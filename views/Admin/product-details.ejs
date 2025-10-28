@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details - JOY Hardware</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-100">
+    <!-- Header -->
+    <header class="bg-blue-800 text-white p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold">JOY Hardware Seller Portal</h1>
+            <div class="flex items-center space-x-4">
+                <span class="text-sm">Welcome, Admin</span>
+                <button class="bg-red-500 hover:bg-red-600 px-3 py-1 rounded text-sm">Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="bg-gray-200 p-2 shadow-sm">
+        <div class="container mx-auto flex space-x-4">
+            <a href="/seller" class="px-3 py-1 rounded hover:bg-gray-300">Dashboard</a>
+            <a href="/seller/products" class="px-3 py-1 rounded hover:bg-gray-300">Products</a>
+            <a href="/seller/product/new" class="px-3 py-1 rounded hover:bg-gray-300">Add Product</a>
+            <a href="/seller/orders" class="px-3 py-1 rounded hover:bg-gray-300">Orders</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container mx-auto p-4">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-gray-800">Product Details</h2>
+            <div class="flex space-x-2">
+                <a href="/seller/product/edit/<%= product._id %>" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md text-white text-sm font-medium">
+                    <i class="fas fa-edit mr-1"></i> Edit Product
+                </a>
+                <button onclick="deleteProduct('<%= product.id %>')" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-md text-white text-sm font-medium">
+                    <i class="fas fa-trash-alt mr-1"></i> Delete Product
+                </button>
+            </div>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <!-- Product Header -->
+            <div class="bg-gray-50 px-6 py-4 border-b">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-xl font-semibold text-gray-800"><%= product.name %></h3>
+                    <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
+                        <%= product.category %>
+                    </span>
+                </div>
+                <p class="text-gray-600 mt-1"><%= product.small_description %></p>
+            </div>
+
+            <!-- Product Content -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 p-6">
+                <!-- Images Section -->
+                <div class="md:col-span-1">
+                    <div class="sticky top-4">
+                        <h4 class="text-lg font-medium text-gray-700 mb-3">Product Images</h4>
+                        <div class="grid grid-cols-2 gap-3">
+                            <% product.image.forEach((img, index) => { %>
+                                <div class="relative group">
+                                    <img src="<%= img.url %>" alt="Product Image <%= index + 1 %>" 
+                                        class="w-full h-40 object-cover rounded-lg border border-gray-200">
+                                    <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-lg">
+                                        <button onclick="viewImage('<%= img.url %>')" class="text-white p-2 hover:text-blue-300">
+                                            <i class="fas fa-expand text-lg"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            <% }); %>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Details Section -->
+                <div class="md:col-span-2 space-y-6">
+                    <!-- Pricing & Stock -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-gray-50 p-4 rounded-lg">
+                        <div>
+                            <p class="text-sm text-gray-500">Price</p>
+                            <p class="text-xl font-bold text-gray-800">₹<%= product.price %></p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Stock</p>
+                            <p class="text-xl font-bold <%= product.stock > 0 ? 'text-green-600' : 'text-red-600' %>">
+                                <%= product.stock %> <%= product.stock === 1 ? 'unit' : 'units' %>
+                            </p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Product ID</p>
+                            <p class="text-sm font-mono text-gray-800"><%= product.id %></p>
+                        </div>
+                    </div>
+
+                    <!-- Key Features -->
+                    <div>
+                        <h4 class="text-lg font-medium text-gray-700 mb-2">Key Features</h4>
+                        <ul class="list-disc pl-5 space-y-1">
+                            <% product.key_features.forEach(feature => { %>
+                                <li class="text-gray-700"><%= feature %></li>
+                            <% }); %>
+                        </ul>
+                    </div>
+
+                    <!-- Full Description -->
+                    <div>
+                        <h4 class="text-lg font-medium text-gray-700 mb-2">Description</h4>
+                        <p class="text-gray-700 whitespace-pre-line"><%= product.Product_description %></p>
+                    </div>
+
+                    <!-- Technical Specifications -->
+                    <div>
+                        <h4 class="text-lg font-medium text-gray-700 mb-2">Technical Specifications</h4>
+                        <div class="bg-gray-50 rounded-lg overflow-hidden">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    <% product.Tech_Specifications.forEach((spec, index) => { %>
+                                        <% if (index === 0) { %>
+                                            <tr>
+                                                <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-500">Brand</td>
+                                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-800"><%= spec.Brand %></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-500">Model Number</td>
+                                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-800"><%= spec.Model_number %></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-500">Model Type</td>
+                                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-800"><%= spec.Model_type %></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-500">Material</td>
+                                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-800"><%= spec.Material %></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-500">Size</td>
+                                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-800"><%= spec.size %> inches</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-500">Weight</td>
+                                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-800"><%= spec.Weight %> grams</td>
+                                            </tr>
+                                        <% } %>
+                                    <% }); %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Additional Specifications -->
+                    <% if (product.specs && Object.keys(product.specs).length > 0) { %>
+                        <div>
+                            <h4 class="text-lg font-medium text-gray-700 mb-2">Additional Specifications</h4>
+                            <div class="bg-gray-50 rounded-lg overflow-hidden">
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <tbody class="bg-white divide-y divide-gray-200">
+                                        <% Object.entries(product.specs).forEach(([key, value]) => { %>
+                                            <tr>
+                                                <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-500 capitalize"><%= key.replace(/_/g, ' ') %></td>
+                                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-800"><%= value %></td>
+                                            </tr>
+                                        <% }); %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Image Modal -->
+    <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-75 z-50 hidden items-center justify-center p-4">
+        <div class="relative max-w-4xl w-full">
+            <button onclick="closeModal()" class="absolute -top-10 right-0 text-white hover:text-gray-300">
+                <i class="fas fa-times text-2xl"></i>
+            </button>
+            <img id="modalImage" src="" alt="Enlarged Product Image" class="w-full max-h-screen rounded-lg">
+        </div>
+    </div>
+
+    <script src="/script/Admin/product-details.js"></script>
+</body>
+</html>

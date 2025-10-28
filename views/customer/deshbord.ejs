@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Dashboard - JOY Hardware</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="/css/customer/deshbord.css">
+</head>
+<body>
+    <header>
+        <h1>JOY Hardware Solutions</h1>
+        <p>Your trusted partner for quality tools and equipment</p>
+    </header>
+
+    <nav>
+        <!-- Left Side Links -->
+        <ul class="nav-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/product">Products</a></li>
+            <li><a href="/about">About Us</a></li>
+            <li><a href="/contact">Contact</a></li>
+        </ul>
+        
+        <!-- Right Side User Icon -->
+        <div class="user-icon-container">
+            <a href="/dashboard" class="user-icon">
+                <img src="https://thumbs.dreamstime.com/b/default-profile-picture-avatar-photo-placeholder-vector-illustration-default-profile-picture-avatar-photo-placeholder-vector-189495158.jpg" alt="User Icon">
+            </a>
+        </div>
+        
+        <!-- Mobile Menu Button -->
+        <div class="hamburger" onclick="toggleMenu()">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </nav>
+
+    <div class="dashboard-container">
+        <section class="welcome-section">
+            <h2>Welcome <%=user.username%>!</h2>
+            <p>Here's what's happening with your account today.</p>
+        </section>
+        
+        <div class="dashboard-cards">
+            <!-- Account Information -->
+            <div class="card">
+                <h3>Account Information</h3>
+                <div class="profile-info">
+                    <img src="https://thumbs.dreamstime.com/b/default-profile-picture-avatar-photo-placeholder-vector-illustration-default-profile-picture-avatar-photo-placeholder-vector-189495158.jpg" alt="Profile Photo" class="profile-photo">
+                    <div style="text-align: center;">
+                        <p><strong><%=user.username%></strong></p>
+                        <p>Premium Member</p>
+                    </div>
+                </div>
+                <p><strong>Email:</strong> <%=user.email%></p>
+                <p><strong>Phone:</strong> +91 <%=user.phone%></p>
+                <p><strong>Member Since:</strong> <%=new Date(user.createdAt).toLocaleDateString()%></p>
+                <a href="/account" class="btn">Edit Profile</a>
+            </div>
+            
+            <!-- Recent Orders -->
+            <div class="card">
+                <h3>Recent Orders</h3>
+                <div class="order-item">
+                    <div>
+                        <strong>Order #1001</strong>
+                        <p>3 items - ₹2,450</p>
+                    </div>
+                    <span class="order-status status-completed">Completed</span>
+                </div>
+                <div class="order-item">
+                    <div>
+                        <strong>Order #1002</strong>
+                        <p>5 items - ₹3,780</p>
+                    </div>
+                    <span class="order-status status-shipped">Shipped</span>
+                </div>
+                <div class="order-item">
+                    <div>
+                        <strong>Order #1003</strong>
+                        <p>2 items - ₹1,250</p>
+                    </div>
+                    <span class="order-status status-pending">Pending</span>
+                </div>
+                <a href="/orders" class="btn">View All Orders</a>
+            </div>
+            
+            <!-- Quick Actions -->
+            <div class="card">
+                <h3>Quick Actions</h3>
+                <a href="/product" class="btn" style="display: block; margin-bottom: 0.5rem;">Shop Products</a>
+                <a href="/wishlist" class="btn" style="display: block; margin-bottom: 0.5rem; background-color: #2ecc71;">View Wishlist</a>
+                <a href="/support" class="btn" style="display: block; background-color: #e74c3c;">Contact Support</a>
+                <form action="/auth/logout" method="POST" style="display: inline;">
+                    <button type="submit" class="btn" style="display: block; background-color: rgb(0, 102, 255);">Log out</button>
+                <!-- <a  class="btn" style="display: block; background-color: rgb(0, 229, 255);"><button type="submit">Log out</button></a> -->
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2023 JOY Hardware Solutions. All Rights Reserved.</p>
+        <p>Contact: sales@joyhardware.com | Phone: +91 XXXXXXXXXX</p>
+    </footer>
+
+    <script src="script/customer/deshbord.js"></script>
+</body>
+</html>

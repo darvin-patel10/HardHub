@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products - JOY Hardware Solutions</title>
+    <link rel="stylesheet" href="/css/customer/product.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+</head>
+<body>
+    <header>
+        <h1>JOY Hardware Products</h1>
+        <p>Quality tools for professionals and DIY enthusiasts</p>
+    </header>
+
+    <!-- Navigation Bar -->
+
+    <nav>
+        <!-- Left Side Links -->
+        <ul class="nav-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/product">Products</a></li>
+            <li><a href="/about">About Us</a></li>
+            <li><a href="/contact">Contact</a></li>
+        </ul>
+        
+        <!-- Right Side User Icon -->
+        <div class="user-icon-container">
+            <a href="/deshbord/<%=userId%>" class="user-icon">
+                <img src="https://thumbs.dreamstime.com/b/default-profile-picture-avatar-photo-placeholder-vector-illustration-default-profile-picture-avatar-photo-placeholder-vector-189495158.jpg" alt="User Icon">
+            </a>
+        </div>
+        
+        <!-- Mobile Menu Button -->
+        <div class="hamburger" onclick="toggleMenu()">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </nav>
+
+
+    <section class="product-categories">
+        <h2 style="text-align: center;">Product Categories</h2>
+        <div class="category-buttons">
+            <button onclick="filterProducts('all')">All Products</button>
+            <button onclick="filterProducts('Aldrop')">Aldrop</button>
+            <button onclick="filterProducts('Main Door Handle')">Main Door Handle</button>
+            <button onclick="filterProducts('Handles')">Handles</button>
+            <button onclick="filterProducts('SS Door kit')">SS Door kit</button>
+            <button onclick="filterProducts('SS Chest Handle')">SS Chest Handle</button>
+            <button onclick="filterProducts('Cabinet Handle')">Cabinet Handle</button>
+        </div>
+    </section>
+
+    <section class="products-container" id="products">
+        <!-- Aldrop -->
+         <% for (let product of allproducts) {%>
+        <div class="product-card" data-category="<%=product.category%>">
+            <a href="/product-details/<%=product.id%>">
+                <img src="<%=product.image[0].url%>" alt="<%=product.name%>">
+                <div class="product-name"><%=product.name%></div>
+                <div class="price"><%=product.price%></div>
+                <p><%=product.small_description%> </p>
+            </a>
+            <button>Add to Cart</button>
+        </div>
+        <%}%>
+    </section>
+
+    <footer>
+        <p>&copy; 2023 JOY Hardware Solutions. All Rights Reserved.</p>
+        <p>Contact: sales@joyhardware.com | Phone: +91 XXXXXXXXXX</p>
+    </footer>
+
+    <script src="script/customer/product.js"></script>
+</body>
+</html>

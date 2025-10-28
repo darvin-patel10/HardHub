@@ -1,0 +1,20 @@
+ /* Simple custom styles */
+        .product-card {
+            transition: all 0.3s;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .stock-low {
+            background-color: #fee2e2;
+            color: #b91c1c;
+        }
+        .stock-medium {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+        .stock-high {
+            background-color: #dcfce7;
+            color: #166534;
+        }

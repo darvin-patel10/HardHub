@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment - JOY Hardware Solutions</title>
+    <link rel="stylesheet" href="/css/customer/payment.css">
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/product">Products</a></li>
+            <li><a href="/about">About Us</a></li>
+            <li><a href="/contact">Contact</a></li>
+            <li><a href="/cart">Cart (<%=totalUniqueItems%>)</a></li>
+        </ul>
+    </nav>
+
+    <div class="payment-container">
+        <div class="payment-header">
+            <h1>Complete Your Purchase</h1>
+            <p>Secure payment with multiple options available</p>
+        </div>
+        
+        <form action="/product/confirm/<%=order.orderid%>" method="POST">
+            <!-- <input type="hidden" name="orderId" value="<%=order._id%>">
+            <input type="hidden" name="totalPrice" value="<%=order.totalPrice%>"> -->
+        <div class="payment-content">
+            <div class="payment-form">
+                <!-- UPI Payment Method -->
+                <div class="payment-method active" id="upiMethod">
+                    <div class="payment-method-header active" onclick="togglePaymentMethod('upiMethod')">
+                        <div>
+                            <input type="radio" name="paymentMethod" id="upiRadio" checked>
+                            <label for="upiRadio">UPI Payment</label>
+                        </div>
+                        <img src="https://via.placeholder.com/80x30?text=UPI" alt="UPI" style="height: 30px;">
+                    </div>
+                    <div class="payment-method-content">
+                        <div class="form-group">
+                            <label for="upiId">Enter UPI ID</label>
+                            <input type="text" id="upiId" placeholder="yourname@upi">
+                        </div>
+                        <p>Or pay using:</p>
+                        <div class="upi-apps">
+                            <div class="upi-app">
+                                <img src="https://via.placeholder.com/40x40?text=GPay" alt="Google Pay">
+                            </div>
+                            <div class="upi-app">
+                                <img src="https://via.placeholder.com/40x40?text=PhonePe" alt="PhonePe">
+                            </div>
+                            <div class="upi-app">
+                                <img src="https://via.placeholder.com/40x40?text=PayTM" alt="PayTM">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Card Payment Method -->
+                <div class="payment-method" id="cardMethod">
+                    <div class="payment-method-header" onclick="togglePaymentMethod('cardMethod')">
+                        <div>
+                            <input type="radio" name="paymentMethod" id="cardRadio">
+                            <label for="cardRadio">Credit/Debit Card</label>
+                        </div>
+                        <div>
+                            <img src="https://via.placeholder.com/80x30?text=Cards" alt="Cards" style="height: 30px;">
+                        </div>
+                    </div>
+                    <div class="payment-method-content">
+                        <div class="form-group">
+                            <label for="cardNumber">Card Number</label>
+                            <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="expiryDate">Expiry Date</label>
+                                <input type="text" id="expiryDate" placeholder="MM/YY">
+                            </div>
+                            <div class="form-group">
+                                <label for="cvv">CVV</label>
+                                <input type="text" id="cvv" placeholder="123">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="cardName">Name on Card</label>
+                            <input type="text" id="cardName" placeholder="Your Name">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Net Banking -->
+                <div class="payment-method" id="netBankingMethod">
+                    <div class="payment-method-header" onclick="togglePaymentMethod('netBankingMethod')">
+                        <div>
+                            <input type="radio" name="paymentMethod" id="netBankingRadio">
+                            <label for="netBankingRadio">Net Banking</label>
+                        </div>
+                        <img src="https://via.placeholder.com/80x30?text=NetBanking" alt="Net Banking" style="height: 30px;">
+                    </div>
+                    <div class="payment-method-content">
+                        <div class="form-group">
+                            <label for="bankSelect">Select Bank</label>
+                            <select id="bankSelect" class="form-group input">
+                                <option value="">-- Select Bank --</option>
+                                <option value="sbi">State Bank of India</option>
+                                <option value="hdfc">HDFC Bank</option>
+                                <option value="icici">ICICI Bank</option>
+                                <option value="axis">Axis Bank</option>
+                                <option value="pnb">Punjab National Bank</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- COD -->
+                <div class="payment-method" id="codMethod">
+                    <div class="payment-method-header" onclick="togglePaymentMethod('codMethod')">
+                        <div>
+                            <input type="radio" name="paymentMethod" id="codRadio">
+                            <label for="codRadio">Cash on Delivery (COD)</label>
+                        </div>
+                        <img src="https://via.placeholder.com/80x30?text=COD" alt="COD" style="height: 30px;">
+                    </div>
+                    <div class="payment-method-content">
+                        <p>Pay cash when your order is delivered. Additional ₹50 COD charge may apply.</p>
+                    </div>
+                </div>
+                
+                <button type="submit" class="pay-button" id="payButton">Pay <%=order.totalPrice%></button>
+            </div>
+        </form>
+            
+            <div class="order-summary">
+                <h2>Order Summary</h2>
+                <div class="order-items">
+                    <div class="order-item">
+                        <span><%=order.items[0].name%> × <%=order.items[0].quantity%></span>
+                        <span><%=order.items[0].price%></span>
+                    </div>
+                    <div class="order-item">
+                        <span>Adjustable Wrench × 1</span>
+                        <span>₹275.00</span>
+                    </div>
+                </div>
+                
+                <div class="order-totals">
+                    <div class="order-total-row">
+                        <span>Subtotal:</span>
+                        <span><%=order.subtotal%></span>
+                    </div>
+                    <div class="order-total-row">
+                        <span>Shipping:</span>
+                        <span>₹120.00</span>
+                    </div>
+                    <div class="order-total-row">
+                        <span>Tax (18%):</span>
+                        <span>₹175.14</span>
+                    </div>
+                    <div class="order-total-row total">
+                        <span>Total:</span>
+                        <span><%=order.totalPrice%></span>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 2rem; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
+                    <h3>Delivery Address</h3>
+                    <p><%=order.firstname%> <%=order.lastname%><br>
+                    <%=order.address%><br>
+                    <%=order.city%>, <%=order.state%> <%=order.pincode%><br>
+                    Phone: +91 <%=order.phone%></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2023 JOY Hardware Solutions. All Rights Reserved.</p>
+        <p>Registered Office: 123 Industrial Area, Mumbai, Maharashtra - 400001</p>
+        <p>Contact: support@joyhardware.com | Customer Care: +91 1800 123 4567</p>
+    </footer>
+
+    <script src="/script/customer/payment.js"></script>
+</body>
+</html>

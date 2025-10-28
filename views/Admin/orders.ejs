@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orders - JOY Hardware</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/css/admin/orders.css">
+</head>
+<body class="bg-gray-100">
+    <!-- Header -->
+    <header class="bg-blue-800 text-white p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold">JOY Hardware Seller Portal</h1>
+            <div class="flex items-center space-x-4">
+                <span class="text-sm">Welcome, Admin</span>
+                <button class="bg-red-500 hover:bg-red-600 px-3 py-1 rounded text-sm">Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="bg-gray-200 p-2 shadow-sm">
+        <div class="container mx-auto flex space-x-4">
+            <a href="/seller" class="px-3 py-1 rounded hover:bg-gray-300">Dashboard</a>
+            <a href="/seller/products" class="px-3 py-1 rounded hover:bg-gray-300">Products</a>
+            <a href="/seller/product/new" class="px-3 py-1 rounded hover:bg-gray-300">Add Product</a>
+            <a href="/seller/orders" class="px-3 py-1 rounded bg-blue-100 text-blue-800 font-medium">Orders</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container mx-auto p-4">
+        <h1 class="text-2xl font-bold text-gray-800 mb-6">Order Management</h1>
+        
+        <!-- Search and Filter -->
+        <div class="flex items-center space-x-2 mb-6">
+            <input type="text" placeholder="Search orders..." class="flex-1 px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <button class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-md">Search</button>
+        </div>
+
+        <!-- Pending/Processing Orders Section -->
+         
+        <h2 class="section-title">Active Orders (Pending/Processing)</h2>
+        <div class="bg-white rounded-lg shadow-md overflow-hidden mb-8">
+            <div class="grid grid-cols-12 bg-gray-100 p-3 font-medium text-gray-700">
+                <div class="col-span-2">Order ID</div>
+                <div class="col-span-3">Customer</div>
+                <div class="col-span-2">Date</div>
+                <div class="col-span-2">Amount</div>
+                <div class="col-span-2">Status</div>
+                <div class="col-span-1">Action</div>
+            </div>
+
+            <div class="divide-y divide-gray-200">
+                <!-- Order 1 -->
+                 <% if (orders && orders.length > 0) { 
+                        for(let order of orders) {%>
+                    <div class="grid grid-cols-12 p-3 items-center order-row">
+                        <div class="col-span-2 font-medium text-blue-600">#JOY-<%=order.orderid%></div>
+                        <div class="col-span-3"><%=order.firstname%> <%=order.lastname%></div>
+                        <div class="col-span-2 text-sm"><%= new Date(order.createdAt).toLocaleDateString() %></div>
+                        <div class="col-span-2 font-medium"><%=order.totalPrice%></div>
+                        <div class="col-span-2">
+                            <span class="status-badge status-pending">Pending</span>
+                        </div>
+                        <div class="col-span-1">
+                            <a href="/seller/order/details/<%=order.orderid%>" class="text-blue-600 hover:text-blue-800">View</a>
+                        </div>
+                    </div>
+                <% } } 
+                else { %>
+                    <div class="p-4 text-gray-600 text-center">No active orders at the moment.</div>
+                <% } %>
+
+                <!-- Order 2 -->
+                <div class="grid grid-cols-12 p-3 items-center order-row">
+                    <div class="col-span-2 font-medium text-blue-600">#JOY-1002</div>
+                    <div class="col-span-3">Sharma Hardware Store</div>
+                    <div class="col-span-2 text-sm">Today, 9:30 AM</div>
+                    <div class="col-span-2 font-medium">₹12,320</div>
+                    <div class="col-span-2">
+                        <span class="status-badge status-processing">Processing</span>
+                    </div>
+                    <div class="col-span-1">
+                        <a href="order-details.html" class="text-blue-600 hover:text-blue-800">View</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Completed Orders Section -->
+        <h2 class="section-title">Completed Orders</h2>
+        <div class="bg-white rounded-lg shadow-md overflow-hidden mb-8">
+            <div class="grid grid-cols-12 bg-gray-100 p-3 font-medium text-gray-700">
+                <div class="col-span-2">Order ID</div>
+                <div class="col-span-3">Customer</div>
+                <div class="col-span-2">Date</div>
+                <div class="col-span-2">Amount</div>
+                <div class="col-span-2">Status</div>
+                <div class="col-span-1">Action</div>
+            </div>
+
+            <div class="divide-y divide-gray-200">
+                <!-- Order 3 -->
+                <div class="grid grid-cols-12 p-3 items-center order-row">
+                    <div class="col-span-2 font-medium text-blue-600">#JOY-1003</div>
+                    <div class="col-span-3">Patel Construction</div>
+                    <div class="col-span-2 text-sm">Yesterday, 4:15 PM</div>
+                    <div class="col-span-2 font-medium">₹6,750</div>
+                    <div class="col-span-2">
+                        <span class="status-badge status-delivered">Delivered</span>
+                    </div>
+                    <div class="col-span-1">
+                        <a href="order-details.html" class="text-blue-600 hover:text-blue-800">View</a>
+                    </div>
+                </div>
+
+                <!-- Order 4 -->
+                <div class="grid grid-cols-12 p-3 items-center order-row">
+                    <div class="col-span-2 font-medium text-blue-600">#JOY-1004</div>
+                    <div class="col-span-3">Gupta Electricals</div>
+                    <div class="col-span-2 text-sm">Yesterday, 2:00 PM</div>
+                    <div class="col-span-2 font-medium">₹15,230</div>
+                    <div class="col-span-2">
+                        <span class="status-badge status-delivered">Delivered</span>
+                    </div>
+                    <div class="col-span-1">
+                        <a href="order-details.html" class="text-blue-600 hover:text-blue-800">View</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cancelled Orders Section -->
+        <h2 class="section-title">Cancelled Orders</h2>
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <div class="grid grid-cols-12 bg-gray-100 p-3 font-medium text-gray-700">
+                <div class="col-span-2">Order ID</div>
+                <div class="col-span-3">Customer</div>
+                <div class="col-span-2">Date</div>
+                <div class="col-span-2">Amount</div>
+                <div class="col-span-2">Status</div>
+                <div class="col-span-1">Action</div>
+            </div>
+
+            <div class="divide-y divide-gray-200">
+                <!-- Order 5 -->
+                <div class="grid grid-cols-12 p-3 items-center order-row">
+                    <div class="col-span-2 font-medium text-blue-600">#JOY-1005</div>
+                    <div class="col-span-3">Kumar Tools Center</div>
+                    <div class="col-span-2 text-sm">Yesterday, 11:30 AM</div>
+                    <div class="col-span-2 font-medium">₹9,870</div>
+                    <div class="col-span-2">
+                        <span class="status-badge status-cancelled">Cancelled</span>
+                    </div>
+                    <div class="col-span-1">
+                        <a href="order-details.html" class="text-blue-600 hover:text-blue-800">View</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="/script/Admin/orders.js"></script>
+</body>
+</html>

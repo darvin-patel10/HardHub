@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Shopping Cart - JOY Hardware Solutions</title>
+    <link rel="stylesheet" href="css/customer/cart.css">
+</head>
+<body>
+    <header>
+        <h1>JOY Hardware Solutions</h1>
+        <p>Quality Tools at Your Fingertips</p>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/product">Products</a></li>
+            <li><a href="/about">About Us</a></li>
+            <li><a href="/contact">Contact</a></li>
+            <li><a href="/cart" class="active">Cart (<%=totalUniqueItems%>)</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <div class="cart-header">
+            <h1>Your Shopping Cart</h1>
+            <p>Review and checkout your selected items</p>
+        </div>
+
+        <!-- For empty cart state (comment out when cart has items) -->
+        <!--
+        <div class="empty-cart">
+            <div class="empty-cart-icon">🛒</div>
+            <h2>Your Cart is Empty</h2>
+            <p>Looks like you haven't added any items to your cart yet.</p>
+            <a href="products.html"><button class="empty-cart-btn">Browse Products</button></a>
+        </div>
+        -->
+
+        <div class="cart-container">
+            <div class="cart-items">
+                <table class="cart-table">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Total</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    
+                    <tbody>
+                        <% for (let product of cartItems) {%>
+                            <tr>
+                                <td>
+                                    <div class="product-cell">
+                                        <img src="<%=product.image%>" alt="<%=product.name%>" class="product-image">
+                                        <div>
+                                            <h3><%=product.name%></h3>
+                                            <p>Model: JPD-550</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="price"><%=product.price%></td>
+                                <td>
+                                    <div class="quantity-control">
+                                        <button class="quantity-btn">-</button>
+                                        <input type="number" value="<%=product.quantity%>" min="<%=product.quantity%>" placeholder="<%=product.quantity%>" class="quantity-input">
+                                        <button class="quantity-btn">+</button>
+                                    </div>
+                                </td>
+                                <td class="price"><%=product.total%></td>
+                                <form action="/cart/remove/<%=product.productId%>" method="POST" class="remove-form">
+                                    <input type="hidden" name="productId" value="<%=product.productId%>">
+                                    <!-- <button type="submit" class="remove-btn">✕</button> -->
+                                <td><button type="submit" class="remove-btn">✕</button></td>
+                            </tr>
+                        <%}%>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="cart-summary">
+                <h2 class="summary-title">Order Summary</h2>
+                
+                <div class="summary-row">
+                    <span>Subtotal (<%=totalUniqueItems%> items)</span>
+                    <span class="price"><%=subtotal%></span>
+                </div>
+                
+                <div class="summary-row">
+                    <span>Shipping</span>
+                    <span class="price">₹120</span>
+                </div>
+                
+                <div class="summary-row">
+                    <span>Tax (GST 18%)</span>
+                    <span class="price">totalPrice</span>
+                </div>
+                
+                <div class="summary-row summary-total">
+                    <span>Total</span>
+                    <span class="price"><%=totalPrice%> <span class="inr">INR</span></span>
+                </div>
+                
+                <button class="checkout-btn">Proceed to Checkout</button>
+                <a href="products.html"><button class="continue-btn">Continue Shopping</button></a>
+                
+                <div style="margin-top: 2rem; font-size: 0.9rem;">
+                    <p><strong>Estimated Delivery:</strong> 3-5 business days</p>
+                    <p><strong>Free Shipping</strong> on orders over ₹5,000</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>JOY Hardware</h3>
+                <p>Your trusted partner for quality tools and equipment since 1995.</p>
+                <p>GSTIN: 27AAACJ1234M1Z5</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul style="list-style: none; padding: 0;">
+                    <li><a href="index.html" style="color: white;">Home</a></li>
+                    <li><a href="products.html" style="color: white;">Products</a></li>
+                    <li><a href="about.html" style="color: white;">About Us</a></li>
+                    <li><a href="contact.html" style="color: white;">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Customer Service</h3>
+                <p>Phone: +91 1800 123 4567</p>
+                <p>Email: support@joyhardware.com</p>
+                <p>Returns & Warranty Policy</p>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2023 JOY Hardware Solutions. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script/customer/cart.js"></script>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation - JOY Hardware Solutions</title>
+    <link rel="stylesheet" href="/css/customer/OrderConfarm.css">
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/product">Products</a></li>
+            <li><a href="/about">About Us</a></li>
+            <li><a href="/contact">Contact</a></li>
+            <li><a href="/cart">Cart (<%=totalUniqueItems%>)</a></li>
+        </ul>
+    </nav>
+
+    <div class="confirmation-container">
+        <div class="confirmation-card">
+            <div class="confirmation-icon">✓</div>
+            <h1 class="confirmation-title">Thank You For Your Order!</h1>
+            <p class="confirmation-subtitle">Your order has been placed successfully and will be processed shortly.</p>
+            <div class="order-number">Order <%=order.orderid%></div>
+            
+            <div class="action-buttons">
+                <a href="/orders/JOY-ORD-10025" class="btn btn-primary">View Order Details</a>
+                <a href="/product" class="btn btn-secondary">Continue Shopping</a>
+            </div>
+        </div>
+        
+        <div class="order-details">
+            <div class="order-section">
+                <h2 class="section-title">Order Summary</h2>
+                <div class="order-items">
+                    <div class="order-item">
+                        <span><%=order.items[0].name%> × <%=order.items[0].quantity%></span>
+                        <span><%=order.items[0].price%></span>
+                    </div>
+                    <!-- <div class="order-item">
+                        <span>Adjustable Wrench × 1</span>
+                        <span>₹275.00</span>
+                    </div> -->
+                </div>
+                
+                <div class="order-totals">
+                    <div class="order-total-row">
+                        <span>Subtotal:</span>
+                        <span><%=order.subtotal%></span>
+                    </div>
+                    <div class="order-total-row">
+                        <span>Shipping:</span>
+                        <span>₹120.00</span>
+                    </div>
+                    <div class="order-total-row">
+                        <span>Tax (18%):</span>
+                        <span>₹175.14</span>
+                    </div>
+                    <div class="order-total-row total">
+                        <span>Total:</span>
+                        <span><%=order.totalPrice%></span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="order-section">
+                <h2 class="section-title">Delivery Information</h2>
+                <p><strong><%=order.firstname%><%=order.lastname%></strong><br>
+                <%=order.address%><br>
+                <%=order.city%>, <%=order.state%> <%=order.pincode%><br>
+                Phone: +91 <%=order.phone%></p>
+                
+                <h2 class="section-title" style="margin-top: 1.5rem;">Payment Method</h2>
+                <p><strong><%=order.paymentMethod%></strong><br>
+                Transaction ID: <%=order.transactionId%><br>
+                Amount Paid: <%=order.totalPrice%></p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2023 JOY Hardware Solutions. All Rights Reserved.</p>
+        <p>Registered Office: 123 Industrial Area, Mumbai, Maharashtra - 400001</p>
+        <p>Contact: support@joyhardware.com | Customer Care: +91 1800 123 4567</p>
+    </footer>
+
+    <script src="/script/customer/OrderConfarm.js"></script>
+</body>
+</html>

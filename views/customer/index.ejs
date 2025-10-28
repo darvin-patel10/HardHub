@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JOY Hardware</title>
+    <link rel="stylesheet" href="/css/customer/index.css">
+</head>
+<body>
+    <header>
+        <h1>JOY Hardware Solutions</h1>
+        <p>Your trusted partner for quality tools and equipment</p>
+    </header>
+
+    <nav class="nav">
+        <!-- Left Side Links -->
+        <ul class="nav-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/product">Products</a></li>
+            <li><a href="/about">About Us</a></li>
+            <li><a href="/contact">Contact</a></li>
+        </ul>
+        
+        <!-- Right Side Buttons -->
+        <div class="auth-buttons">
+            <a href="/auth/signin" class="login-btn">Login</a>
+            <a href="/auth/signup" class="signup-btn">Sign Up</a>
+        </div>
+        
+        <!-- Mobile Menu Button -->
+        <div class="hamburger" onclick="toggleMenu()">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </nav>
+
+    <!-- <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/product">Products</a></li>
+            <li><a href="/about">About Us</a></li>
+            <li><a href="/contact">Contact</a></li> -->
+            <!-- Added login and signup buttons -->
+            <!-- <li class="auth-buttons">
+                <a href="/login" class="login-btn">Login</a>
+                <a href="/signup" class="signup-btn">Sign Up</a>
+            </li>
+        </ul>
+    </nav> -->
+    <section class="hero">
+        <h2>Welcome to JOY Hardware</h2>
+        <p>Best quality tools at affordable prices</p>
+        <button onclick="window.location.assign('/auth/signin');">Shop Now</button>
+    </section>
+
+    <section class="featured-products">
+        <h2 style="text-align: center;">Featured Products</h2>
+        <div class="products">
+            <!-- Product 1 -->
+            <div class="product-card">
+                <img src="https://2.imimg.com/data2/CR/IW/MY-3006731/stainless-steel-aldrops-500x500.jpg" alt="Steel Hammer">
+                <h3>Aldrop</h3>
+                <p>Heavy-duty Aldrop</p>
+                <div class="price">₹750/piece</div>
+                <button>Add to Cart</button>
+            </div>
+
+            <!-- Product 2 -->
+            <div class="product-card">
+                <img src="https://4.imimg.com/data4/FP/LC/MY-3210181/stainless-steel-main-door-handles-500x500.jpeg" alt="Screwdriver Set">
+                <h3>Stainless Steel Main Door Handle</h3>
+                <p>Best quality range of Metal Door Handle to our clients.</p>
+                <div class="price">₹3200/piece</div>
+                <button>Add to Cart</button>
+            </div>
+
+            <!-- Product 3 -->
+            <div class="product-card">
+                <img src="https://4.imimg.com/data4/TX/VT/MY-3210181/door-aldrop-500x500.jpeg" alt="Adjustable Wrench">
+                <h3>SS Door Kit</h3>
+                <p>Best quality of SS Door Kit</p>
+                <div class="price">₹1000/piece</div>
+                <button>Add to Cart</button>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2012 JOY Hardware. All Rights Reserved.</p>
+        <p>Contact: info@joyhardware.com | Phone: +91 XXXXXXXXXX</p>
+    </footer>
+
+    <script src="script/customer/index.js"></script>
+</body>
+</html>

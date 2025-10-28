@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details - JOY Hardware Solutions</title>
+    <link rel="stylesheet" href="/css/customer/product-details.css">
+</head>
+<body>
+    <!-- <header>
+        <h1>JOY Hardware Solutions</h1>
+        <p>Precision Tools for Professionals</p>
+    </header> -->
+
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/product">Products</a></li>
+            <li><a href="/about">About Us</a></li>
+            <li><a href="/contact">Contact</a></li>
+            <li><a href="/cart">Cart (<%=totalUniqueItems%>)</a></li>
+        </ul>
+    </nav>
+
+    <div class="product-container">
+        <div class="product-images">
+            <img id="main-image" src="<%=product.image[0].url%>" alt="<%=product.name%>" class="product-main-image">
+            <!-- <div class="product-thumbnails">
+                <img src="https://4.imimg.com/data4/AC/LU/MY-3210181/door-aldrop-500x500.jpeg" alt="Drill Machine Front" onclick="changeImage(this.src)">
+                <img src="https://4.imimg.com/data4/TY/VB/MY-3210181/door-aldrop-500x500.jpeg" alt="Drill Machine Side" onclick="changeImage(this.src)">
+                <img src="https://4.imimg.com/data4/IO/NH/MY-3210181/door-aldrop-500x500.jpeg" onclick="changeImage(this.src)">
+                <img src="https://4.imimg.com/data4/AC/LU/MY-3210181/door-aldrop-500x500.jpeg" alt="Drill Machine Packaging" onclick="changeImage(this.src)">
+            </div> -->
+        </div>
+
+        <div class="product-info">
+            <h1 class="product-title"><%=product.name%></h1>
+            <div class="product-rating">
+                ★★★★☆ (42 Reviews)
+            </div>
+            <div class="product-price">
+                <%=product.price%> <span>₹690</span> (22% off)
+            </div>
+            <div class="product-availability">
+                <strong>Availability:</strong> In Stock (<%=product.stock%> units)
+            </div>
+
+            <div class="product-highlights">
+                <h3>Key Features:</h3>
+                <ul>
+                    <%for(let feature of product.key_features) {%>
+                        <li><%=feature%></li>
+                    <%}%>
+                </ul>
+            </div>
+
+            <div class="product-actions">
+    <div class="quantity-selector">
+        <label for="quantity"><strong>Quantity:</strong></label>
+        <input type="number" id="quantity" value="1" min="1" max="10">
+    </div>
+    <div class="btn-b-c">
+        <form action="/cart/add/<%=product.id%>" method="POST" onsubmit="copyQuantity(this)">
+            <input type="hidden" name="quantity">
+            <input type="hidden" name="productId" value="<%=product.id%>">
+            <input type="hidden" name="name" value="<%=product.name%>">
+            <input type="hidden" name="price" value="<%=product.price%>">
+            <input type="hidden" name="image" value="<%=product.image[0].url%>">
+            <button type="submit" class="add-to-cart">
+                <i class="fas fa-cart-plus"></i> Add to Cart
+            </button>
+        </form>
+        
+        <form action="/product/checkout/<%=product.id%>" method="POST" onsubmit="copyQuantity(this)">
+            <input type="hidden" name="quantity">
+            <input type="hidden" name="productId" value="<%=product.id%>">
+            <input type="hidden" name="name" value="<%=product.name%>">
+            <input type="hidden" name="price" value="<%=product.price%>">
+            <input type="hidden" name="image" value="<%=product.image[0].url%>">
+            <button type="submit" class="buy-now">
+                <i class="fas fa-bolt"></i> Buy Now
+            </button>
+        </form>
+    </div>
+</div>
+
+            <div class="product-description">
+                <h3>Product Description</h3>
+                <p><%=product.Product_description%></p>
+            </div>
+
+            <div class="product-specs">
+                <h3>Technical Specifications</h3>
+                <table class="specs-table">
+                    <tr>
+                        <td>Brand</td>
+                        <td><%=product.Tech_Specifications[0].Brand%></td>
+                    </tr>
+                    <tr>
+                        <td>Model</td>
+                        <td><%=product.Tech_Specifications[0].Model_number%></td>
+                    </tr>
+                    <tr>
+                        <td>Model type</td>
+                        <td><%=product.Tech_Specifications[0].Model_type%></td>
+                    </tr>
+                    <tr>
+                        <td>Material</td>
+                        <td><%=product.Tech_Specifications[0].Material%></td>
+                    </tr>
+                    <tr>
+                        <td>Size(inch)</td>
+                        <td><%=product.Tech_Specifications[0].size%></td>
+                    </tr>
+                    <tr>
+                        <td>Weight(g)</td>
+                        <td><%=product.Tech_Specifications[0].Weight%></td>
+                    </tr>
+                    <tr>
+                        <td>Country of Origin</td>
+                        <td>India</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2023 JOY Hardware Solutions. All Rights Reserved.</p>
+        <p>Registered Office: 123 Industrial Area, Mumbai, Maharashtra - 400001</p>
+        <p>Contact: support@joyhardware.com | Customer Care: +91 1800 123 4567</p>
+    </footer>
+
+    <script src="/script/customer/product-details.js"></script>
+</body>
+</html>

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Product - JOY Hardware</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/css/Admin/add.css">
+</head>
+<body class="bg-gray-100">
+    <!-- Header -->
+    <header class="bg-blue-800 text-white p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold">JOY Hardware Seller Portal</h1>
+            <div class="flex items-center space-x-4">
+                <span class="text-sm">Welcome, Admin</span>
+                <button class="bg-red-500 hover:bg-red-600 px-3 py-1 rounded text-sm">Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="bg-gray-200 p-2 shadow-sm">
+        <div class="container mx-auto flex space-x-4">
+            <a href="/seller" class="px-3 py-1 rounded hover:bg-gray-300">Dashboard</a>
+            <a href="/seller/products" class="px-3 py-1 rounded hover:bg-gray-300">Products</a>
+            <a href="/seller/product/new" class="px-3 py-1 rounded hover:bg-gray-300">Add Product</a>
+            <a href="/seller/orders" class="px-3 py-1 rounded hover:bg-gray-300">Orders</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container mx-auto p-4"> 
+        <div class="flex justify-between items-center mb-6">
+            <a href="/seller/product/edit/<%= product._id %>">
+                <h2 class="text-2xl font-bold text-gray-800">Edit Product</h2>
+            </a>
+            <button onclick="deleteProduct()" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-md text-white text-sm font-medium">
+                Delete Product
+            </button>
+        </div>
+        
+        
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <form method="post" action="/seller/product/update/<%=product._id%>" id="productForm" class="space-y-6" enctype="multipart/form-data">
+                <input type="hidden" id="productId" name="productId" value="<%=product.id%>">
+                
+                <!-- Basic Info -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="productName" class="block text-sm font-medium text-gray-700 mb-1">Product Name*</label>
+                        <input type="text" id="productName" name="productName" required 
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            value="<%=product.name%>">
+                    </div>
+                    
+                    <div>
+                        <label for="category" class="block text-sm font-medium text-gray-700 mb-1">Category*</label>
+                        <select id="category" name="category" required value="<%=product.category%>"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">Select Category</option>
+                            <option value="Aldrop">Aldrop</option>
+                            <option value="Main Door Handle">Main Door Handl</option>
+                            <option value="Handles">Handles</option>
+                            <option value="SS Door kit">SS Door kit</option>
+                            <option value="SS Chest Handle">SS Chest Handle</option>
+                            <option value="Cabinet Handle">Cabinet Handle</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label for="brand" class="block text-sm font-medium text-gray-700 mb-1">Brand*</label>
+                        <input type="text" id="brand" name="Tech_Specifications[0][Brand]" required
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            value="<%=product.Tech_Specifications[0].Brand%>">
+                    </div>
+                </div>
+                
+                <!-- Description -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="smallDescription" class="block text-sm font-medium text-gray-700 mb-1">Short Description*</label>
+                        <textarea id="smallDescription" name="smallDescription" rows="2" required
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"><%=product.small_description%></textarea>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Key Features*</label>
+                        <div id="keyFeaturesContainer" class="space-y-2">
+                            <!-- Key features will be dynamically inserted here -->
+                            <div class="flex space-x-2">
+                                <input type="text" name="key_features[]" placeholder="Key feature" required
+                                    class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    value="<%=product.key_features%>">
+                                <button type="button" onclick="removeKeyFeature(this)" class="px-2 text-red-500 hover:text-red-700">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <button type="button" onclick="addKeyFeature()" class="mt-2 inline-flex items-center px-3 py-1 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                            </svg>
+                            Add Key Feature
+                        </button>
+                    </div>
+                        
+                    <div>
+                        <label for="fullDescription" class="block text-sm font-medium text-gray-700 mb-1">Full Description*</label>
+                        <textarea id="fullDescription" name="Product_description" rows="4" required
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"><%=product.Product_description%></textarea>
+                    </div>  
+                </div>
+                
+                <br>
+                <!-- Pricing & Stock -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="relative">
+                        <label for="price" class="block text-sm font-medium text-gray-700 mb-1">Price (INR)*</label>
+                        <div class="relative">
+                            <span class="absolute left-3 top-1/2 transform -translate-y-1/2">₹</span>
+                            <input type="number" id="price" name="price" min="0" step="0.01" required 
+                                class="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                value="<%=product.price%>">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="stock" class="block text-sm font-medium text-gray-700 mb-1">Stock Quantity*</label>
+                        <input type="number" id="stock" name="stock" min="0" required 
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            value="<%=product.stock%>">
+                    </div>
+                </div>
+                
+                <br>
+                <!-- Technical Specifications -->
+                <div>
+                    <label class="block text-xl font-bold text-gray-700 mb-1">Technical Specifications*</label>
+                    <div id="techSpecsContainer" class="space-y-4 p-4 bg-gray-50 rounded-md">
+                        <div class="spec-input-group grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label for="modelNumber" class="block text-sm font-medium text-gray-700 mb-1">Model Number*</label>
+                                <input type="text" id="modelNumber" name="Tech_Specifications[0][Model_number]" required
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    value="<%=product.Tech_Specifications[0].Model_number%>">
+                            </div>
+                            
+                            <div>
+                                <label for="modelType" class="block text-sm font-medium text-gray-700 mb-1">Model Type*</label>
+                                <input type="text" id="modelType" name="Tech_Specifications[0][Model_type]" required
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    value="<%=product.Tech_Specifications[0].Model_type%>">
+                            </div>
+                            
+                            <div>
+                                <label for="material" class="block text-sm font-medium text-gray-700 mb-1">Material*</label>
+                                <input type="text" id="material" name="Tech_Specifications[0][Material]" required
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    value="<%=product.Tech_Specifications[0].Material%>">
+                            </div>
+                            
+                            <div>
+                                <label for="size" class="block text-sm font-medium text-gray-700 mb-1">Size*(inch)</label>
+                                <input type="number" id="size" name="Tech_Specifications[0][size]" step="0.01" required
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    value="<%=product.Tech_Specifications[0].size%>">
+                            </div>
+                            
+                            <div>
+                                <label for="weight" class="block text-sm font-medium text-gray-700 mb-1">Weight (g)*</label>
+                                <input type="number" id="weight" name="Tech_Specifications[0][Weight]" step="0.01" required
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    value="<%=product.Tech_Specifications[0].Weight%>">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Images -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Product Images</label>
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Current Image</label>
+                        <div id="currentImages" class="flex flex-wrap gap-2">
+                            <!-- Current image will be inserted here -->
+                            <div class="image-preview relative w-20 h-20 rounded-md overflow-hidden border border-gray-200">
+                                <img src="<%=product.image[0].url%>" class="w-full h-full object-cover">
+                                <button type="button" onclick="removeExistingImage(this, '<!-- Image public_id will be inserted here -->')" 
+                                    class="absolute top-0 right-0 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">×</button>
+                                <input type="hidden" name="existing_image" value="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <div class="border-2 border-dashed border-gray-300 rounded-md p-4 text-center w-64">
+                            <label for="productImages" class="cursor-pointer">
+                                <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                                    <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                                <p class="text-sm text-gray-600">Click to upload new image</p>
+                                <p class="text-xs text-gray-500">PNG, JPG up to 2MB</p>
+                            </label>
+                            <input id="productImages" type="file" accept="image/*" name="new_image" class="hidden" />
+                        </div>
+                        <div id="imagePreviews" class="flex flex-wrap gap-2"></div>
+                    </div>
+                </div>
+                
+                <!-- Form Actions -->
+                <div class="flex justify-end space-x-4 pt-4">
+                    <button type="button" onclick="resetForm()" class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        Reset Changes
+                    </button>
+                    <button type="submit" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        Update Product
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <script src="/script/Admin/edit.js"></script>
+</body>
+</html>
