@@ -1,15 +1,17 @@
 const express=require('express');
 const app=express();
+require('dotenv').config();
 const { v4: uuidv4 } = require('uuid');
 const path=require('path');
 const qs = require('qs'); // For parsing nested form data
 const ejs = require('ejs');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const cookieParser = require('cookie-parser')
+const cookieParser = require('cookie-parser');
 
 const db = require('./config/db'); // MongoDB connection
- 
+const port = process.env.PORT;
+
 const authentication = require('./routes/authenticationRoutes');
 const sellerRoutes = require('./routes/sellerRoutes');
 const userRoutes = require('./routes/userRoutes');
@@ -25,6 +27,6 @@ app.use('/auth', authentication); // Use the authentication routes
 app.use('/seller', sellerRoutes); // Use the seller routes
 app.use('/', userRoutes); // Use the user routes
 
-app.listen(3000,()=>{
+app.listen(port,()=>{
     console.log('Server is running on port 3000');
 });

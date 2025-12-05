@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-
+    const dbUrl = process.env.MONGO_URL;
     main()
         .then(() =>{
             console.log("✅ MongoDB connected successfully");
@@ -10,7 +10,7 @@ const mongoose = require('mongoose');
         });
     
     async function main() {
-        await mongoose.connect('mongodb://127.0.0.1:27017/joy');
+        await mongoose.connect(dbUrl);
     }
 
 module.exports = mongoose.connection;    

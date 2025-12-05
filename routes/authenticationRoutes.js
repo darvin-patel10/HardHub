@@ -7,6 +7,8 @@ const User = require('../models/users');
 
 // ------------------------------- User Registration ---------------------------
 
+const key = process.env.SECRET_KEY;
+
 router.post('/registor', async (req, res) => {
     const { username, email, phone, password } = req.body;
 
@@ -35,7 +37,7 @@ router.post('/registor', async (req, res) => {
                     console.log("✅ User saved successfully", user);
 
                     // Generate JWT token
-                    let token = jwt.sign({ email:email, userId: user.userId},"11May75@");
+                    let token = jwt.sign({ email:email, userId: user.userId}, key);
                     console.log("✅ JWT token generated successfully");
 
                     res.cookie('token', token);
