@@ -2,13 +2,17 @@ const express = require('express');
 const app = express();
 const { v4: uuidv4 } = require('uuid');
 const session = require('express-session');
+const authToken = require('../middleware/validation');
 
+app.use(authToken);
 app.use(session({
   secret: 'yourSecretKey', // Change this to a strong secret
   resave: false,
   saveUninitialized: true,
   cookie: { secure: false } // true only if using HTTPS
 }));
+
+
 
 const User = require('../models/users');
 const Product = require('../models/Product');

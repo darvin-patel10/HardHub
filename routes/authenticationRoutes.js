@@ -70,10 +70,10 @@ router.post('/login', async (req, res) => {
     bcrypt.compare(password, user.password, (err, result) => {
         if(result) {
             // Passwords match
-            // let token = jwt.sign({ email: user.email, userId: user.userId }, "11May75@");
-            // console.log("✅ JWT token generated successfully");
+            let token = jwt.sign({ email: user.email, userId: user.userId }, "11May75@");
+            console.log("✅ JWT token generated successfully");
 
-            // res.cookie('token', token);
+            res.cookie('token', token);
             console.log("✅ Cookie set with token");
 
             res.redirect(`/product/${user.userId}`);
