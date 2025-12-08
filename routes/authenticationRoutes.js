@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router(); // ✅ Use router instead of app
-const { v4: uuidv4 } = require('uuid');
+// const { v4: uuidv4 } = require('uuid');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/users');
@@ -15,7 +15,8 @@ router.post('/registor', async (req, res) => {
     // Check if the user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-        return res.status(400).send('User already exists with this email');
+        res.status(400).send('User already exists with this email');
+        return res.redirect('/auth/signup');
     }
 
     try {
@@ -27,7 +28,7 @@ router.post('/registor', async (req, res) => {
                 console.log("✅ Password hashed successfully", hash);
                 const user = new User({
                     username,
-                    userId: uuidv4(),
+                    // userId,
                     email,
                     phone,
                     password: hash, // Store the hashed password
@@ -37,7 +38,7 @@ router.post('/registor', async (req, res) => {
                     console.log("✅ User saved successfully", user);
 
                     // Generate JWT token
-                    let token = jwt.sign({ email:email, userId: user.userId}, key);
+                    let token = jwt.sign({ email:email, userId: user._id}, key);
                     console.log("✅ JWT token generated successfully");
 
                     res.cookie('token', token);
@@ -51,6 +52,7 @@ router.post('/registor', async (req, res) => {
 
     } catch (err) {
         console.error("❌ Error during user registration:", err);
+        res.redirect('/auth/signup');
         res.status(500).send('Error registering user');
     }
 });
@@ -70,13 +72,13 @@ router.post('/login', async (req, res) => {
     bcrypt.compare(password, user.password, (err, result) => {
         if(result) {
             // Passwords match
-            let token = jwt.sign({ email: user.email, userId: user.userId }, "11May75@");
+            let token = jwt.sign({ email: user.email, userId: user._id }, key);
             console.log("✅ JWT token generated successfully");
 
             res.cookie('token', token);
             console.log("✅ Cookie set with token");
 
-            res.redirect(`/product/${user.userId}`);
+            res.redirect(`/product/${user._id}`);
         } else {
             // Passwords do not match
             return res.send('Incorrect password');

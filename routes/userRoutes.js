@@ -26,6 +26,7 @@ app.get('/product-details/:id',async(req,res)=>{
     const product = await Product.findOne({ id: productID });
     let cart = await Cart.findOne({});
     res.render('customer/product-details.ejs', { 
+        userId : req.user._id,
         product,
         totalUniqueItems: cart.items.length
     });
@@ -45,6 +46,7 @@ app.post('/cart/add/:id', async (req, res) => {
         if (!cart) {
             console.log("No cart found, creating a new one...");
             cart = new Cart({
+                userId: req.user._id,
                 items: [{
                     productId,
                     name,
@@ -317,8 +319,9 @@ app.get('/about',(req,res)=>{
     res.render('customer/about.ejs');
 });
 
-app.get('/cart', async(req,res)=>{
-    const cartArray = await Cart.find({});
+app.get('/cart/:id', async(req,res)=>{
+    const userId = req.params.id;
+    const cartArray = await Cart.findById({userId});
     const cart = cartArray[0];
  // Assuming you want to fetch the first cart
     res.render('customer/cart.ejs', { cartItems: cart.items,
@@ -332,7 +335,7 @@ app.get('/cart', async(req,res)=>{
 app.get('/deshbord/:id',async(req,res)=>{
     const userId = req.params.id;
 
-    let user = await User.findOne({ userId: userId });
+    let user = await User.findOne({ _id: userId });
     if (!user) {
         return res.status(404).send('User not found');
     }
