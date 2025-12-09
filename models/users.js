@@ -2,16 +2,16 @@ const mongoose = require('mongoose');
 const { v4: uuidv4 } = require('uuid'); // Add this at top
 
 const userSchema = new mongoose.Schema({
-    username: {
-        type: String,
-        required: true,
-        trim: true,
-    },
     userId: {
         type: String,
         required: true,
         default: uuidv4, // Generate a unique ID by default 
         unique: true, // Ensure each user has a unique ID
+    },
+    username: {
+        type: String,
+        required: true,
+        trim: true,
     },
     email: {
         type: String,

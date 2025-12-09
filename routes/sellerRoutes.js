@@ -1,5 +1,5 @@
 const express = require('express');
-const app = express();
+const router = express.Router();
 const { v4: uuidv4 } = require('uuid');
 const qs = require('qs'); // For parsing nested form data
 
@@ -10,16 +10,17 @@ const upload = require('../middleware/uplode-image');
 
 
 //------------------------------- Create New product---------------------------
-app.get('/product/new', (req, res) => {
+router.get('/product/new', (req, res) => {
     res.render('Admin/add.ejs');
 })
 
-app.post('/product',upload.single("images") ,async (req, res) => {
+router.post('/product',upload.single("images") ,async (req, res) => {
     const parseBody = qs.parse(req.body); // ✅ deeply parses nested fields
     
     const newProduct = new Product({
         // Generate a unique ID for the product
-        id: uuidv4(),
+        productid: uuidv4(),
+        userId: req.user?.id, // Assuming req.user contains authenticated user info
         // image: `/image/Product/${req.file.filename}`,
         image: [{
             public_id: req.file.filename, // Assuming you want to store the filename as public_id
@@ -49,7 +50,7 @@ app.post('/product',upload.single("images") ,async (req, res) => {
 
 //------------------------------- Edit Product---------------------------
 
-app.post('/product/update/:id',upload.single("new_image"),async(req,res) =>{
+router.post('/product/update/:id',upload.single("new_image"),async(req,res) =>{
     const productId = req.params.id;
     
     let product = await Product.findById(productId);
@@ -88,7 +89,7 @@ app.post('/product/update/:id',upload.single("new_image"),async(req,res) =>{
 });
 
 //------------------------------- Delete Product---------------------------
-app.post('/product/delete/:id', async (req, res) => {
+router.post('/product/delete/:id', async (req, res) => {
     const productId = req.params.id;
     try {
         const product = await Product.findByIdAndDelete(productId);
@@ -105,7 +106,7 @@ app.post('/product/delete/:id', async (req, res) => {
 });
 
 //------------------------------- Order Management---------------------------
-app.post('/order/delete/:id', async (req, res) => {
+router.post('/order/delete/:id', async (req, res) => {
     const orderId = req.params.id;
     try {
         const order = await Buy.findOneAndDelete({ orderid: orderId });
@@ -121,7 +122,7 @@ app.post('/order/delete/:id', async (req, res) => {
 });
 
 // ------------------------------- View All Products---------------------------
-app.get('/', async(req, res) => {
+router.get('/', async(req, res) => {
     const orders = await Buy.find({});
     const allproducts = await Product.find({});
     res.render('Admin/Deshbord.ejs', { 
@@ -130,7 +131,7 @@ app.get('/', async(req, res) => {
      });
 });    
 
-app.get('/product/:id', async (req, res) => {
+router.get('/product/:id', async (req, res) => {
     const productId = req.params.id;
     const product = await Product.findById(productId);
     if (!product) {
@@ -139,7 +140,7 @@ app.get('/product/:id', async (req, res) => {
     res.render('Admin/product-details.ejs', { product });
 });
 
-app.get('/order/details/:id',async(req, res) =>{
+router.get('/order/details/:id',async(req, res) =>{
     const orderId = req.params.id;
     const order = await Buy.findOne({orderid: orderId });
     if (!order) {
@@ -148,7 +149,7 @@ app.get('/order/details/:id',async(req, res) =>{
     res.render('Admin/order-details.ejs', { order });
 });
 
-app.get('/product/edit/:id', async (req, res) => {
+router.get('/product/edit/:id', async (req, res) => {
     const productId = req.params.id;
     const product = await Product.findById(productId);
     if (!product) {
@@ -157,15 +158,15 @@ app.get('/product/edit/:id', async (req, res) => {
     res.render('Admin/edit.ejs', { product });
 });
 
-app.get('/orders', async(req, res) => {
+router.get('/orders', async(req, res) => {
     const orders = await Buy.find({});
     res.render('Admin/orders.ejs', { orders });
 });
 
-app.get('/products', async(req, res) => {
+router.get('/products', async(req, res) => {
     const allproducts = await Product.find({});
     res.render('Admin/Products-list.ejs', { allproducts });
 });
 
 
-module.exports = app;
+module.exports = router;

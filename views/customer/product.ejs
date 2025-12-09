@@ -57,13 +57,13 @@
         <!-- Aldrop -->
          <% for (let product of allproducts) {%>
         <div class="product-card" data-category="<%=product.category%>">
-            <a href="/product-details/<%=product.id%>">
+            <a href="/product-details/<%=product.productid%>">
                 <img src="<%=product.image[0].url%>" alt="<%=product.name%>">
                 <div class="product-name"><%=product.name%></div>
                 <div class="price"><%=product.price%></div>
                 <p><%=product.small_description%> </p>
             </a>
-            <form action="/cart/add/<%=product.id%>" method="POST" onsubmit="copyQuantity(this)">
+            <form action="/cart/add/<%=product.productid%>" method="POST" onsubmit="copyQuantity(this)">
                 <input type="hidden" name="quantity">
                 <input type="hidden" name="productId" value="<%=product.id%>">
                 <input type="hidden" name="name" value="<%=product.name%>">
@@ -82,6 +82,6 @@
         <p>Contact: sales@joyhardware.com | Phone: +91 XXXXXXXXXX</p>
     </footer>
 
-    <script src="script/customer/product.js"></script>
+    <script src="/script/customer/product.js"></script>
 </body>
 </html>

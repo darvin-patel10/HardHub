@@ -3,10 +3,14 @@ const mongoose = require('mongoose');
 const productSchema = new mongoose.Schema({
     // Define the schema for the product
 
-    id: {
+    productid: {
         type: String,
         required: true,
         unique: true // Ensure each product has a unique ID
+    },
+    userId: {
+        type: String,
+        required: true
     },
     image:[
         {

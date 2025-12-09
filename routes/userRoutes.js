@@ -1,11 +1,11 @@
 const express = require('express');
-const app = express();
+const router = express.Router();
 const { v4: uuidv4 } = require('uuid');
 const session = require('express-session');
 const authToken = require('../middleware/validation');
 
-app.use(authToken);
-app.use(session({
+router.use(authToken);
+router.use(session({
   secret: 'yourSecretKey', // Change this to a strong secret
   resave: false,
   saveUninitialized: true,
@@ -21,27 +21,48 @@ const Buy = require('../models/checkout'); // Assuming you have a Buy model for 
 
 //Show Product
 
-app.get('/product-details/:id',async(req,res)=>{
-    const productID = req.params.id;
-    const product = await Product.findOne({ id: productID });
-    let cart = await Cart.findOne({});
+router.get('/product-details/:id',async(req,res)=>{
+    const productId = req.params.id;
+    const product = await Product.findOne({ productid: productId });
+    if (!product) {
+       console.log('Product not found');
+    }  
+    // let cart = await Cart.findOne({ userId: req.user._id });
+    // if (!cart) {
+    //     console.log("No cart found, creating a new one...");
+    //     continue;
+    // }
+
+    let cart = null;
+    let totalUniqueItems = 0;
+    let userId = null;
+
+    // Only try to load cart if user is logged in
+    if (req.user && req.user.userId) {
+        userId = req.user.userId;
+        cart = await Cart.findOne({ userId: req.user.userId });
+
+        if (cart) {
+            totalUniqueItems = cart.items ? cart.items.length : 0;
+        }
+    }
     res.render('customer/product-details.ejs', { 
-        userId : req.user._id,
-        product,
-        totalUniqueItems: cart.items.length
+        userId,
+        product: product,
+        totalUniqueItems
     });
 });
 
 //--------------------- Add to cart-------------------------------
 
-app.post('/cart/add/:id', async (req, res) => {
+router.post('/cart/add/:id', async (req, res) => {
     const { productId, name, price, quantity, image } = req.body;
 
     const priceNum = parseFloat(price);
     const quantityNum = parseInt(quantity);
 
     try {
-        let cart = await Cart.findOne({}); // find cart (for now, just fetch first cart)
+        let cart = await Cart.findOne({userId: req.user._id}); // find cart (for now, just fetch first cart)
 
         if (!cart) {
             console.log("No cart found, creating a new one...");
@@ -85,7 +106,7 @@ app.post('/cart/add/:id', async (req, res) => {
         await cart.save();
         console.log("✅ Cart saved:", cart);
 
-        res.redirect('/cart');
+        res.redirect(`/cart/${req.user._id}`);
     } catch (err) {
         console.error("❌ Error adding to cart:", err);
         res.status(500).send("❌ Error adding to cart",err);
@@ -94,7 +115,7 @@ app.post('/cart/add/:id', async (req, res) => {
 
 // Remove item from cart
 
-app.post('/cart/remove/:id', async (req, res) => {
+router.post('/cart/remove/:id', async (req, res) => {
     const productId = req.params.id;
 
     try {
@@ -102,7 +123,7 @@ app.post('/cart/remove/:id', async (req, res) => {
 
         if (!cart) {
             console.log("No cart found.");
-            return res.redirect('/cart');
+            return res.redirect(`/cart/${req.user._id}`);
         }
 
         const itemIndex = cart.items.findIndex(item => item.productId === productId);
@@ -124,7 +145,7 @@ app.post('/cart/remove/:id', async (req, res) => {
         await cart.save();
         console.log("✅ Cart updated:", cart);
 
-        res.redirect('/cart');
+        res.redirect(`/cart/${req.user._id}`);
     } catch (err) {
         console.error("❌ Error removing from cart:", err);
         res.status(500).send("❌ Error removing from cart");
@@ -135,7 +156,7 @@ app.post('/cart/remove/:id', async (req, res) => {
 
 //--------------------- Buy-------------------------------
 
-app.post('/product/checkout/:id', async (req, res) => {
+router.post('/product/checkout/:id', async (req, res) => {
     const {productId, name, price, quantity, image}= req.body;
 
      // Store product data in session
@@ -158,7 +179,7 @@ app.post('/product/checkout/:id', async (req, res) => {
     }        
 });
 
-app.post('/product/buy/:id', async (req, res) => {
+router.post('/product/buy/:id', async (req, res) => {
     const checkoutData = req.session.checkoutData;
 
     if (!checkoutData) {
@@ -205,7 +226,7 @@ app.post('/product/buy/:id', async (req, res) => {
     }
 });
 
-app.post('/product/confirm/:id', async (req, res) => {
+router.post('/product/confirm/:id', async (req, res) => {
     const buyData = req.session.buyData;
     if (!buyData) {
         return res.status(400).send("Session expired. Please start checkout again.");
@@ -271,7 +292,7 @@ app.post('/product/confirm/:id', async (req, res) => {
 //--------------------- Routes for customer views-------------------------------
 // All Routes
 
-app.get('/chekout/:id', async(req,res)=>{
+router.get('/chekout/:id', async(req,res)=>{
     const cartArray = await Cart.find({});
     const cart = cartArray[0]; // Assuming you want to fetch the first cart
 
@@ -285,7 +306,7 @@ app.get('/chekout/:id', async(req,res)=>{
     });
 });
 
-app.get('/payment/:id',async(req,res)=>{
+router.get('/payment/:id',async(req,res)=>{
     const cartArray = await Cart.find({});
     const cart = cartArray[0];
 
@@ -298,7 +319,7 @@ app.get('/payment/:id',async(req,res)=>{
     });
 });
 
-app.get('/order-confirmation/:id', async (req, res) => {
+router.get('/order-confirmation/:id', async (req, res) => {
     const cartArray = await Cart.find({});
     const cart = cartArray[0]; // Assuming you want to fetch the first cart
     const orderId = req.params.id;
@@ -311,20 +332,49 @@ app.get('/order-confirmation/:id', async (req, res) => {
      });  
 });
 
-app.get('/contact',(req,res)=>{
+router.get('/contact',(req,res)=>{
     res.render('customer/contect.ejs');
 });
 
-app.get('/about',(req,res)=>{
+router.get('/about',(req,res)=>{
     res.render('customer/about.ejs');
 });
 
-app.get('/cart/:id', async(req,res)=>{
+router.get('/cart/:id', async(req,res)=>{
+    //   const userId = req.params.id;
+
+    // try {
+    //     const cart = await Cart.findOne({ userId });
+
+    //     if (!cart) {
+    //         return res.render('customer/cart.ejs', {
+    //             cartItems: [],
+    //             total: 0,
+    //             subtotal: 0,
+    //             totalPrice: 0,
+    //             totalUniqueItems: 0
+    //         });
+    //     }
+
+    //     res.render('customer/cart.ejs', {
+    //         cartItems: cart.items,
+    //         total: cart.totalPrice,
+    //         subtotal: cart.subtotal,
+    //         totalPrice: cart.totalPrice,
+    //         totalUniqueItems: cart.items.length
+    //     });
+
+    // } catch (err) {
+    //     console.error("Error loading cart:", err);
+    //     res.status(500).send("Error loading cart");
+    // }
+
     const userId = req.params.id;
-    const cartArray = await Cart.findById({userId});
+    const cartArray = await cart.findOne({ userId });
     const cart = cartArray[0];
- // Assuming you want to fetch the first cart
-    res.render('customer/cart.ejs', { cartItems: cart.items,
+//  Assuming you want to fetch the first cart
+    res.render('customer/cart.ejs', { 
+        cartItems: cart.items,
         total:cart.total, 
         subtotal: cart.subtotal, 
         totalPrice: cart.totalPrice, 
@@ -332,7 +382,7 @@ app.get('/cart/:id', async(req,res)=>{
     });
 });
 
-app.get('/deshbord/:id',async(req,res)=>{
+router.get('/deshbord/:id',async(req,res)=>{
     const userId = req.params.id;
 
     let user = await User.findOne({ _id: userId });
@@ -343,7 +393,7 @@ app.get('/deshbord/:id',async(req,res)=>{
     res.render('customer/deshbord.ejs', { user });
 }); 
 
-app.get('/product/:id',async(req,res)=>{
+router.get('/product/:id',async(req,res)=>{
     const userId = req.params.id;
     // Fetch all products from the database
     const allproducts = await Product.find({});
@@ -352,8 +402,8 @@ app.get('/product/:id',async(req,res)=>{
 });
 
 
-app.get('/',(req,res)=>{
+router.get('/',(req,res)=>{
     res.render('customer/index.ejs');
 });
 
-module.exports = app;
+module.exports = router;
