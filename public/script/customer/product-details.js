@@ -4,8 +4,10 @@
         }
 
         function copyQuantity(form) {
-            const sharedQty = document.getElementById('quantity').value;
-            form.querySelector('input[name="quantity"]').value = sharedQty;
+            const quantityInput = document.getElementById('quantity');
+            const hiddenQuantity = form.querySelector('input[name="quantity"]');
+            hiddenQuantity.value = quantityInput.value;
+            return true;
         }
 
         // Add to cart functionality

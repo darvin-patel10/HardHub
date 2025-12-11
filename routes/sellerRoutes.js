@@ -20,7 +20,7 @@ router.post('/product',upload.single("images") ,async (req, res) => {
     const newProduct = new Product({
         // Generate a unique ID for the product
         productid: uuidv4(),
-        userId: req.user?.id, // Assuming req.user contains authenticated user info
+        userId: req.user?.id, // Assuming req.user contains authenticated user infoanonymous
         // image: `/image/Product/${req.file.filename}`,
         image: [{
             public_id: req.file.filename, // Assuming you want to store the filename as public_id

@@ -18,7 +18,7 @@
             <li><a href="/product">Products</a></li>
             <li><a href="/about">About Us</a></li>
             <li><a href="/contact">Contact</a></li>
-            <li><a href="/cart/<%=product.userId%>">Cart (<%=totalUniqueItems%>)</a></li>
+            <li><a href="/cart/<%=userId%>">Cart (<%=totalUniqueItems%>)</a></li>
         </ul>
     </nav>
 
@@ -60,9 +60,9 @@
         <input type="number" id="quantity" value="1" min="1" max="10">
     </div>
     <div class="btn-b-c">
-        <form action="/cart/add/<%=product.userId%>" method="POST" onsubmit="copyQuantity(this)">
+        <form action="/cart/add/<%=userId%>" method="POST" onsubmit="copyQuantity(this)">
             <input type="hidden" name="quantity">
-            <input type="hidden" name="productId" value="<%=product.id%>">
+            <input type="hidden" name="productId" value="<%= product.productid %>">
             <input type="hidden" name="name" value="<%=product.name%>">
             <input type="hidden" name="price" value="<%=product.price%>">
             <input type="hidden" name="image" value="<%=product.image[0].url%>">

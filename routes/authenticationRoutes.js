@@ -28,7 +28,7 @@ router.post('/registor', async (req, res) => {
                 console.log("✅ Password hashed successfully", hash);
                 const user = new User({
                     username,
-                    // userId,
+                    // userId : user._id,
                     email,
                     phone,
                     password: hash, // Store the hashed password
@@ -38,7 +38,7 @@ router.post('/registor', async (req, res) => {
                     console.log("✅ User saved successfully", user);
 
                     // Generate JWT token
-                    let token = jwt.sign({ email:email, userId: user._id}, key);
+                    let token = jwt.sign({ email:user.email, userId: user.userId}, key);
                     console.log("✅ JWT token generated successfully");
 
                     res.cookie('token', token);
