@@ -22,8 +22,10 @@ const Buy = require('../models/checkout'); // Assuming you have a Buy model for 
 //Show Product
 
 router.get('/product-details/:id',async(req,res)=>{
+    console.log("Fetching product details for ID:", req.params.id);
     try {
     const productId = req.params.id;
+    console.log("Product ID:", productId);
     const product = await Product.findOne({ productid: productId });
     if (!product) {
        console.log('Product not found');
@@ -34,18 +36,35 @@ router.get('/product-details/:id',async(req,res)=>{
     let userId = null;
     
     // Only try to load cart if user is logged in
-    if (req.user && req.user.userId) {
-        userId = req.user.userId;
-         cart = await Cart.findOne({ userId: userId });
+    // if (req.user && req.user.userId) {
+    //     userId = req.user._id;
+    //     console.log("User ID for product details:", userId);
+        
+    //     //Find User
+    //      const user = await User.findById(userId);
 
-        // if (cart) {
-        totalUniqueItems = cart.items.length;
-        // }
-    }
+    //      if(user){
+    //         console.log("User found for product details:", userId);
+    //         cart = await Cart.findOne({ userId: userId });
+    //      }
+    //      else {
+    //         console.log("User not found, redirecting to signin:", userId);
+    //         // res.clearCookie('token');
+    //         // redirect('/auth/signin');
+    //      }
+
+    //     if (cart) {
+    //         totalUniqueItems = cart.items.length;
+    //     }
+    // }
+    userId = req.user._id;
+    console.log("User ID for product details:", userId);
+    // const user = await User.findById(userId);
+    cart = await Cart.findOne({ userId: userId });
     res.render('customer/product-details.ejs', { 
         userId,
         product: product,
-        totalUniqueItems
+        totalUniqueItems: cart ? cart.items.length : 0
     });
     } catch (err) {
         console.error("❌ Error loading product details:", err);
@@ -53,12 +72,13 @@ router.get('/product-details/:id',async(req,res)=>{
     }
 });
 
-//--------------------- Add to cart-------------------------------
+//======================================== Add to cart ===============================
 
 router.post('/cart/add/:id', async (req, res) => {
 
     try {
     const { productId, name, price, quantity, image } = req.body;
+    console.log("Product details:", req.body);
     
     // Validate required fields
     if (!productId || !name || !price || !quantity || !image) {
@@ -69,19 +89,28 @@ router.post('/cart/add/:id', async (req, res) => {
     const quantityNum = parseInt(quantity);
     
     // Get user ID - use req.user.userId from your User model
-    const userId = req.user.userId;
+    const userId = req.params.id;
+    console.log("User ID for adding to cart:", userId);
     
     if (!userId) {
       return res.status(401).send('User not authenticated');
     }
 
+    //Find User
+    const user = await User.findById(userId);
+    
+    if (!user) {
+        return res.status(404).send('User not found');      
+    }
+    console.log("Creating new cart for user:", userId,user);
+
     // Find or create cart for this user
-    let cart = await Cart.findOne({ userId: userId });
+    let cart = await Cart.findOne({ userId });
 
     if (!cart) {
-      console.log("Creating new cart for user:", userId);
+      
       cart = new Cart({
-        userId: userId,
+        userId: req.params.id,
         items: [{
             productId,
             name,
@@ -92,6 +121,7 @@ router.post('/cart/add/:id', async (req, res) => {
         }]
       });
     }
+    console.log("User found for cart:", userId);
     console.log("Cart found/created for user:", cart);
 
     // Check if product already exists in cart
@@ -181,7 +211,7 @@ router.post('/cart/remove/:id', async (req, res) => {
 
 
 
-//--------------------- Buy-------------------------------
+//========================================Buying Routes========================================//
 
 router.post('/product/checkout/:id', async (req, res) => {
     const {productId, name, price, quantity, image}= req.body;
@@ -264,6 +294,7 @@ router.post('/product/confirm/:id', async (req, res) => {
 
     try {
         let buy = new Buy({
+        userId: req.user._id,    
         orderid: orderId,
         productId: buyData.productId,
         firstname: buyData.firstname,
@@ -341,6 +372,7 @@ router.get('/payment/:id',async(req,res)=>{
         return res.redirect(`/product/${req.params.id}`);
     }
     res.render('customer/payment.ejs',{
+        userId: req.user._id,
         order: req.session.buyData,
         totalUniqueItems: cart.items.length
     });
@@ -354,6 +386,7 @@ router.get('/order-confirmation/:id', async (req, res) => {
     const order = await Buy.findOne({ orderid: orderId });
     console.log("Order details:", order);
     res.render('customer/OrderConfarm.ejs', { 
+        userId: req.user._id,
         order,
         totalUniqueItems: cart.items.length
      });  
@@ -372,8 +405,25 @@ router.get('/cart/:id', async(req,res)=>{
     console.log("Fetching cart for user:", req.params.id);
     const userId = req.params.id;
     console.log("Fetching cart for user:", userId);
+
+    if(!userId) {
+        console.log("User ID not found, redirecting to signin");
+        // res.clearCookie('token');
+        // redirect('/auth/signin');
+    }
     const cart = await Cart.findOne({ userId });
     
+    if (!cart) {
+        console.log("No cart found for user:", userId);
+        return res.render('customer/cart.ejs', {
+            userId,
+            cartItems: [],
+            total: 0,
+            subtotal: 0,
+            totalPrice: 0,
+            totalUniqueItems: 0   
+        });
+    }
 
     // If cart found → render cart normally
     console.log("Cart found for user:", userId, cart);
@@ -389,13 +439,19 @@ router.get('/cart/:id', async(req,res)=>{
 
 router.get('/deshbord/:id',async(req,res)=>{
     const userId = req.params.id;
+    console.log("User ID for deshbord:", userId);
 
     let user = await User.findOne({ _id: userId });
     if (!user) {
         return res.status(404).send('User not found');
     }
+
+    const buyOrders = await Buy.find({ userId: userId });
+    console.log("Buy orders for user:", buyOrders);
+    // user = user.toObject();
+    // user.buyOrders = buyOrders;
     // Fetch all products from the database
-    res.render('customer/deshbord.ejs', { user });
+    res.render('customer/deshbord.ejs', { user , buyOrders});
 }); 
 
 router.get('/product/:id',async(req,res)=>{
@@ -403,7 +459,7 @@ router.get('/product/:id',async(req,res)=>{
     console.log("User ID for product listing:", userId);
     // Fetch all products from the database
     const allproducts = await Product.find({});
-    // console.log(allproducts);
+    console.log(allproducts);
     res.render('customer/product.ejs', { allproducts, userId});
 });
 

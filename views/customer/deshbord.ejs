@@ -16,7 +16,7 @@
     <nav>
         <!-- Left Side Links -->
         <ul class="nav-links">
-            <li><a href="/">Home</a></li>
+            <li><a href="/product/<%= user._id %>">Home</a></li>
             <li><a href="/product">Products</a></li>
             <li><a href="/about">About Us</a></li>
             <li><a href="/contact">Contact</a></li>
@@ -61,41 +61,33 @@
             </div>
             
             <!-- Recent Orders -->
-            <div class="card">
+
+            <% for (let order of buyOrders) {%>
+                <div class="card">
                 <h3>Recent Orders</h3>
                 <div class="order-item">
                     <div>
-                        <strong>Order #1001</strong>
-                        <p>3 items - ₹2,450</p>
+                        <strong>Order <%=order.orderid || 'N/A'%></strong>
+                        <p><%=order.items?.length || 0%> items - ₹<%=order.totalPrice || 0%></p>
                     </div>
-                    <span class="order-status status-completed">Completed</span>
-                </div>
-                <div class="order-item">
-                    <div>
-                        <strong>Order #1002</strong>
-                        <p>5 items - ₹3,780</p>
-                    </div>
-                    <span class="order-status status-shipped">Shipped</span>
-                </div>
-                <div class="order-item">
-                    <div>
-                        <strong>Order #1003</strong>
-                        <p>2 items - ₹1,250</p>
-                    </div>
-                    <span class="order-status status-pending">Pending</span>
+                    <span class="order-status status-completed">Pending</span>
                 </div>
                 <a href="/orders" class="btn">View All Orders</a>
             </div>
             
+            <% } %>
+            
+            
             <!-- Quick Actions -->
             <div class="card">
                 <h3>Quick Actions</h3>
-                <a href="/product" class="btn" style="display: block; margin-bottom: 0.5rem;">Shop Products</a>
-                <a href="/wishlist" class="btn" style="display: block; margin-bottom: 0.5rem; background-color: #2ecc71;">View Wishlist</a>
-                <a href="/support" class="btn" style="display: block; background-color: #e74c3c;">Contact Support</a>
+                <a href="/product/<%= user.userId %>" class="btn" style="display: block; margin-bottom: 0.5rem;">Shop Products</a>
+                <a href="/cart/<%=user.userId%>" class="btn" style="display: block; margin-bottom: 0.5rem; background-color: #2ecc71;">View Wishlist</a>
+                <a href="/contact" class="btn" style="display: block; background-color: #e74c3c;">Contact Support</a>
                 <form action="/auth/logout" method="POST" style="display: inline;">
                     <button type="submit" class="btn" style="display: block; background-color: rgb(0, 102, 255);">Log out</button>
                 <!-- <a  class="btn" style="display: block; background-color: rgb(0, 229, 255);"><button type="submit">Log out</button></a> -->
+                </form>
             </div>
         </div>
     </div>

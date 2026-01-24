@@ -11,7 +11,7 @@ const remove = document.querySelectorAll('.remove-btn');
                 if (this.textContent === '+' && value < 10) {
                     input.value = value + 1;
                     
-                } else if (this.textContent === '-' && value > 1) {
+                } else if (this.textContent === '-' && value > 0) {
                     input.value = value - 1;
                 }
                 
@@ -22,7 +22,7 @@ const remove = document.querySelectorAll('.remove-btn');
         // Quantity input validation
         qunInput.forEach(input => {
             input.addEventListener('change', function() {
-                if (this.value < 1) this.value = 1;
+                if (this.value < 0) this.value = 1;
                 if (this.value > 10) this.value = 10;
                 updateCartTotals();
             });

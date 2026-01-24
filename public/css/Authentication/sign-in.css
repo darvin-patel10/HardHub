@@ -1,34 +1,91 @@
 /* Custom styles to match your home page */
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-        .nav {
-            background: #34495e;
-        }
-        .btn-primary {
-            background: #3498db;
-        }
-        .btn-primary:hover {
-            background: #2980b9;
-        }
-        .btn-secondary {
-            background: #2ecc71;
-        }
-        .btn-secondary:hover {
-            background: #27ae60;
-        }
-        main {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        .login-container {
-            min-height: 60vh;
-            display: flex;
-            align-items: center;
-        }
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.nav {
+    background: #34495e;
+}
+
+.btn-primary {
+    background: #3498db;
+}
+
+.btn-primary:hover {
+    background: #2980b9;
+}
+
+.btn-secondary {
+    background: #2ecc71;
+}
+
+.btn-secondary:hover {
+    background: #27ae60;
+}
+
+main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.login-container {
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+}
+
+/* Custom styles for user type selection */
+input[type="radio"] + label {
+    transition: all 0.2s ease;
+}
+
+input[type="radio"]:checked + label {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* Buyer/Seller icon colors */
+#buyer:checked + label svg {
+    color: #3b82f6; /* blue-600 */
+}
+
+#seller:checked + label svg {
+    color: #10b981; /* green-600 */
+}
+
+/* Mobile responsiveness */
+@media (max-width: 640px) {
+    .login-container > div {
+        margin: 1rem;
+        padding: 1.5rem;
+    }
+    
+    input[type="radio"] + label {
+        padding: 0.75rem;
+    }
+    
+    input[type="radio"] + label svg {
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+}
+
+/* Animation for form submission */
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+}
+
+.form-submitting {
+    animation: pulse 1.5s infinite;
+}

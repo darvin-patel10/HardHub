@@ -5,7 +5,9 @@ const qs = require('qs'); // For parsing nested form data
 
 const Product = require('../models/Product');
 const Buy = require('../models/checkout');
+const User = require('../models/users');
 
+const authToken = require('../middleware/validation');
 const upload = require('../middleware/uplode-image');
 
 
@@ -20,8 +22,6 @@ router.post('/product',upload.single("images") ,async (req, res) => {
     const newProduct = new Product({
         // Generate a unique ID for the product
         productid: uuidv4(),
-        userId: req.user?.id, // Assuming req.user contains authenticated user infoanonymous
-        // image: `/image/Product/${req.file.filename}`,
         image: [{
             public_id: req.file.filename, // Assuming you want to store the filename as public_id
             url: `/image/Product/${req.file.filename}` // Adjust the URL path as needed
@@ -122,10 +122,19 @@ router.post('/order/delete/:id', async (req, res) => {
 });
 
 // ------------------------------- View All Products---------------------------
-router.get('/', async(req, res) => {
+router.get('/:id', async(req, res) => {
+    const sellerId = req.params.id;
+    console.log("Seller ID:", sellerId);
+    const seller = await User.findById(sellerId);
+    console.log("Seller Info:", seller);
+    if (!seller || seller.type !== 'seller') {
+        return res.status(404).send('Seller not found');
+    }
     const orders = await Buy.find({});
     const allproducts = await Product.find({});
     res.render('Admin/Deshbord.ejs', { 
+        sellerId,
+        seller,
         orders,
         allproducts
      });

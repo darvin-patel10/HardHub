@@ -8,10 +8,10 @@ const productSchema = new mongoose.Schema({
         required: true,
         unique: true // Ensure each product has a unique ID
     },
-    userId: {
-        type: String,
-        required: true
-    },
+    // userId: {
+    //     type: String,
+    //     required: true
+    // },
     image:[
         {
             public_id:{

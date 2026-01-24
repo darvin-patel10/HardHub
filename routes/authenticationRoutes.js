@@ -38,7 +38,7 @@ router.post('/registor', async (req, res) => {
                     console.log("✅ User saved successfully", user);
 
                     // Generate JWT token
-                    let token = jwt.sign({ email:user.email, userId: user.userId}, key);
+                    let token = jwt.sign({ email:user.email, userId: user._Id}, key);
                     console.log("✅ JWT token generated successfully");
 
                     res.cookie('token', token);
@@ -62,9 +62,17 @@ router.post('/registor', async (req, res) => {
 
 router.post('/login', async (req, res) => {
     console.log("✅ Login request received");
-    const { email, password } = req.body;
-
-    let user = await User.findOne({ email });
+    const { type, email, password } = req.body;
+    console.log("✅ Login details:", req.body);
+    console.log("✅ User type:", type, "Email:", email, "Password:", password);
+    const user = await User.findOne({ email, type });;
+    // let user;
+    // if(type === 'buyer'){
+    //     user = await User.findOne({ email, type: 'buyer' });
+    // } else if(type === 'seller'){
+    //     user = await User.findOne({ email, type: 'seller' });
+    // }
+    
     if (!user) {
         return res.send('User not found with this email');
     }
@@ -77,8 +85,12 @@ router.post('/login', async (req, res) => {
 
             res.cookie('token', token);
             console.log("✅ Cookie set with token");
-
-            res.redirect(`/product/${user._id}`);
+            if(type === 'seller'){
+                return res.redirect(`/seller/${user._id}`);
+            }
+            else {
+                return res.redirect(`/product/${user._id}`);
+            }
         } else {
             // Passwords do not match
             return res.send('Incorrect password');

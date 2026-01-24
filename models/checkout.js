@@ -2,6 +2,11 @@ const mongoose = require('mongoose');
 
 const buySchema = new mongoose.Schema({
     // Define the schema for the product
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
     orderid: {
         type: String,
         required: true,
