@@ -35,28 +35,6 @@ router.get('/product-details/:id',async(req,res)=>{
     let totalUniqueItems = 0;
     let userId = null;
     
-    // Only try to load cart if user is logged in
-    // if (req.user && req.user.userId) {
-    //     userId = req.user._id;
-    //     console.log("User ID for product details:", userId);
-        
-    //     //Find User
-    //      const user = await User.findById(userId);
-
-    //      if(user){
-    //         console.log("User found for product details:", userId);
-    //         cart = await Cart.findOne({ userId: userId });
-    //      }
-    //      else {
-    //         console.log("User not found, redirecting to signin:", userId);
-    //         // res.clearCookie('token');
-    //         // redirect('/auth/signin');
-    //      }
-
-    //     if (cart) {
-    //         totalUniqueItems = cart.items.length;
-    //     }
-    // }
     userId = req.user._id;
     console.log("User ID for product details:", userId);
     // const user = await User.findById(userId);

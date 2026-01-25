@@ -61,17 +61,8 @@ router.post('/registor', async (req, res) => {
 // ------------------------------- User Login ---------------------------
 
 router.post('/login', async (req, res) => {
-    console.log("✅ Login request received");
     const { type, email, password } = req.body;
-    console.log("✅ Login details:", req.body);
-    console.log("✅ User type:", type, "Email:", email, "Password:", password);
     const user = await User.findOne({ email, type });;
-    // let user;
-    // if(type === 'buyer'){
-    //     user = await User.findOne({ email, type: 'buyer' });
-    // } else if(type === 'seller'){
-    //     user = await User.findOne({ email, type: 'seller' });
-    // }
     
     if (!user) {
         return res.send('User not found with this email');
@@ -86,7 +77,7 @@ router.post('/login', async (req, res) => {
             res.cookie('token', token);
             console.log("✅ Cookie set with token");
             if(type === 'seller'){
-                return res.redirect(`/seller/${user._id}`);
+                return res.redirect('/seller');
             }
             else {
                 return res.redirect(`/product/${user._id}`);

@@ -13,7 +13,7 @@
         <div class="container mx-auto flex justify-between items-center">
             <h1 class="text-2xl font-bold">JOY Hardware Seller Portal</h1>
             <div class="flex items-center space-x-4">
-                <span class="text-sm">Welcome, Admin</span>
+                <span class="text-sm">Welcome, <%= seller.username %></span>
                 <button class="bg-red-500 hover:bg-red-600 px-3 py-1 rounded text-sm">Logout</button>
             </div>
         </div>
@@ -59,7 +59,7 @@
                     <div class="grid grid-cols-12 p-3 items-center order-row">
                         <div class="col-span-2 font-medium text-blue-600">#JOY-<%=order.orderid%></div>
                         <div class="col-span-3"><%=order.firstname%> <%=order.lastname%></div>
-                        <div class="col-span-2 text-sm"><%= new Date(order.createdAt).toLocaleDateString() %></div>
+                        <div class="col-span-2 text-sm"><%= new Date(order.createdAt).toLocaleDateString("en-GB") %></div>
                         <div class="col-span-2 font-medium"><%=order.totalPrice%></div>
                         <div class="col-span-2">
                             <span class="status-badge status-pending">Pending</span>

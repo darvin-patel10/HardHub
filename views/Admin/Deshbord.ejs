@@ -42,7 +42,7 @@
                 <div class="flex justify-between items-center">
                     <div>
                         <p class="text-gray-500">Total Sales</p>
-                        <h2 class="text-2xl font-bold">₹25,420</h2>
+                        <h2 class="text-2xl font-bold"><%= totalSales %></h2>
                     </div>
                     <div class="bg-blue-100 p-3 rounded-full">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -58,7 +58,7 @@
                 <div class="flex justify-between items-center">
                     <div>
                         <p class="text-gray-500">Total Orders</p>
-                        <h2 class="text-2xl font-bold">42</h2>
+                        <h2 class="text-2xl font-bold"><%= totalOrders %></h2>
                     </div>
                     <div class="bg-green-100 p-3 rounded-full">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -74,7 +74,7 @@
                 <div class="flex justify-between items-center">
                     <div>
                         <p class="text-gray-500">Total Products</p>
-                        <h2 class="text-2xl font-bold">28</h2>
+                        <h2 class="text-2xl font-bold"><%= totalProducts %></h2>
                     </div>
                     <div class="bg-purple-100 p-3 rounded-full">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -90,7 +90,7 @@
                 <div class="flex justify-between items-center">
                     <div>
                         <p class="text-gray-500">Low Stock</p>
-                        <h2 class="text-2xl font-bold">5</h2>
+                        <h2 class="text-2xl font-bold"><%= lowStock %></h2>
                     </div>
                     <div class="bg-red-100 p-3 rounded-full">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -106,7 +106,7 @@
         <div class="bg-white rounded-lg shadow-md p-6 mb-8">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-xl font-bold text-gray-800">Recent Orders</h2>
-                <a href="/seller/products" class="text-blue-600 hover:text-blue-800 text-sm">View All</a>
+                <a href="/seller/orders" class="text-blue-600 hover:text-blue-800 text-sm">View All</a>
             </div>
             
             <div class="overflow-x-auto">
@@ -126,11 +126,11 @@
                             <tr class="border-b">
                                 <td class="p-3">#JOY-<%=order.orderid%></td>
                                 <td class="p-3"><%=order.firstname%> <%=order.lastname%></td>
-                                <td class="p-3"><%= new Date(order.createdAt).toLocaleDateString() %></td>
+                                <td class="p-3"><%= new Date(order.createdAt).toLocaleDateString("en-GB") %></td>
                                 <td class="p-3">₹<%=order.totalPrice%></td>
                                 <td class="p-3"><span class="status-badge status-pending">Pending</span></td>
                                 <td class="p-3">
-                                    <a href="#" class="text-blue-600 hover:text-blue-800">View</a>
+                                    <a href="/seller/order/details/<%=order.orderid%>" class="text-blue-600 hover:text-blue-800">View</a>
                                 </td>
                             </tr>
                         <% } %>

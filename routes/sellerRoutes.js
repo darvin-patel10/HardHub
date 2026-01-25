@@ -8,12 +8,15 @@ const Buy = require('../models/checkout');
 const User = require('../models/users');
 
 const authToken = require('../middleware/validation');
+const isSeller = require('../middleware/checkSeller');
 const upload = require('../middleware/uplode-image');
 
+router.use(authToken);
+router.use(isSeller);
 
 //------------------------------- Create New product---------------------------
 router.get('/product/new', (req, res) => {
-    res.render('Admin/add.ejs');
+    res.render('Admin/add.ejs', { seller: req.user });
 })
 
 router.post('/product',upload.single("images") ,async (req, res) => {
@@ -122,23 +125,7 @@ router.post('/order/delete/:id', async (req, res) => {
 });
 
 // ------------------------------- View All Products---------------------------
-router.get('/:id', async(req, res) => {
-    const sellerId = req.params.id;
-    console.log("Seller ID:", sellerId);
-    const seller = await User.findById(sellerId);
-    console.log("Seller Info:", seller);
-    if (!seller || seller.type !== 'seller') {
-        return res.status(404).send('Seller not found');
-    }
-    const orders = await Buy.find({});
-    const allproducts = await Product.find({});
-    res.render('Admin/Deshbord.ejs', { 
-        sellerId,
-        seller,
-        orders,
-        allproducts
-     });
-});    
+ 
 
 router.get('/product/:id', async (req, res) => {
     const productId = req.params.id;
@@ -146,7 +133,7 @@ router.get('/product/:id', async (req, res) => {
     if (!product) {
         return res.status(404).send('Product not found');
     }
-    res.render('Admin/product-details.ejs', { product });
+    res.render('Admin/product-details.ejs', { product, seller: req.user });
 });
 
 router.get('/order/details/:id',async(req, res) =>{
@@ -155,7 +142,7 @@ router.get('/order/details/:id',async(req, res) =>{
     if (!order) {
         return res.status(404).send('Order not found');
     }
-    res.render('Admin/order-details.ejs', { order });
+    res.render('Admin/order-details.ejs', { order , seller: req.user });
 });
 
 router.get('/product/edit/:id', async (req, res) => {
@@ -164,18 +151,73 @@ router.get('/product/edit/:id', async (req, res) => {
     if (!product) {
         return res.status(404).send('Product not found');
     }
-    res.render('Admin/edit.ejs', { product });
+    res.render('Admin/edit.ejs', { product, seller: req.user });
 });
 
 router.get('/orders', async(req, res) => {
-    const orders = await Buy.find({});
-    res.render('Admin/orders.ejs', { orders });
+    const orders = await Buy.find({ }).sort({ createdAt: -1 });
+    res.render('Admin/orders.ejs', { orders, seller: req.user });
 });
 
 router.get('/products', async(req, res) => {
     const allproducts = await Product.find({});
-    res.render('Admin/Products-list.ejs', { allproducts });
+    res.render('Admin/Products-list.ejs', { allproducts, seller: req.user });
 });
+
+router.get('/', async(req, res) => {
+    const sellerId = req.user._id;
+    const seller = await User.findById(sellerId);
+    // const orders = await Buy.find({});
+    const allproducts = await Product.find({});
+
+    const [salesAgg] = await Buy.aggregate([
+      {
+        $match: {
+        //   sellerId: req.user._id,
+          status: 'completed'
+        }
+      },
+      {
+        $group: {
+          _id: null,
+          total: { $sum: "$totalAmount" }
+        }
+      }
+    ]);
+
+    const totalSales = salesAgg?.total || 0;
+
+    const totalOrders = await Buy.countDocuments({
+    //   sellerId: req.user._id
+    });
+
+    const totalProducts = await Product.countDocuments({
+    //   userId: req.user._id
+    });
+
+    const lowStock = await Product.countDocuments({
+    //   userId: req.user._id,
+      stock: { $lte: 5 }
+    });
+
+    const orders = await Buy.find({ }).sort({ createdAt: -1 }).limit(3);    // sellerId: req.user._id
+       // 🔥 latest first
+                     // optional (recent orders)
+
+
+    res.render('Admin/Deshbord.ejs', { 
+        
+        seller,
+        orders,
+        allproducts,
+
+        totalSales,
+        totalOrders,
+      totalProducts,
+      lowStock,
+      user: req.user
+     });
+});   
 
 
 module.exports = router;
