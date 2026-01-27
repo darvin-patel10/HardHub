@@ -56,41 +56,29 @@
                 <!-- Order 1 -->
                  <% if (orders && orders.length > 0) { 
                         for(let order of orders) {%>
-                    <div class="grid grid-cols-12 p-3 items-center order-row">
-                        <div class="col-span-2 font-medium text-blue-600">#JOY-<%=order.orderid%></div>
-                        <div class="col-span-3"><%=order.firstname%> <%=order.lastname%></div>
-                        <div class="col-span-2 text-sm"><%= new Date(order.createdAt).toLocaleString("en-GB") %></div>
-                        <div class="col-span-2 font-medium"><%=order.totalPrice%></div>
-                        <div class="col-span-2">
-                            <span class="status-badge status-pending"><%= order.status %></span>
-                        </div>
-                        <div class="col-span-1">
-                            <a href="/seller/order/details/<%=order.orderid%>" class="text-blue-600 hover:text-blue-800">View</a>
-                        </div>
-                    </div>
-                <% } } 
+                            <% if(order.status === 'Pending' || order.status === 'Processing'){ %>
+                                <div class="grid grid-cols-12 p-3 items-center order-row">
+                                    <div class="col-span-2 font-medium text-blue-600">#JOY-<%=order.orderid%></div>
+                                    <div class="col-span-3"><%=order.firstname%> <%=order.lastname%></div>
+                                    <div class="col-span-2 text-sm"><%= new Date(order.createdAt).toLocaleString("en-GB") %></div>
+                                    <div class="col-span-2 font-medium"><%=order.totalPrice%></div>
+                                    <div class="col-span-2">
+                                        <span class="status-badge status-pending"><%= order.status %></span>
+                                    </div>
+                                    <div class="col-span-1">
+                                        <a href="/seller/order/details/<%=order.orderid%>" class="text-blue-600 hover:text-blue-800">View</a>
+                                    </div>
+                                </div>
+                            <% } %>
+                    <% }  }
                 else { %>
                     <div class="p-4 text-gray-600 text-center">No active orders at the moment.</div>
                 <% } %>
-
-                <!-- Order 2 -->
-                <div class="grid grid-cols-12 p-3 items-center order-row">
-                    <div class="col-span-2 font-medium text-blue-600">#JOY-1002</div>
-                    <div class="col-span-3">Sharma Hardware Store</div>
-                    <div class="col-span-2 text-sm">Today, 9:30 AM</div>
-                    <div class="col-span-2 font-medium">₹12,320</div>
-                    <div class="col-span-2">
-                        <span class="status-badge status-processing">Processing</span>
-                    </div>
-                    <div class="col-span-1">
-                        <a href="order-details.html" class="text-blue-600 hover:text-blue-800">View</a>
-                    </div>
-                </div>
             </div>
         </div>
 
-        <!-- Completed Orders Section -->
-        <h2 class="section-title">Completed Orders</h2>
+        <!-- Shipped Orders Section -->
+        <h2 class="section-title">Shipped Orders</h2>
         <div class="bg-white rounded-lg shadow-md overflow-hidden mb-8">
             <div class="grid grid-cols-12 bg-gray-100 p-3 font-medium text-gray-700">
                 <div class="col-span-2">Order ID</div>
@@ -102,33 +90,62 @@
             </div>
 
             <div class="divide-y divide-gray-200">
-                <!-- Order 3 -->
-                <div class="grid grid-cols-12 p-3 items-center order-row">
-                    <div class="col-span-2 font-medium text-blue-600">#JOY-1003</div>
-                    <div class="col-span-3">Patel Construction</div>
-                    <div class="col-span-2 text-sm">Yesterday, 4:15 PM</div>
-                    <div class="col-span-2 font-medium">₹6,750</div>
-                    <div class="col-span-2">
-                        <span class="status-badge status-delivered">Delivered</span>
-                    </div>
-                    <div class="col-span-1">
-                        <a href="order-details.html" class="text-blue-600 hover:text-blue-800">View</a>
-                    </div>
-                </div>
+                <% if (orders && orders.length > 0) {
+                        for(let order of orders) {%>
+                            <% if(order.status === 'Shipped'){ %>
+                                <div class="grid grid-cols-12 p-3 items-center order-row">                    
+                                    <div class="col-span-2 font-medium text-blue-600">#JOY-<%=order.orderid%></div>
+                                    <div class="col-span-3"><%=order.firstname%> <%=order.lastname%></div>
+                                    <div class="col-span-2 text-sm"><%= new Date(order.createdAt).toLocaleString("en-GB") %></div>
+                                    <div class="col-span-2 font-medium"><%=order.totalPrice%></div>
+                                    <div class="col-span-2">
+                                        <span class="status-badge status-delivered"><%= order.status %></span>
+                                    </div>
+                                    <div class="col-span-1">
+                                        <a href="/seller/order/details/<%=order.orderid%>" class="text-blue-600 hover:text-blue-800">View</a>
+                                    </div>
+                                </div>
+                            <%}%>
+                    <% } } 
+                    else { %>
+                        <div class="p-4 text-gray-600 text-center">No Shipped orders at the moment.</div>
+                    <% } %>
+            </div>
+        </div>
 
-                <!-- Order 4 -->
-                <div class="grid grid-cols-12 p-3 items-center order-row">
-                    <div class="col-span-2 font-medium text-blue-600">#JOY-1004</div>
-                    <div class="col-span-3">Gupta Electricals</div>
-                    <div class="col-span-2 text-sm">Yesterday, 2:00 PM</div>
-                    <div class="col-span-2 font-medium">₹15,230</div>
-                    <div class="col-span-2">
-                        <span class="status-badge status-delivered">Delivered</span>
-                    </div>
-                    <div class="col-span-1">
-                        <a href="order-details.html" class="text-blue-600 hover:text-blue-800">View</a>
-                    </div>
-                </div>
+        <!-- Completed Orders Section -->
+        <h2 class="section-title">Delivered Orders</h2>
+        <div class="bg-white rounded-lg shadow-md overflow-hidden mb-8">
+            <div class="grid grid-cols-12 bg-gray-100 p-3 font-medium text-gray-700">
+                <div class="col-span-2">Order ID</div>
+                <div class="col-span-3">Customer</div>
+                <div class="col-span-2">Date</div>
+                <div class="col-span-2">Amount</div>
+                <div class="col-span-2">Status</div>
+                <div class="col-span-1">Action</div>
+            </div>
+
+            <div class="divide-y divide-gray-200">
+                <% if ( orders && orders.length > 0) {
+                        for(let order of orders) {%>
+                            <% if(order.status === 'Delivered'){ %>
+                                <div class="grid grid-cols-12 p-3 items-center order-row">                    
+                                    <div class="col-span-2 font-medium text-blue-600">#JOY-<%=order.orderid%></div>
+                                    <div class="col-span-3"><%=order.firstname%> <%=order.lastname%></div>
+                                    <div class="col-span-2 text-sm"><%= new Date(order.createdAt).toLocaleString("en-GB") %></div>
+                                    <div class="col-span-2 font-medium"><%=order.totalPrice%></div>
+                                    <div class="col-span-2">
+                                        <span class="status-badge status-delivered"><%= order.status %></span>
+                                    </div>
+                                    <div class="col-span-1">
+                                        <a href="/seller/order/details/<%=order.orderid%>" class="text-blue-600 hover:text-blue-800">View</a>
+                                    </div>
+                                </div>
+                            <%}%>
+                    <% } } 
+                    else { %>
+                        <div class="p-4 text-gray-600 text-center">No completed orders at the moment.</div>
+                    <% } %>
             </div>
         </div>
 
@@ -145,19 +162,26 @@
             </div>
 
             <div class="divide-y divide-gray-200">
-                <!-- Order 5 -->
-                <div class="grid grid-cols-12 p-3 items-center order-row">
-                    <div class="col-span-2 font-medium text-blue-600">#JOY-1005</div>
-                    <div class="col-span-3">Kumar Tools Center</div>
-                    <div class="col-span-2 text-sm">Yesterday, 11:30 AM</div>
-                    <div class="col-span-2 font-medium">₹9,870</div>
-                    <div class="col-span-2">
-                        <span class="status-badge status-cancelled">Cancelled</span>
-                    </div>
-                    <div class="col-span-1">
-                        <a href="order-details.html" class="text-blue-600 hover:text-blue-800">View</a>
-                    </div>
-                </div>
+                <% if (orders && orders.length > 0) {
+                        for(let order of orders) {%>
+                            <% if(order.status === 'Cancelled' ){ %>
+                                <div class="grid grid-cols-12 p-3 items-center order-row">
+                                    <div class="col-span-2 font-medium text-blue-600">#JOY-<%=order.orderid%></div>
+                                    <div class="col-span-3"><%=order.firstname%> <%=order.lastname%></div>
+                                    <div class="col-span-2 text-sm"><%= new Date(order.createdAt).toLocaleString("en-GB") %></div>
+                                    <div class="col-span-2 font-medium"><%=order.totalPrice%></div>
+                                    <div class="col-span-2">
+                                        <span class="status-badge status-cancelled">Cancelled</span>
+                                    </div>
+                                    <div class="col-span-1">
+                                        <a href="order-details.html" class="text-blue-600 hover:text-blue-800">View</a>
+                                    </div>
+                                </div>
+                            <%}%>
+                    <% } } 
+                    else { %>
+                        <div class="p-4 text-gray-600 text-center">No cancelled orders at the moment.</div>
+                    <% } %>
             </div>
         </div>
     </main>
