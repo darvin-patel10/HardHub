@@ -2,48 +2,26 @@
         document.addEventListener('DOMContentLoaded', function() {
             // This would normally be populated from your backend
             // For demo purposes, we'll simulate loading product data
-            loadProductData();
+            loadProductData(product);
         });
 
-        function loadProductData() {
-            // In a real application, you would fetch this data from your backend API
-            // For now, we'll use placeholder data
-            const productData = {
-                id: "12345",
-                name: "Premium Door Handle",
-                category: "Main Door Handle",
-                brand: "JOY Hardware",
-                smallDescription: "High-quality door handle with modern design",
-                key_features: ["Stainless steel construction", "Ergonomic design", "Easy installation"],
-                fullDescription: "This premium door handle is made from high-quality stainless steel with a modern, ergonomic design. It features a smooth operation mechanism and comes with all necessary hardware for easy installation. Suitable for both residential and commercial applications.",
-                price: 1299.99,
-                stock: 45,
-                techSpecs: {
-                    modelNumber: "DH-2023-PRO",
-                    modelType: "Lever Handle",
-                    material: "Stainless Steel 304",
-                    size: 4.5,
-                    weight: 350
-                },
-                image: { url: "/images/products/door-handle-1.jpg", public_id: "prod_123_img1" }
-            };
-
+        function loadProductData(product) {
             // Populate form fields
-            document.getElementById('productId').value = productData.id;
-            document.getElementById('productName').value = productData.name;
-            document.getElementById('category').value = productData.category;
-            document.getElementById('brand').value = productData.brand;
-            document.getElementById('smallDescription').value = productData.smallDescription;
-            document.getElementById('fullDescription').value = productData.fullDescription;
-            document.getElementById('price').value = productData.price;
-            document.getElementById('stock').value = productData.stock;
+            document.getElementById('productId').value = product.id;
+            document.getElementById('productName').value = product.name;
+            document.getElementById('category').value = product.category;
+            document.getElementById('brand').value = product.brand;
+            document.getElementById('smallDescription').value = product.smallDescription;
+            document.getElementById('fullDescription').value = product.fullDescription;
+            document.getElementById('price').value = product.price;
+            document.getElementById('stock').value = product.stock;
             
             // Technical specs
-            document.getElementById('modelNumber').value = productData.techSpecs.modelNumber;
-            document.getElementById('modelType').value = productData.techSpecs.modelType;
-            document.getElementById('material').value = productData.techSpecs.material;
-            document.getElementById('size').value = productData.techSpecs.size;
-            document.getElementById('weight').value = productData.techSpecs.weight;
+            document.getElementById('modelNumber').value = product.techSpecs.modelNumber;
+            document.getElementById('modelType').value = product.techSpecs.modelType;
+            document.getElementById('material').value = product.techSpecs.material;
+            document.getElementById('size').value = product.techSpecs.size;
+            document.getElementById('weight').value = product.techSpecs.weight;
 
             // Key features
             const keyFeaturesContainer = document.getElementById('keyFeaturesContainer');
