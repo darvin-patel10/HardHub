@@ -59,10 +59,10 @@
                     <div class="grid grid-cols-12 p-3 items-center order-row">
                         <div class="col-span-2 font-medium text-blue-600">#JOY-<%=order.orderid%></div>
                         <div class="col-span-3"><%=order.firstname%> <%=order.lastname%></div>
-                        <div class="col-span-2 text-sm"><%= new Date(order.createdAt).toLocaleDateString("en-GB") %></div>
+                        <div class="col-span-2 text-sm"><%= new Date(order.createdAt).toLocaleString("en-GB") %></div>
                         <div class="col-span-2 font-medium"><%=order.totalPrice%></div>
                         <div class="col-span-2">
-                            <span class="status-badge status-pending">Pending</span>
+                            <span class="status-badge status-pending"><%= order.status %></span>
                         </div>
                         <div class="col-span-1">
                             <a href="/seller/order/details/<%=order.orderid%>" class="text-blue-600 hover:text-blue-800">View</a>

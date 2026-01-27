@@ -124,6 +124,40 @@ router.post('/order/delete/:id', async (req, res) => {
     }
 });
 
+// order status update
+
+router.put('/orders/:orderId/status', async (req, res) => {
+    console.log("✅ Order status update request received");
+    try {
+        const { orderId } = req.params;
+        const { status } = req.body;
+
+        console.log("OrderId:", orderId);
+        console.log("Status:", status);
+
+        const order = await Buy.findOne({ orderid: orderId }); // ⚠️ IMPORTANT
+
+        if (!order) {
+            return res.status(404).json({ message: "Order not found" });
+        }
+
+        order.status = status;
+        await order.save();
+        return res.status(200).json({
+            message: 'Status updated successfully',
+            status: order.status
+        });
+
+        // console.log("✅ Order status updated in DB");
+
+        // res.json({ success: true });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Server error" });
+    }
+});
+
+
 // ------------------------------- View All Products---------------------------
  
 

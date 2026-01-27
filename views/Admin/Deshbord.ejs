@@ -126,9 +126,9 @@
                             <tr class="border-b">
                                 <td class="p-3">#JOY-<%=order.orderid%></td>
                                 <td class="p-3"><%=order.firstname%> <%=order.lastname%></td>
-                                <td class="p-3"><%= new Date(order.createdAt).toLocaleDateString("en-GB") %></td>
+                                <td class="p-3"><%= new Date(order.createdAt).toLocaleString("en-GB") %></td>
                                 <td class="p-3">₹<%=order.totalPrice%></td>
-                                <td class="p-3"><span class="status-badge status-pending">Pending</span></td>
+                                <td class="p-3"><span class="status-badge status-pending"><%= order.status %></span></td>
                                 <td class="p-3">
                                     <a href="/seller/order/details/<%=order.orderid%>" class="text-blue-600 hover:text-blue-800">View</a>
                                 </td>

@@ -43,7 +43,7 @@
                         Delete Order
                     </button>
                 </form>
-                <button onclick="updateOrderStatus('<%= order.orderid %>')" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md text-white text-sm font-medium">
+                <button onclick="statusManu()" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md text-white text-sm font-medium">
                     <i class="fas fa-sync-alt mr-1"></i> Update Status
                 </button>
                 <button onclick="printOrder()" class="bg-gray-600 hover:bg-gray-700 px-4 py-2 rounded-md text-white text-sm font-medium">
@@ -58,7 +58,7 @@
                 <div>
                     <p class="text-sm text-gray-500">Order Date</p>
                     <p class="font-medium text-gray-800">
-                        <%= new Date(order.createdAt).toLocaleDateString() %>
+                        <%= new Date(order.createdAt).toLocaleDateString("en-GB") %>
                     </p>
                 </div>
                 <div>
@@ -75,7 +75,9 @@
                 </div>
                 <div>
                     <p class="text-sm text-gray-500">Status</p>
-                    
+                    <p class="font-medium text-gray-800">
+                        <%= order.status %>
+                    </p>
                 </div>
             </div>
 
@@ -191,28 +193,51 @@
                     <div>
                         <p class="text-sm font-medium text-gray-900">Order placed</p>
                         <p class="text-sm text-gray-500">
-                            <%= new Date(order.createdAt).toLocaleString() %>
+                            <%= new Date(order.createdAt).toLocaleString("en-GB") %>
                         </p>
                     </div>
                 </div>
                 <!-- Additional timeline items would go here -->
                 <div class="flex items-start">
-                    <div class="flex-shrink-0 bg-gray-300 rounded-full p-1 text-white mr-3 mt-1">
-                        <i class="fas fa-truck text-xs"></i>
-                    </div>
-                    <div>
-                        <p class="text-sm font-medium text-gray-900">Order shipped</p>
-                        <p class="text-sm text-gray-500">Pending</p>
-                    </div>
+                    <% if (order.status === 'Shipped' || order.status === 'Delivered') { %>
+                        <div id="orderStatus"
+                            class="flex-shrink-0 bg-blue-500 rounded-full p-1 text-white mr-3 mt-1">
+                            <i class="fas fa-truck text-xs"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-900">Order shipped</p>
+                            <p class="text-sm text-gray-500">Shipped</p>
+                        </div>
+                    <% } else { %>
+                        <div
+                            class="flex-shrink-0 bg-gray-300 rounded-full p-1 text-white mr-3 mt-1">
+                            <i class="fas fa-truck text-xs"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-900">Order shipped</p>
+                            <p class="text-sm text-gray-500">Processing</p>
+                        </div>
+                    <% } %>
                 </div>
+
                 <div class="flex items-start">
-                    <div class="flex-shrink-0 bg-gray-300 rounded-full p-1 text-white mr-3 mt-1">
-                        <i class="fas fa-check-circle text-xs"></i>
-                    </div>
-                    <div>
-                        <p class="text-sm font-medium text-gray-900">Order delivered</p>
-                        <p class="text-sm text-gray-500">Pending</p>
-                    </div>
+                    <% if (order.status === 'Delivered') { %>
+                        <div class="flex-shrink-0 bg-blue-500 rounded-full p-1 text-white mr-3 mt-1">
+                            <i class="fas fa-check-circle text-xs"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-900">Order delivered</p>
+                            <p class="text-sm text-gray-500">Delivered</p>
+                        </div>
+                    <% } else { %>
+                        <div class="flex-shrink-0 bg-gray-300 rounded-full p-1 text-white mr-3 mt-1">
+                            <i class="fas fa-check-circle text-xs"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-900">Order delivered</p>
+                            <p class="text-sm text-gray-500">Processing</p>
+                        </div>
+                    <% } %>
                 </div>
             </div>
         </div>
@@ -245,7 +270,7 @@
                     <button type="button" onclick="closeStatusModal()" class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
                         Cancel
                     </button>
-                    <button type="button" onclick="saveOrderStatus()" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <button onclick="saveOrderStatus('<%= order.orderid %>')" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
                         Update Status
                     </button>
                 </div>
