@@ -13,6 +13,9 @@ router.use(session({
 }));
 
 
+// Middleware for file uploads
+const upload = require('../middleware/uplode-image');
+
 
 const User = require('../models/users');
 const Product = require('../models/Product');
@@ -325,6 +328,94 @@ router.post('/product/confirm/:id', async (req, res) => {
 
 
 
+//---------------------------Account Edit-----------------------------
+
+router.post('/account/edit/:id', upload.single('profilePhoto'), async (req, res) => {
+    const userId = req.params.id;
+    console.log("User ID for account edit:", userId);
+    const { profilePhoto, username, password, email, phone, dob, street1,street2, city, state, pincode, country } = req.body;
+    try {
+        let user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+        if (req.file){
+            user.profilePhoto = [{
+                public_id: req.file.filename, // Assuming you want to store the filename as public_id
+                url: `/image/Product/${req.file.filename}` // Adjust the URL path as needed
+            }];
+        }
+        if(password){
+            const bcrypt = require('bcrypt');
+            const saltRounds = 10;
+            const hash = await bcrypt.hash(password, saltRounds);
+            user.password = hash;
+        }
+
+        user.username = username || user.username;
+        user.email = email || user.email;
+        user.phone = phone || user.phone;
+        user.dob = dob || user.dob;
+        user.street1 = street1 || user.street1;
+        user.street2 = street2 || user.street2;
+        user.city = city || user.city;
+        user.state = state || user.state;
+        user.pincode = pincode || user.pincode;
+        user.country = country || user.country;
+
+        await user.save();
+        console.log("✅ User updated successfully:", user);
+        if(password){
+            res.clearCookie('token');
+        }
+        res.redirect(`/deshbord/${user._id}`);
+    } 
+    catch (err) {
+        console.error("❌ Error updating account:", err);
+    }
+});
+
+
+//------------------------Address Add and Edit-----------------------------
+
+router.post('/address/edit/:id', async (req, res) => {
+    const userId = req.params.id;
+    const { street1, street2, city, state, pincode, country } = req.body;
+
+    try {
+        let user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+
+        // ✅ Ensure address array exists
+        if (!user.address || user.address.length === 0) {
+            user.address = [{}];
+        }
+
+        // ✅ Now safe to update
+        user.address[0].street1 = street1 || user.address[0].street1;
+        user.address[0].street2 = street2 || user.address[0].street2;
+        user.address[0].city = city || user.address[0].city;
+        user.address[0].state = state || user.address[0].state;
+        user.address[0].pincode = pincode || user.address[0].pincode;
+        user.address[0].country = country || user.address[0].country;
+
+        await user.save();
+
+        console.log("✅ Address updated successfully:", user);
+
+        res.redirect(`/deshbord/${user._id}`);
+
+    } catch (err) {
+        console.error("❌ Error updating address:", err);
+        res.status(500).send("Server Error");
+    }
+});
+
+
 //--------------------- Routes for customer views-------------------------------
 // All Routes
 
@@ -417,28 +508,47 @@ router.get('/cart/:id', async(req,res)=>{
 
 router.get('/deshbord/:id',async(req,res)=>{
     const userId = req.params.id;
-    console.log("User ID for deshbord:", userId);
-
     let user = await User.findOne({ _id: userId });
     if (!user) {
         return res.status(404).send('User not found');
     }
 
     const buyOrders = await Buy.find({ userId: userId });
-    console.log("Buy orders for user:", buyOrders);
     // user = user.toObject();
     // user.buyOrders = buyOrders;
     // Fetch all products from the database
     res.render('customer/deshbord.ejs', { user , buyOrders});
 }); 
 
+//--------------------- Account Edit and Order Details -------------------------------
+router.get('/accountedit/:id',async(req,res)=>{
+    const userId = req.params.id;
+    console.log("User ID for orders:", userId);
+    let user = await User.findOne({ _id: userId });
+    res.render('customer/accountEdit.ejs', { user });
+});
+
+//--------------------- Order Details -------------------------------
+router.get('/order-details/:id',async(req,res)=>{
+    const orderId = req.params.id;
+    const userId = req.user._id;
+    console.log("Order ID for details:", orderId);
+    const order = await Buy.findOne({ orderid: orderId });
+    const user = await User.findById(userId);
+    console.log("Order details:", order);
+    res.render('customer/order-details.ejs', { order , user });
+});
+
+//--------------------- Product Listing -------------------------------
 router.get('/product/:id',async(req,res)=>{
     const userId = req.params.id;
     console.log("User ID for product listing:", userId);
+
     // Fetch all products from the database
+    const user = await User.findById(userId);
     const allproducts = await Product.find({});
     console.log(allproducts);
-    res.render('customer/product.ejs', { allproducts, userId});
+    res.render('customer/product.ejs', { allproducts, user });
 });
 
 

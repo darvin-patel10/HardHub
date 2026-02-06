@@ -3,357 +3,268 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Dashboard - JOY Hardware</title>
+    <title>My Dashboard - JOY Hardware Products</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="/css/customer/deshbord.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'hardware-primary': '#1a365d',
+                        'hardware-secondary': '#2d3748',
+                        'hardware-accent': '#dd6b20',
+                    }
+                }
+            }
+        }
+    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/customer/deshbord.css">
 </head>
-<body class="bg-gray-50 min-h-screen">
-    <!-- Header -->
-    <header class="gradient-bg text-white shadow-lg">
-        <div class="container mx-auto px-4 py-6">
-            <div class="flex flex-col md:flex-row justify-between items-center">
-                <div class="text-center md:text-left mb-4 md:mb-0">
-                    <h1 class="text-3xl md:text-4xl font-bold tracking-tight">JOY Hardware Solutions</h1>
-                    <p class="text-blue-100 mt-2 text-lg">Your trusted partner for quality tools and equipment</p>
+<body class="bg-gray-50">
+    <!-- Header Section -->
+    <header class="header-gradient text-white py-4 px-4 lg:px-8">
+        <div class="container mx-auto">
+            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between">
+                <div class="text-center lg:text-left mb-4 lg:mb-0">
+                    <h1 class="text-2xl lg:text-3xl font-bold tracking-tight">JOY Hardware Products</h1>
+                    <p class="text-gray-300 mt-1 text-sm lg:text-base">Quality tools for professionals and DIY enthusiasts</p>
                 </div>
-                <div class="flex items-center space-x-4">
-                    <div class="hidden md:flex items-center space-x-2 bg-white/20 backdrop-blur-sm rounded-full px-4 py-2">
-                        <i class="fas fa-user-circle text-xl"></i>
-                        <span class="font-medium"><%=user.username%></span>
-                    </div>
+                <div class="hidden lg:flex items-center space-x-2 text-sm">
+                    <span class="text-gray-300">Welcome, <strong><%=user.username%></strong></span>
                 </div>
             </div>
         </div>
     </header>
 
     <!-- Navigation -->
-    <nav class="bg-white shadow-md sticky top-0 z-40">
-        <div class="container mx-auto px-4">
-            <div class="flex items-center justify-between h-16">
-                <!-- Desktop Navigation -->
-                <div class="hidden md:flex items-center space-x-8">
-                    <a href="/product/<%= user._id %>" class="text-gray-700 hover:text-purple-600 font-medium transition-colors duration-200 flex items-center space-x-2">
-                        <i class="fas fa-home"></i>
-                        <span>Home</span>
-                    </a>
-                    <a href="/product" class="text-gray-700 hover:text-purple-600 font-medium transition-colors duration-200 flex items-center space-x-2">
-                        <i class="fas fa-tools"></i>
-                        <span>Products</span>
-                    </a>
-                    <a href="/about" class="text-gray-700 hover:text-purple-600 font-medium transition-colors duration-200 flex items-center space-x-2">
-                        <i class="fas fa-info-circle"></i>
-                        <span>About Us</span>
-                    </a>
-                    <a href="/contact" class="text-gray-700 hover:text-purple-600 font-medium transition-colors duration-200 flex items-center space-x-2">
-                        <i class="fas fa-envelope"></i>
-                        <span>Contact</span>
-                    </a>
-                </div>
-
-                <!-- User Icon -->
-                <div class="flex items-center space-x-4">
-                    <a href="/dashboard" class="flex items-center space-x-2 group">
-                        <div class="relative">
-                            <img src="https://thumbs.dreamstime.com/b/default-profile-picture-avatar-photo-placeholder-vector-illustration-default-profile-picture-avatar-photo-placeholder-vector-189495158.jpg" 
-                                 alt="User Icon" 
-                                 class="w-10 h-10 rounded-full border-2 border-transparent group-hover:border-purple-500 transition-all duration-200">
-                            <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
-                        </div>
-                        <span class="hidden md:inline text-gray-700 font-medium">Dashboard</span>
-                    </a>
-
-                    <!-- Mobile Menu Button -->
-                    <button onclick="toggleMenu()" class="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200">
-                        <i class="fas fa-bars text-gray-700 text-xl"></i>
-                    </button>
-                </div>
+    <nav class="bg-white shadow-md py-3 px-4 lg:px-8 sticky top-0 z-10">
+        <div class="container mx-auto flex items-center justify-between">
+            <!-- Desktop Navigation -->
+            <div class="hidden lg:flex items-center space-x-8">
+                <a href="/product/<%= user._id %>" class="text-hardware-primary font-medium hover:text-hardware-accent transition-colors">Home</a>
+                <a href="/product" class="text-hardware-primary font-medium hover:text-hardware-accent transition-colors">Products</a>
+                <a href="/about" class="text-hardware-primary font-medium hover:text-hardware-accent transition-colors">About Us</a>
+                <a href="/contact" class="text-hardware-primary font-medium hover:text-hardware-accent transition-colors">Contact</a>
+            </div>
+            
+            <!-- User Icon -->
+            <div class="flex items-center space-x-4">
+                <a href="/dashboard" class="flex items-center space-x-2 text-hardware-primary hover:text-hardware-accent transition-colors">
+                    <div class="relative">
+                        <img src="<%= user.profilePhoto[0].url || 'https://thumbs.dreamstime.com/b/default-profile-picture-avatar-photo-placeholder-vector-illustration-default-profile-picture-avatar-photo-placeholder-vector-189495158.jpg' %>" 
+                             alt="User Icon" 
+                             class="w-10 h-10 rounded-full border-2 border-gray-300">
+                        <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
+                    </div>
+                    <span class="hidden lg:inline font-medium"><%=user.username%></span>
+                </a>
+                
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-button" class="lg:hidden text-hardware-primary focus:outline-none">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
             </div>
         </div>
-
-        <!-- Mobile Menu -->
-        <div id="mobileMenu" class="md:hidden hidden bg-white border-t">
-            <div class="container mx-auto px-4 py-4 space-y-2">
-                <a href="/product/<%= user._id %>" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200">
-                    <i class="fas fa-home text-purple-600 w-6"></i>
-                    <span>Home</span>
-                </a>
-                <a href="/product" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200">
-                    <i class="fas fa-tools text-purple-600 w-6"></i>
-                    <span>Products</span>
-                </a>
-                <a href="/about" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200">
-                    <i class="fas fa-info-circle text-purple-600 w-6"></i>
-                    <span>About Us</span>
-                </a>
-                <a href="/contact" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200">
-                    <i class="fas fa-envelope text-purple-600 w-6"></i>
-                    <span>Contact</span>
-                </a>
+        
+        <!-- Mobile Navigation Menu -->
+        <div id="mobile-menu" class="lg:hidden hidden bg-white shadow-lg rounded-b-lg mt-2 py-4 px-4">
+            <div class="flex flex-col space-y-3">
+                <a href="/product/<%= user._id %>" class="text-hardware-primary font-medium py-2 px-3 hover:bg-gray-100 rounded transition-colors">Home</a>
+                <a href="/product" class="text-hardware-primary font-medium py-2 px-3 hover:bg-gray-100 rounded transition-colors">Products</a>
+                <a href="/about" class="text-hardware-primary font-medium py-2 px-3 hover:bg-gray-100 rounded transition-colors">About Us</a>
+                <a href="/contact" class="text-hardware-primary font-medium py-2 px-3 hover:bg-gray-100 rounded transition-colors">Contact</a>
             </div>
         </div>
     </nav>
 
-    <!-- Main Content -->
-    <main class="container mx-auto px-4 py-8">
+    <!-- Main Dashboard Content -->
+    <main class="container mx-auto px-4 lg:px-8 py-8">
         <!-- Welcome Section -->
-        <section class="mb-10">
-            <div class="bg-gradient-to-r from-purple-50 to-blue-50 rounded-2xl p-8 border border-purple-100 shadow-sm">
-                <div class="flex flex-col md:flex-row justify-between items-center">
-                    <div>
-                        <h2 class="text-3xl font-bold text-gray-800 mb-2">Welcome back, <%=user.username%>! 👋</h2>
-                        <p class="text-gray-600 text-lg">Here's what's happening with your account today.</p>
-                    </div>
-                    <div class="mt-4 md:mt-0 flex items-center space-x-2 text-purple-700">
-                        <i class="fas fa-calendar-check text-2xl"></i>
-                        <span class="font-semibold"><%=new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })%></span>
-                    </div>
+        <div class="bg-gradient-to-r from-hardware-primary to-hardware-secondary rounded-xl shadow-lg p-6 lg:p-8 mb-8 text-white">
+            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between">
+                <div>
+                    <h2 class="text-2xl lg:text-3xl font-bold mb-2">Welcome <%=user.username%>!</h2>
+                    <p class="text-gray-200">Here's what's happening with your account today.</p>
                 </div>
-            </div>
-        </section>
-
-        <!-- Dashboard Cards Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <!-- Account Information Card -->
-            <div class="bg-white rounded-2xl shadow-lg p-6 card-hover border border-gray-100">
-                <div class="flex items-center justify-between mb-6">
-                    <h3 class="text-xl font-bold text-gray-800">Account Information</h3>
-                    <i class="fas fa-user-circle text-2xl text-purple-600"></i>
+                <div class="mt-4 lg:mt-0">
+                    <span class="inline-flex items-center px-4 py-2 rounded-full bg-hardware-accent text-white text-sm font-medium">
+                        <i class="fas fa-crown mr-2"></i> Premium Member
+                    </span>
                 </div>
-                
-                <div class="flex flex-col items-center mb-6">
-                    <div class="relative mb-4">
-                        <img src="https://thumbs.dreamstime.com/b/default-profile-picture-avatar-photo-placeholder-vector-illustration-default-profile-picture-avatar-photo-placeholder-vector-189495158.jpg" 
-                             alt="Profile Photo" 
-                             class="w-24 h-24 rounded-full border-4 border-white shadow-lg">
-                        <div class="absolute bottom-0 right-0 w-8 h-8 bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center">
-                            <i class="fas fa-crown text-white text-sm"></i>
-                        </div>
-                    </div>
-                    <div class="text-center">
-                        <h4 class="text-lg font-bold text-gray-800"><%=user.username%></h4>
-                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gradient-to-r from-yellow-100 to-yellow-50 text-yellow-800 mt-1">
-                            <i class="fas fa-star mr-1 text-yellow-500"></i>
-                            Premium Member
-                        </span>
-                    </div>
-                </div>
-
-                <div class="space-y-3 mb-6">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
-                            <i class="fas fa-envelope text-blue-600"></i>
-                        </div>
-                        <div>
-                            <p class="text-sm text-gray-500">Email</p>
-                            <p class="font-medium text-gray-800"><%=user.email%></p>
-                        </div>
-                    </div>
-                    <div class="flex items-center space-x-3">
-                        <div class="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
-                            <i class="fas fa-phone text-green-600"></i>
-                        </div>
-                        <div>
-                            <p class="text-sm text-gray-500">Phone</p>
-                            <p class="font-medium text-gray-800">+91 <%=user.phone%></p>
-                        </div>
-                    </div>
-                    <div class="flex items-center space-x-3">
-                        <div class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center">
-                            <i class="fas fa-calendar-plus text-purple-600"></i>
-                        </div>
-                        <div>
-                            <p class="text-sm text-gray-500">Member Since</p>
-                            <p class="font-medium text-gray-800"><%=new Date(user.createdAt).toLocaleDateString()%></p>
-                        </div>
-                    </div>
-                </div>
-
-                <a href="/account" class="block w-full py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white text-center font-semibold rounded-xl hover:opacity-90 transition-opacity duration-200">
-                    <i class="fas fa-edit mr-2"></i>Edit Profile
-                </a>
-            </div>
-
-            <!-- Recent Orders Card -->
-            <% if(buyOrders && buyOrders.length > 0) { %>
-                <div class="bg-white rounded-2xl shadow-lg p-6 card-hover border border-gray-100">
-                    <div class="flex items-center justify-between mb-6">
-                        <h3 class="text-xl font-bold text-gray-800">Recent Orders</h3>
-                        <i class="fas fa-shopping-bag text-2xl text-blue-600"></i>
-                    </div>
-
-                    <% for (let order of buyOrders.slice(0, 2)) { %>
-                        <div class="mb-4 p-4 bg-gradient-to-r from-gray-50 to-white rounded-xl border border-gray-200 hover:border-blue-300 transition-colors duration-200">
-                            <div class="flex justify-between items-start mb-3">
-                                <div>
-                                    <div class="flex items-center space-x-2 mb-1">
-                                        <i class="fas fa-receipt text-blue-500"></i>
-                                        <strong class="text-gray-800">Order #<%=order.orderid || 'N/A'%></strong>
-                                    </div>
-                                    <p class="text-sm text-gray-600"><%=order.items?.length || 0%> items • ₹<%=order.totalPrice?.toLocaleString() || 0%></p>
-                                </div>
-                                <% if(order.status === "Processing") { %>
-                                    <span class="status-badge bg-yellow-100 text-yellow-800 border border-yellow-200">
-                                        <i class="fas fa-clock mr-1"></i><%= order.status %>
-                                    </span>
-                                <% } else if(order.status === "Shipped") { %>
-                                    <span class="status-badge bg-blue-100 text-blue-800 border border-blue-200">
-                                        <i class="fas fa-shipping-fast mr-1"></i><%= order.status %>
-                                    </span>
-                                <% } else if(order.status === "Delivered") { %>
-                                    <span class="status-badge bg-green-100 text-green-800 border border-green-200">
-                                        <i class="fas fa-check-circle mr-1"></i><%= order.status %>
-                                    </span>
-                                <% } else { %>
-                                    <span class="status-badge bg-red-100 text-red-800 border border-red-200">
-                                        <i class="fas fa-exclamation-circle mr-1"></i><%= order.status %>
-                                    </span>
-                                <% } %>
-                            </div>
-                            <div class="flex justify-between items-center text-sm text-gray-500">
-                                <span>Placed: <%=new Date(order.createdAt || Date.now()).toLocaleDateString()%></span>
-                                <a href="/order/<%=order._id%>" class="text-blue-600 hover:text-blue-800 font-medium">
-                                    View Details <i class="fas fa-chevron-right ml-1"></i>
-                                </a>
-                            </div>
-                        </div>
-                    <% } %>
-
-                    <a href="/orders" class="block w-full py-3 bg-gradient-to-r from-gray-100 to-gray-50 text-gray-700 text-center font-semibold rounded-xl hover:bg-gray-200 transition-colors duration-200 border border-gray-300">
-                        <i class="fas fa-list mr-2"></i>View All Orders
-                    </a>
-                </div>
-            <% } else { %>
-                <div class="bg-white rounded-2xl shadow-lg p-6 card-hover border border-gray-100">
-                    <div class="flex items-center justify-between mb-6">
-                        <h3 class="text-xl font-bold text-gray-800">Recent Orders</h3>
-                        <i class="fas fa-shopping-bag text-2xl text-blue-600"></i>
-                    </div>
-                    <div class="text-center py-8">
-                        <i class="fas fa-box-open text-4xl text-gray-300 mb-4"></i>
-                        <p class="text-gray-500 mb-4">No orders yet</p>
-                        <a href="/product/<%= user.userId %>" class="inline-block py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200">
-                            Start Shopping
-                        </a>
-                    </div>
-                </div>
-            <% } %>
-
-            <!-- Quick Actions Card -->
-            <div class="bg-white rounded-2xl shadow-lg p-6 card-hover border border-gray-100">
-                <div class="flex items-center justify-between mb-6">
-                    <h3 class="text-xl font-bold text-gray-800">Quick Actions</h3>
-                    <i class="fas fa-bolt text-2xl text-green-600"></i>
-                </div>
-
-                <div class="space-y-3 mb-6">
-                    <a href="/product/<%= user.userId %>" class="flex items-center justify-between p-4 bg-gradient-to-r from-purple-50 to-purple-100 rounded-xl hover:from-purple-100 hover:to-purple-200 transition-all duration-200 group">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-10 h-10 rounded-lg bg-purple-600 flex items-center justify-center">
-                                <i class="fas fa-shopping-cart text-white"></i>
-                            </div>
-                            <span class="font-semibold text-gray-800">Shop Products</span>
-                        </div>
-                        <i class="fas fa-chevron-right text-purple-600 group-hover:translate-x-1 transition-transform duration-200"></i>
-                    </a>
-
-                    <a href="/cart/<%=user.userId%>" class="flex items-center justify-between p-4 bg-gradient-to-r from-green-50 to-green-100 rounded-xl hover:from-green-100 hover:to-green-200 transition-all duration-200 group">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-10 h-10 rounded-lg bg-green-600 flex items-center justify-center">
-                                <i class="fas fa-heart text-white"></i>
-                            </div>
-                            <span class="font-semibold text-gray-800">View Wishlist</span>
-                        </div>
-                        <i class="fas fa-chevron-right text-green-600 group-hover:translate-x-1 transition-transform duration-200"></i>
-                    </a>
-
-                    <a href="/contact" class="flex items-center justify-between p-4 bg-gradient-to-r from-red-50 to-red-100 rounded-xl hover:from-red-100 hover:to-red-200 transition-all duration-200 group">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-10 h-10 rounded-lg bg-red-600 flex items-center justify-center">
-                                <i class="fas fa-headset text-white"></i>
-                            </div>
-                            <span class="font-semibold text-gray-800">Contact Support</span>
-                        </div>
-                        <i class="fas fa-chevron-right text-red-600 group-hover:translate-x-1 transition-transform duration-200"></i>
-                    </a>
-                </div>
-
-                <form action="/auth/logout" method="POST">
-                    <button type="submit" class="w-full flex items-center justify-center space-x-2 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-xl hover:opacity-90 transition-opacity duration-200">
-                        <i class="fas fa-sign-out-alt"></i>
-                        <span>Logout Account</span>
-                    </button>
-                </form>
             </div>
         </div>
 
-        <!-- Stats Section -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
-            <div class="bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl p-6 text-white shadow-lg">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-blue-100">Total Orders</p>
-                        <p class="text-3xl font-bold mt-2"><%=buyOrders?.length || 0%></p>
+        <!-- Dashboard Cards Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            <!-- Account Information Card -->
+            <div class="bg-white rounded-xl card-shadow p-6 product-card">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-xl font-bold text-hardware-primary">Account Information</h3>
+                    <i class="fas fa-user-circle text-hardware-accent text-2xl"></i>
+                </div>
+                
+                <div class="flex flex-col items-center mb-6">
+                    <img src="<%= user.profilePhoto[0].url || 'https://thumbs.dreamstime.com/b/default-profile-picture-avatar-photo-placeholder-vector-illustration-default-profile-picture-avatar-photo-placeholder-vector-189495158.jpg' %>" 
+                         alt="Profile Photo" 
+                         class="w-24 h-24 rounded-full border-4 border-gray-100 mb-4">
+                    <p class="text-lg font-bold text-gray-800"><%=user.username%></p>
+                    <p class="text-hardware-accent font-medium">Premium Member</p>
+                </div>
+                
+                <div class="space-y-3 mb-6">
+                    <div class="flex items-center">
+                        <i class="fas fa-envelope text-gray-400 w-6 mr-3"></i>
+                        <div>
+                            <p class="text-sm text-gray-500">Email</p>
+                            <p class="font-medium"><%=user.email%></p>
+                        </div>
                     </div>
-                    <i class="fas fa-shopping-bag text-3xl opacity-80"></i>
+                    
+                    <div class="flex items-center">
+                        <i class="fas fa-phone text-gray-400 w-6 mr-3"></i>
+                        <div>
+                            <p class="text-sm text-gray-500">Phone</p>
+                            <p class="font-medium">+91 <%=user.phone%></p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center">
+                        <i class="fas fa-calendar-alt text-gray-400 w-6 mr-3"></i>
+                        <div>
+                            <p class="text-sm text-gray-500">Member Since</p>
+                            <p class="font-medium"><%=new Date(user.createdAt).toLocaleDateString('en-GB')%></p>
+                        </div>
+                    </div>
+                </div>
+                
+                <a href="/accountedit/<%=user._id%>" class="block w-full text-center bg-hardware-primary hover:bg-hardware-secondary text-white font-medium py-3 rounded-lg transition-colors">
+                    <i class="fas fa-edit mr-2"></i> Edit Profile
+                </a>
+            </div>
+            
+            <!-- Recent Orders Card -->
+            <div class="bg-white rounded-xl card-shadow p-6 product-card">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-xl font-bold text-hardware-primary">Recent Orders</h3>
+                    <i class="fas fa-shopping-bag text-hardware-accent text-2xl"></i>
+                </div>
+                
+                <% if (buyOrders && buyOrders.length > 0) { %>
+                    <% for (let order of buyOrders.slice(0, 3)) { %>
+                        <a href="/order-details/<%=order.orderid%>" class="block  mb-4">
+                        <div class="border border-gray-200 rounded-lg p-4 mb-4 hover:bg-gray-50 transition-colors">
+                            <div class="flex justify-between items-start mb-2">
+                                <div>
+                                    <strong class="text-lg">Order #<%=order.orderid || 'N/A'%></strong>
+                                    <p class="text-gray-600 text-sm"><%=order.items?.length || 0%> items - ₹<%=order.totalPrice || 0%></p>
+                                </div>
+                                <% if(order.status === "Processing") { %>
+                                    <span class="px-3 py-1 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800">
+                                        <%= order.status %>
+                                    </span>
+                                <% } else if(order.status === "Shipped") { %>
+                                    <span class="px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">
+                                        <%= order.status %>
+                                    </span>
+                                <% } else if(order.status === "Delivered") { %>
+                                    <span class="px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800">
+                                        <%= order.status %>
+                                    </span>
+                                <% } else { %>
+                                    <span class="px-3 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-800">
+                                        <%= order.status %>
+                                    </span>
+                                <% } %>
+                            </div>
+                            <p class="text-gray-500 text-sm mt-2">
+                                <i class="fas fa-calendar-alt mr-2"></i>
+                                <%= new Date(order.createdAt || Date.now()).toLocaleDateString('en-GB') %>
+                            </p>
+                        </div>
+                        </a>
+                    <% } %>
+                <% } else { %>
+                    <div class="text-center py-8">
+                        <i class="fas fa-shopping-cart text-gray-300 text-4xl mb-4"></i>
+                        <p class="text-gray-500">No recent orders</p>
+                        <p class="text-gray-400 text-sm mt-1">Start shopping now!</p>
+                    </div>
+                <% } %>
+                
+                <a href="/orders" class="block w-full text-center border-2 border-hardware-primary text-hardware-primary hover:bg-hardware-primary hover:text-white font-medium py-3 rounded-lg transition-colors mt-4">
+                    <i class="fas fa-list-alt mr-2"></i> View All Orders
+                </a>
+            </div>
+            
+            <!-- Quick Actions Card -->
+            <div class="bg-white rounded-xl card-shadow p-6 product-card">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-xl font-bold text-hardware-primary">Quick Actions</h3>
+                    <i class="fas fa-bolt text-hardware-accent text-2xl"></i>
+                </div>
+                
+                <div class="space-y-4">
+                    <a href="/product/<%= user.userId %>" class="flex items-center justify-between bg-blue-50 hover:bg-blue-100 text-blue-700 p-4 rounded-lg transition-colors">
+                        <div class="flex items-center">
+                            <i class="fas fa-shopping-cart text-xl mr-3"></i>
+                            <span class="font-medium">Shop Products</span>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                    
+                    <a href="/cart/<%=user.userId%>" class="flex items-center justify-between bg-green-50 hover:bg-green-100 text-green-700 p-4 rounded-lg transition-colors">
+                        <div class="flex items-center">
+                            <i class="fas fa-heart text-xl mr-3"></i>
+                            <span class="font-medium">View Wishlist</span>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                    
+                    <a href="/contact" class="flex items-center justify-between bg-red-50 hover:bg-red-100 text-red-700 p-4 rounded-lg transition-colors">
+                        <div class="flex items-center">
+                            <i class="fas fa-headset text-xl mr-3"></i>
+                            <span class="font-medium">Contact Support</span>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                    
+                    <form action="/auth/logout" method="POST">
+                        <button type="submit" class="w-full flex items-center justify-between bg-indigo-50 hover:bg-indigo-100 text-indigo-700 p-4 rounded-lg transition-colors">
+                            <div class="flex items-center">
+                                <i class="fas fa-sign-out-alt text-xl mr-3"></i>
+                                <span class="font-medium">Log Out</span>
+                            </div>
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </form>
                 </div>
             </div>
-            <div class="bg-gradient-to-r from-green-500 to-green-600 rounded-xl p-6 text-white shadow-lg">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-green-100">Member Since</p>
-                        <p class="text-xl font-bold mt-2"><%=new Date(user.createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })%></p>
-                    </div>
-                    <i class="fas fa-award text-3xl opacity-80"></i>
-                </div>
-            </div>
-            <div class="bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl p-6 text-white shadow-lg">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-purple-100">Account Status</p>
-                        <p class="text-xl font-bold mt-2">Active</p>
-                    </div>
-                    <i class="fas fa-shield-check text-3xl opacity-80"></i>
-                </div>
-            </div>
+        </div>
         </div>
     </main>
 
     <!-- Footer -->
-    <footer class="bg-gray-900 text-white mt-16">
-        <div class="container mx-auto px-4 py-8">
+    <footer class="bg-hardware-primary text-white py-8 px-4 lg:px-8">
+        <div class="container mx-auto">
             <div class="flex flex-col md:flex-row justify-between items-center">
-                <div class="mb-6 md:mb-0">
-                    <h3 class="text-2xl font-bold text-white mb-2">JOY Hardware Solutions</h3>
-                    <p class="text-gray-400">Your trusted partner for quality tools and equipment</p>
+                <div class="mb-6 md:mb-0 text-center md:text-left">
+                    <h3 class="text-xl font-bold mb-2">JOY Hardware Products</h3>
+                    <p class="text-gray-300">Quality tools for professionals and DIY enthusiasts</p>
                 </div>
-                <div class="flex space-x-6">
-                    <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">
-                        <i class="fab fa-facebook text-xl"></i>
-                    </a>
-                    <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">
-                        <i class="fab fa-twitter text-xl"></i>
-                    </a>
-                    <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">
-                        <i class="fab fa-instagram text-xl"></i>
-                    </a>
-                    <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">
-                        <i class="fab fa-linkedin text-xl"></i>
-                    </a>
+                <div class="text-center md:text-right">
+                    <p class="mb-2">
+                        <i class="fas fa-envelope mr-2"></i>
+                        sales@joyhardware.com
+                    </p>
+                    <p>
+                        <i class="fas fa-phone mr-2"></i>
+                        +91 XXXXXXXXXX
+                    </p>
                 </div>
             </div>
-            <div class="border-t border-gray-800 mt-6 pt-6 text-center md:text-left">
-                <div class="flex flex-col md:flex-row justify-between items-center">
-                    <p class="text-gray-400">&copy; 2023 JOY Hardware Solutions. All Rights Reserved.</p>
-                    <div class="mt-4 md:mt-0">
-                        <p class="text-gray-400">
-                            <i class="fas fa-envelope mr-2"></i>sales@joyhardware.com
-                            <span class="mx-2">|</span>
-                            <i class="fas fa-phone mr-2"></i>+91 XXXXXXXXXX
-                        </p>
-                    </div>
-                </div>
+            <div class="border-t border-gray-700 mt-8 pt-6 text-center text-gray-300">
+                <p>&copy; 2023 JOY Hardware Solutions. All Rights Reserved.</p>
             </div>
         </div>
     </footer>

@@ -7,6 +7,18 @@ const userSchema = new mongoose.Schema({
         enum: ['buyer', 'seller'],
         default: 'buyer'
     },
+    profilePhoto: [
+        {
+            public_id:{
+                type: String,
+                required: true
+            },
+            url: {
+                type: String,
+                required: true
+            }
+        }
+    ],
     userId: {
         type: String,
         required: true,
@@ -35,7 +47,46 @@ const userSchema = new mongoose.Schema({
         required: true,
         trim: true,
     },
-    address: {
+    address: [
+        {
+            street1:{
+                type: String,
+                trim: true,
+            },
+            street2:{
+                type: String,
+                trim: true,
+            },
+            city:{
+                type: String,
+                trim: true,
+            },
+            state:{
+                type: String,
+                trim: true,
+            },
+            pincode:{
+                type: String,
+                trim: true,
+            },
+            country:{
+                type: String,
+                trim: true,
+            },
+        }
+    ],
+    dob: {
+        type: Date,
+    },
+    gender: {
+        type: String,
+        enum: ['Male', 'Female', 'Other'],
+    },
+    occupation: {
+        type: String,
+        trim: true,
+    },
+    about: {
         type: String,
         trim: true,
     },
