@@ -256,7 +256,7 @@ router.post('/product/buy/:id', async (req, res) => {
         };
 
 
-        // console.log("✅ First Buy saved:", req.session.buyData);
+        console.log("✅ First Buy saved:", req.session.buyData);
         res.redirect(`/payment/${orderId}`);
     } 
     catch (err) {
@@ -420,7 +420,10 @@ router.post('/address/edit/:id', async (req, res) => {
 // All Routes
 
 router.get('/chekout/:id', async(req,res)=>{
+    const productId = req.params.id;
+    const userId = req.user._id;
     const cartArray = await Cart.find({});
+    const user = await User.findById(userId);
     const cart = cartArray[0]; // Assuming you want to fetch the first cart
 
     if (!req.session.checkoutData) {
@@ -428,6 +431,7 @@ router.get('/chekout/:id', async(req,res)=>{
     }
 
     res.render('customer/checkout.ejs', {
+        user,
         product: req.session.checkoutData, // So you can show summary
         totalUniqueItems: cart.items.length
     });
@@ -548,7 +552,7 @@ router.get('/product/:id',async(req,res)=>{
     const user = await User.findById(userId);
     const allproducts = await Product.find({});
     console.log(allproducts);
-    res.render('customer/product.ejs', { allproducts, user });
+    res.render('customer/product.ejs', { allproducts, user,userId });
 });
 
 

@@ -13,16 +13,54 @@
             <li><a href="/product">Products</a></li>
             <li><a href="/about">About Us</a></li>
             <li><a href="/contact">Contact</a></li>
-            <li><a href="/cart">Cart (<%=totalUniqueItems%>)</a></li>
+            <li><a href="/cart/<%=user._id%>">Cart (<%=totalUniqueItems%>)</a></li>
         </ul>
     </nav>
     
     <form id="shippingForm" action="/product/buy/<%=product.productId%>" method="POST">
-
         <div class="checkout-container">
             <div class="checkout-form">
                 <h2 class="section-title">Shipping Information</h2>
                 
+                <!-- Saved Address Option -->
+                <% if(user.address) { %>
+                <div class="saved-address-option">
+                    <div class="address-card" id="savedAddressCard">
+                        <input type="checkbox" id="useSavedAddress" name="useSavedAddress" value="true">
+                        <label for="useSavedAddress" class="address-label">
+                            <strong>Use Saved Address</strong>
+                            <div class="address-details">
+                                <p><strong><%= user.username %></strong></p>
+                                <p><%= user.address?.[0]?.street1 %></p>
+                                <% if(user.address?.[0]?.street2) { %>
+                                    <p><%= user.address?.[0]?.street2 %></p>
+                                <% } %>
+                                <p><%= user.address?.[0]?.city %>, <%= user.address?.[0]?.state %></p>
+                                <p><%= user.address?.[0]?.pincode %>, <%= user.address?.[0]?.country || 'India' %></p>
+                                <p>Phone: <%= user.phone %></p>
+                                <p>Email: <%= user.email %></p>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+                <div id="savedUserData"
+                    data-firstname="<%= user.username.split(' ')[0] %>"
+                    data-lastname="<%= user.username.split(' ').slice(1).join(' ') %>"
+                    data-email="<%= user.email %>"
+                    data-phone="<%= user.phone %>"
+                    data-address="<%= user.address?.[0]?.street1 || '' %>"
+                    data-city="<%= user.address?.[0]?.city || '' %>"
+                    data-state="<%= user.address?.[0]?.state || '' %>"
+                    data-pincode="<%= user.address?.[0]?.pincode || '' %>">
+                </div>
+
+                <div class="or-separator">
+                    <span>OR</span>
+                </div>
+                <% } %>
+                
+                <!-- Address Form (Initially visible) -->
+                <div id="addressFormSection">
                     <div class="form-row">
                         <div class="form-group">
                             <label for="firstName">First Name*</label>
@@ -77,7 +115,7 @@
                             <input type="text" id="country" name="country" value="India" readonly>
                         </div>
                     </div>
-                
+                </div>
             </div>
             
             <div class="order-summary">
@@ -114,7 +152,7 @@
                     </div>
                 </div>
                 
-                <button type="submit" class="place-order-btn" id="placeOrderBtn">Place Order</button></a>
+                <button type="submit" class="place-order-btn" id="placeOrderBtn">Place Order</button>
             </div>
         </div>
     </form>
