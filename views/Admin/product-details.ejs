@@ -80,21 +80,30 @@
                 <!-- Details Section -->
                 <div class="md:col-span-2 space-y-6">
                     <!-- Pricing & Stock -->
+                     <div>
+                        <p class="text-sm font-bold text-gray-500">Product ID</p>
+                        <p class="text-sm font-bold font-mono text-gray-800"><%= product.id %></p>
+                    </div>
+                    
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-gray-50 p-4 rounded-lg">
-                        <div>
-                            <p class="text-sm text-gray-500">Price</p>
-                            <p class="text-xl font-bold text-gray-800">₹<%= product.price %></p>
-                        </div>
-                        <div>
-                            <p class="text-sm text-gray-500">Stock</p>
-                            <p class="text-xl font-bold <%= product.stock > 0 ? 'text-green-600' : 'text-red-600' %>">
-                                <%= product.stock %> <%= product.stock === 1 ? 'unit' : 'units' %>
-                            </p>
-                        </div>
-                        <div>
-                            <p class="text-sm text-gray-500">Product ID</p>
-                            <p class="text-sm font-mono text-gray-800"><%= product.id %></p>
-                        </div>
+                        
+                        <% for(let size of product.sizes) { %>
+                            <div>
+                                <p class="text-sm text-gray-500">Size</p>
+                                <p class="text-xl font-bold text-gray-800"><%= size.size %> inches</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Price</p>
+                                <p class="text-xl font-bold text-gray-800">₹<%= size.price %></p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Stock</p>
+                                <p class="text-xl font-bold <%= size.stock > 0 ? 'text-green-600' : 'text-red-600' %>">
+                                    <%= size.stock %> <%= size.stock === 1 ? 'unit' : 'units' %>
+                                </p>
+                            </div>
+                        <% } %>
+                        
                     </div>
 
                     <!-- Key Features -->

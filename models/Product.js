@@ -39,11 +39,11 @@ const productSchema = new mongoose.Schema({
 
     }, 
 
-    price: {
-        type: String,
-        required: true,
-        trim: true // trim whitespace
-    },
+    // price: {
+    //     type: String,
+    //     required: true,
+    //     trim: true // trim whitespace
+    // },
 
     key_features: {
         type: [String],
@@ -52,12 +52,12 @@ const productSchema = new mongoose.Schema({
         default: ["No key features available"] // default message if not provided
     },
 
-    stock: {
-        type: Number,
-        required: true,
-        trim: true, // trim whitespace
-        default: 0 // default stock is 0
-    }, 
+    // stock: {
+    //     type: Number,
+    //     required: true,
+    //     trim: true, // trim whitespace
+    //     default: 0 // default stock is 0
+    // }, 
 
     category:{
         type: String,
@@ -70,6 +70,24 @@ const productSchema = new mongoose.Schema({
         required: true,
         trim: true // trim whitespace
     },
+
+    /* ✅ MULTIPLE SIZES HERE */
+    sizes: [
+        {
+            size: {
+                type: Number,   // S, M, L or 10cm, 12cm etc.
+                required: true
+            },
+            stock: {
+                type: Number,
+                default: 0
+            },
+            price: {
+                type: Number,   // optional different price per size
+                required: true
+            }
+        }
+    ],
 
     Tech_Specifications:[
         {
@@ -90,11 +108,6 @@ const productSchema = new mongoose.Schema({
             },
             Material:{
                 type: String,
-                required: true,
-                trim: true // trim whitespace
-            },
-            size:{
-                type: Number,
                 required: true,
                 trim: true // trim whitespace
             },

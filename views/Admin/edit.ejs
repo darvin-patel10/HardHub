@@ -32,39 +32,37 @@
     <!-- Main Content -->
     <main class="container mx-auto p-4"> 
         <div class="flex justify-between items-center mb-6">
-            <a href="/seller/product/edit/<%= product._id %>">
-                <h2 class="text-2xl font-bold text-gray-800">Edit Product</h2>
-            </a>
+            <h2 class="text-2xl font-bold text-gray-800">Edit Product</h2>
             <button onclick="deleteProduct()" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-md text-white text-sm font-medium">
                 Delete Product
             </button>
         </div>
         
-        
         <div class="bg-white rounded-lg shadow-md p-6">
             <form method="post" action="/seller/product/update/<%=product._id%>" id="productForm" class="space-y-6" enctype="multipart/form-data">
-                <input type="hidden" id="productId" name="productId" value="<%=product.id%>">
+                <input type="hidden" id="productId" name="productId" value="<%=product._id%>">
+                <input type="hidden" id="originalProductId" name="originalProductId" value="<%=product.productid%>">
                 
                 <!-- Basic Info -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label for="productName" class="block text-sm font-medium text-gray-700 mb-1">Product Name*</label>
-                        <input type="text" id="productName" name="productName" required 
+                        <input type="text" id="productName" name="name" required 
                             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                             value="<%=product.name%>">
                     </div>
                     
                     <div>
                         <label for="category" class="block text-sm font-medium text-gray-700 mb-1">Category*</label>
-                        <select id="category" name="category" required value="<%=product.category%>"
+                        <select id="category" name="category" required
                             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                             <option value="">Select Category</option>
-                            <option value="Aldrop">Aldrop</option>
-                            <option value="Main Door Handle">Main Door Handl</option>
-                            <option value="Handles">Handles</option>
-                            <option value="SS Door kit">SS Door kit</option>
-                            <option value="SS Chest Handle">SS Chest Handle</option>
-                            <option value="Cabinet Handle">Cabinet Handle</option>
+                            <option value="Aldrop" <%= product.category === 'Aldrop' ? 'selected' : '' %>>Aldrop</option>
+                            <option value="Main Door Handle" <%= product.category === 'Main Door Handle' ? 'selected' : '' %>>Main Door Handle</option>
+                            <option value="Handles" <%= product.category === 'Handles' ? 'selected' : '' %>>Handles</option>
+                            <option value="SS Door kit" <%= product.category === 'SS Door kit' ? 'selected' : '' %>>SS Door kit</option>
+                            <option value="SS Chest Handle" <%= product.category === 'SS Chest Handle' ? 'selected' : '' %>>SS Chest Handle</option>
+                            <option value="Cabinet Handle" <%= product.category === 'Cabinet Handle' ? 'selected' : '' %>>Cabinet Handle</option>
                         </select>
                     </div>
                     
@@ -80,29 +78,37 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label for="smallDescription" class="block text-sm font-medium text-gray-700 mb-1">Short Description*</label>
-                        <textarea id="smallDescription" name="smallDescription" rows="2" required
+                        <textarea id="smallDescription" name="small_description" rows="2" required
                             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"><%=product.small_description%></textarea>
                     </div>
                     
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Key Features*</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                            Key Features*
+                        </label>
+
                         <div id="keyFeaturesContainer" class="space-y-2">
-                            <!-- Key features will be dynamically inserted here -->
-                            <div class="flex space-x-2">
-                                <input type="text" name="key_features[]" placeholder="Key feature" required
-                                    class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    value="<%=product.key_features%>">
-                                <button type="button" onclick="removeKeyFeature(this)" class="px-2 text-red-500 hover:text-red-700">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                    </svg>
-                                </button>
-                            </div>
+
+                            <% product.key_features.forEach((feature, index) => { %>
+                                <div class="flex space-x-2">
+                                    <input type="text" name="key_features[]" value="<%= feature %>" required placeholder="Key feature" class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+
+                                    <button type="button" onclick="removeKeyFeature(this)" class="px-2 text-red-500 hover:text-red-700">
+
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                        </svg>
+
+                                    </button>
+                                </div>
+                            <% }) %>
+
                         </div>
-                        <button type="button" onclick="addKeyFeature()" class="mt-2 inline-flex items-center px-3 py-1 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                            </svg>
+
+                        <button type="button"
+                            onclick="addKeyFeature()"
+                            class="mt-2 inline-flex items-center px-3 py-1 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+
                             Add Key Feature
                         </button>
                     </div>
@@ -114,31 +120,23 @@
                     </div>  
                 </div>
                 
-                <br>
-                <!-- Pricing & Stock -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="relative">
-                        <label for="price" class="block text-sm font-medium text-gray-700 mb-1">Price (INR)*</label>
-                        <div class="relative">
-                            <span class="absolute left-3 top-1/2 transform -translate-y-1/2">₹</span>
-                            <input type="number" id="price" name="price" min="0" step="0.01" required 
-                                class="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                value="<%=product.price%>">
-                        </div>
+                <!-- Multiple Sizes Section -->
+                <div>
+                    <label class="block text-xl font-bold text-gray-700 mb-4">Size Variations</label>
+                    <div id="sizesContainer" class="space-y-4 p-4 bg-gray-50 rounded-md">
+                        <!-- Size variations will be dynamically inserted here -->
                     </div>
-                    
-                    <div>
-                        <label for="stock" class="block text-sm font-medium text-gray-700 mb-1">Stock Quantity*</label>
-                        <input type="number" id="stock" name="stock" min="0" required 
-                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            value="<%=product.stock%>">
-                    </div>
+                    <button type="button" onclick="addSize()" class="mt-2 inline-flex items-center px-3 py-1 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                        </svg>
+                        Add Another Size
+                    </button>
                 </div>
                 
-                <br>
                 <!-- Technical Specifications -->
                 <div>
-                    <label class="block text-xl font-bold text-gray-700 mb-1">Technical Specifications*</label>
+                    <label class="block text-xl font-bold text-gray-700 mb-4">Technical Specifications*</label>
                     <div id="techSpecsContainer" class="space-y-4 p-4 bg-gray-50 rounded-md">
                         <div class="spec-input-group grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div>
@@ -163,13 +161,6 @@
                             </div>
                             
                             <div>
-                                <label for="size" class="block text-sm font-medium text-gray-700 mb-1">Size*(inch)</label>
-                                <input type="number" id="size" name="Tech_Specifications[0][size]" step="0.01" required
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    value="<%=product.Tech_Specifications[0].size%>">
-                            </div>
-                            
-                            <div>
                                 <label for="weight" class="block text-sm font-medium text-gray-700 mb-1">Weight (g)*</label>
                                 <input type="number" id="weight" name="Tech_Specifications[0][Weight]" step="0.01" required
                                     class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -181,36 +172,79 @@
                 
                 <!-- Images -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Product Images</label>
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Current Image</label>
+                    <label class="block text-xl font-bold text-gray-700 mb-1">Product Images</label>
+                    <p class="text-sm text-gray-500 mb-3">Upload multiple images (minimum 1, maximum 5)</p>
+                    
+                    <!-- Current Images -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Current Images</label>
                         <div id="currentImages" class="flex flex-wrap gap-2">
-                            <!-- Current image will be inserted here -->
-                            <div class="image-preview relative w-20 h-20 rounded-md overflow-hidden border border-gray-200">
-                                <img src="<%=product.image[0].url%>" class="w-full h-full object-cover">
-                                <button type="button" onclick="removeExistingImage(this, '<!-- Image public_id will be inserted here -->')" 
-                                    class="absolute top-0 right-0 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">×</button>
-                                <input type="hidden" name="existing_image" value="">
-                            </div>
+                            <!-- Current images will be dynamically inserted here -->
                         </div>
                     </div>
+                    
+                    <!-- New Images Upload -->
                     <div class="flex items-center space-x-4">
-                        <div class="border-2 border-dashed border-gray-300 rounded-md p-4 text-center w-64">
-                            <label for="productImages" class="cursor-pointer">
-                                <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
-                                    <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                </svg>
-                                <p class="text-sm text-gray-600">Click to upload new image</p>
-                                <p class="text-xs text-gray-500">PNG, JPG up to 2MB</p>
-                            </label>
-                            <input id="productImages" type="file" accept="image/*" name="new_image" class="hidden" />
+
+                        <div class="flex items-center space-x-4">
+
+                            <!-- Upload Box -->
+                            <div class="border-2 border-dashed border-gray-300 rounded-md p-4 text-center w-64">
+                                <label for="productImages" class="cursor-pointer">
+                                    <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                                        <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                                        stroke-width="2"/>
+                                    </svg>
+
+                                    <p class="text-sm text-gray-600">Click to upload new images</p>
+                                    <p class="text-xs text-gray-500">PNG, JPG up to 2MB each</p>
+                                </label>
+
+                                <input 
+                                    id="productImages"
+                                    type="file"
+                                    accept="image/*"
+                                    name="images"
+                                    class="hidden"
+                                    multiple
+                                />
+                            </div>
+
+                            <!-- Existing Images -->
+                            <div id="imagePreviews" class="flex flex-wrap gap-2">
+
+                                <% if(product.image && product.image.length > 0) { %>
+                                    <% product.image.forEach((img, index) => { %>
+                                        <div class="relative">
+
+                                            <img 
+                                                src="<%= img.url %>" 
+                                                alt="Product Image <%= index+1 %>"
+                                                class="w-20 h-20 object-cover rounded-md border"
+                                            >
+
+                                            <!-- keep image in DB -->
+                                            <input 
+                                                type="hidden" 
+                                                name="existing_images[]" 
+                                                value="<%= img.public_id %>"
+                                            >
+
+                                        </div>
+                                    <% }) %>
+                                <% } %>
+
+                            </div>
+
                         </div>
-                        <div id="imagePreviews" class="flex flex-wrap gap-2"></div>
+
+
                     </div>
+
                 </div>
                 
                 <!-- Form Actions -->
-                <div class="flex justify-end space-x-4 pt-4">
+                <div class="flex justify-end space-x-4 pt-4 border-t border-gray-200">
                     <button type="button" onclick="resetForm()" class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
                         Reset Changes
                     </button>
@@ -221,6 +255,11 @@
             </form>
         </div>
     </main>
+    <script>
+        const productData = <%- JSON.stringify(product) %>;
+        const existingSpecs = productData.specs || {};
+    </script>
+
     <script src="/script/Admin/edit.js"></script>
 </body>
 </html>

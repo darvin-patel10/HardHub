@@ -29,26 +29,25 @@ router.post('/product',upload.single("images") ,async (req, res) => {
             public_id: req.file.filename, // Assuming you want to store the filename as public_id
             url: `/image/Product/${req.file.filename}` // Adjust the URL path as needed
         }],
-        name: parseBody.productName,
-        small_description: parseBody.smallDescription,
-        price: parseBody.price,
+        name: parseBody.name,
+        small_description: parseBody.small_description,
         key_features: parseBody.key_features,
-        stock: parseBody.stock,
         category: parseBody.category,
         Product_description: parseBody.Product_description ,
+        sizes: parseBody.sizes || [],
         Tech_Specifications: parseBody.Tech_Specifications
     });
     console.log(newProduct);
     
-        try {
-            await newProduct.save(); // ✅ FIXED LINE
-            console.log("✅ Product saved successfully");
-            res.redirect("/seller/products"); // Redirect to the products page after saving
-        } 
-        catch (err) {
-            console.error("❌Error saving product:", err);
-            res.status(500).send("Failed to save product.");
-        }
+    try {
+        await newProduct.save(); // ✅ FIXED LINE
+        console.log("✅ Product saved successfully");
+        res.redirect("/seller/products"); // Redirect to the products page after saving
+    } 
+    catch (err) {
+        console.error("❌Error saving product:", err);
+        res.status(500).send("Failed to save product.");
+    }
 });
 
 //------------------------------- Edit Product---------------------------
@@ -65,14 +64,13 @@ router.post('/product/update/:id',upload.single("new_image"),async(req,res) =>{
     const parseBody = qs.parse(req.body); // ✅ deeply parses nested fields
     
     try{
-        product.name = parseBody.productName;
-        product.small_description = parseBody.smallDescription;
-        product.price = parseBody.price;
+        product.name = parseBody.name;
+        product.small_description = parseBody.small_description;
         product.key_features = parseBody.key_features;
-        product.stock = parseBody.stock;
         product.category = parseBody.category;
         product.Product_description = parseBody.Product_description;
         product.Tech_Specifications = parseBody.Tech_Specifications;
+        product.sizes = parseBody.sizes || [];
         // ✅ Corrected image update
         if (req.file) {
             product.image = [{
