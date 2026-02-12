@@ -4,132 +4,234 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product Details - JOY Hardware Solutions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/css/customer/product-details.css">
 </head>
-<body>
-    <!-- <header>
-        <h1>JOY Hardware Solutions</h1>
-        <p>Precision Tools for Professionals</p>
-    </header> -->
-
-    <nav>
-        <ul>
-            <li><a href="/product/<%= userId %>">Home</a></li>
-            <!-- <li><a href="/product">Products</a></li> -->
-            <li><a href="/about">About Us</a></li>
-            <li><a href="/contact">Contact</a></li>
-            <li><a href="/cart/<%=userId%>">Cart (<%=totalUniqueItems%>)</a></li>
-        </ul>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <ul class="flex justify-center space-x-8">
+                <li><a href="/product/<%= userId %>" class="hover:text-blue-300 transition-colors">Home</a></li>
+                <li><a href="/about" class="hover:text-blue-300 transition-colors">About Us</a></li>
+                <li><a href="/contact" class="hover:text-blue-300 transition-colors">Contact</a></li>
+                <li><a href="/cart/<%=userId%>" class="hover:text-blue-300 transition-colors">Cart (<%=totalUniqueItems%>)</a></li>
+            </ul>
+        </div>
     </nav>
 
-    <div class="product-container">
-        <div class="product-images">
-            <img id="main-image" src="<%=product.image[0].url%>" alt="<%=product.name%>" class="product-main-image">
-            <!-- <div class="product-thumbnails">
-                <img src="https://4.imimg.com/data4/AC/LU/MY-3210181/door-aldrop-500x500.jpeg" alt="Drill Machine Front" onclick="changeImage(this.src)">
-                <img src="https://4.imimg.com/data4/TY/VB/MY-3210181/door-aldrop-500x500.jpeg" alt="Drill Machine Side" onclick="changeImage(this.src)">
-                <img src="https://4.imimg.com/data4/IO/NH/MY-3210181/door-aldrop-500x500.jpeg" onclick="changeImage(this.src)">
-                <img src="https://4.imimg.com/data4/AC/LU/MY-3210181/door-aldrop-500x500.jpeg" alt="Drill Machine Packaging" onclick="changeImage(this.src)">
-            </div> -->
+    <div class="container mx-auto px-4 py-8">
+        <div class="flex flex-col lg:flex-row gap-8">
+            <!-- Product Images -->
+            <div class="lg:w-1/2">
+                <div class="bg-white p-4 rounded-lg shadow-lg">
+                    <img id="main-image" src="<%=product.image[0].url%>" alt="<%=product.name%>" 
+                         class="product-main-image w-full rounded-lg">
+                    
+                    <% if(product.image.length > 1) { %>
+                    <div class="mt-4 grid grid-cols-4 gap-2">
+                        <% product.image.forEach((img, index) => { %>
+                        <img src="<%=img.url%>" 
+                             alt="<%=product.name%> - Image <%=index+1%>"
+                             class="w-full h-20 object-cover rounded cursor-pointer border-2 hover:border-blue-500 transition-all"
+                             onclick="changeImage('<%=img.url%>')"
+                             onmouseover="changeImage('<%=img.url%>')">
+                        <% }) %>
+                    </div>
+                    <% } %>
+                </div>
+            </div>
+
+            <!-- Product Info -->
+            <div class="lg:w-1/2">
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h1 class="text-3xl font-bold text-gray-800 mb-2"><%=product.name%></h1>
+                    
+                    <div class="flex items-center mb-4">
+                        <div class="flex text-yellow-400">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                        <span class="ml-2 text-gray-600">(42 Reviews)</span>
+                    </div>
+
+                    <!-- Price Display -->
+                    <div id="price-display" class="mb-6">
+                        <% if(product.sizes && product.sizes.length > 0) { %>
+                        <p class="text-gray-600 mb-2">Select a size to see the price</p>
+                        <% } else { %>
+                        <div class="text-2xl font-bold text-blue-600">
+                            ₹<%=product.price%>
+                        </div>
+                        <% } %>
+                    </div>
+
+                    <!-- Size Variations -->
+                    <% if(product.sizes && product.sizes.length > 0) { %>
+                    <div class="mb-6">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-3">
+                            Select Size <span class="text-red-500">*</span>
+                        </h3>
+                        <div id="size-options" class="grid grid-cols-3 md:grid-cols-4 gap-3">
+                            <% product.sizes.forEach((sizeObj, index) => { %>
+                            <div class="size-option text-center p-3 border-2 border-gray-300 rounded-lg cursor-pointer transition-all 
+                                        <%= sizeObj.stock <= 0 ? 'out-of-stock' : '' %>"
+                                 data-size="<%=sizeObj.size%>"
+                                 data-stock="<%=sizeObj.stock%>"
+                                 data-price="<%=sizeObj.price%>"
+                                 onclick="selectSize(this)">
+                                <div class="font-medium text-gray-800"><%=sizeObj.size%>"</div>
+                                <div class="text-sm text-green-600 font-semibold">₹<%=sizeObj.price%></div>
+                                <div class="text-xs <%= sizeObj.stock > 0 ? 'text-green-600' : 'text-red-600' %> mt-1">
+                                    <% if(sizeObj.stock > 0) { %>
+                                        <%=sizeObj.stock%> in stock
+                                    <% } else { %>
+                                        Out of stock
+                                    <% } %>
+                                </div>
+                            </div>
+                            <% }) %>
+                        </div>
+                        
+                        <!-- Selected Size Info -->
+                        <div id="selected-size-info" class="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg hidden">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <span class="font-semibold text-blue-800">Selected Size:</span>
+                                    <span id="selected-size-text" class="ml-2 text-gray-800"></span>
+                                </div>
+                                <div>
+                                    <span class="font-semibold text-blue-800">Price:</span>
+                                    <span id="selected-price-text" class="ml-2 text-xl font-bold text-green-600"></span>
+                                </div>
+                            </div>
+                            <div id="stock-info" class="mt-2 text-sm text-gray-600"></div>
+                        </div>
+                    </div>
+                    <% } %>
+
+                    <!-- Key Features -->
+                    <div class="mb-6">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-3">Key Features:</h3>
+                        <ul class="space-y-2">
+                            <% product.key_features.forEach(feature => { %>
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                                <span class="text-gray-700"><%=feature%></span>
+                            </li>
+                            <% }) %>
+                        </ul>
+                    </div>
+
+                    <!-- Quantity & Actions -->
+                    <div class="mb-6">
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                            <div class="flex items-center space-x-4">
+                                <label for="quantity" class="font-semibold text-gray-700">Quantity:</label>
+                                <div class="flex items-center border border-gray-300 rounded">
+                                    <button type="button" onclick="decreaseQuantity()" class="px-3 py-1 text-gray-600 hover:bg-gray-100">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                    <input type="number" id="quantity" value="1" min="1" max="10" 
+                                           class="w-16 text-center border-0 focus:ring-0">
+                                    <button type="button" onclick="increaseQuantity()" class="px-3 py-1 text-gray-600 hover:bg-gray-100">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex flex-col sm:flex-row gap-4 mb-6">
+                        <!-- Add to Cart Form -->
+                        <form id="add-to-cart-form" action="/cart/add/<%=userId%>" method="POST" class="flex-1">
+                            <input type="hidden" name="quantity" id="cart-quantity" value="1">
+                            <input type="hidden" name="productId" value="<%=product.productid%>">
+                            <input type="hidden" name="name" value="<%=product.name%>">
+                            <input type="hidden" name="image" value="<%=product.image[0].url%>">
+                            <input type="hidden" name="size" id="selected-size-input">
+                            <input type="hidden" name="price" id="selected-price-input">
+                            <input type="hidden" name="size_id" id="selected-size-id">
+                            
+                            <button type="submit" id="add-to-cart-btn" 
+                                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed">
+                                <i class="fas fa-cart-plus mr-2"></i> Add to Cart
+                            </button>
+                        </form>
+                        
+                        <!-- Buy Now Form -->
+                        <form id="buy-now-form" action="/product/checkout/<%=product.productid%>" method="POST" class="flex-1">
+                            <input type="hidden" name="quantity" id="buy-quantity" value="1">
+                            <input type="hidden" name="productId" value="<%=product.productid%>">
+                            <input type="hidden" name="name" value="<%=product.name%>">
+                            <input type="hidden" name="image" value="<%=product.image[0].url%>">
+                            <input type="hidden" name="size" id="buy-selected-size-input">
+                            <input type="hidden" name="price" id="buy-selected-price-input">
+                            <input type="hidden" name="size_id" id="buy-selected-size-id">
+                            
+                            <button type="submit" id="buy-now-btn" 
+                                    class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed">
+                                <i class="fas fa-bolt mr-2"></i> Buy Now
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Product Description -->
+                    <div class="mb-6">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-3">Product Description</h3>
+                        <p class="text-gray-700 leading-relaxed"><%=product.Product_description%></p>
+                    </div>
+
+                    <!-- Technical Specifications -->
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-3">Technical Specifications</h3>
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="flex justify-between border-b pb-2">
+                                    <span class="font-medium text-gray-600">Brand</span>
+                                    <span class="text-gray-800"><%=product.Tech_Specifications[0].Brand%></span>
+                                </div>
+                                <div class="flex justify-between border-b pb-2">
+                                    <span class="font-medium text-gray-600">Model Number</span>
+                                    <span class="text-gray-800"><%=product.Tech_Specifications[0].Model_number%></span>
+                                </div>
+                                <div class="flex justify-between border-b pb-2">
+                                    <span class="font-medium text-gray-600">Model Type</span>
+                                    <span class="text-gray-800"><%=product.Tech_Specifications[0].Model_type%></span>
+                                </div>
+                                <div class="flex justify-between border-b pb-2">
+                                    <span class="font-medium text-gray-600">Material</span>
+                                    <span class="text-gray-800"><%=product.Tech_Specifications[0].Material%></span>
+                                </div>
+                                <div class="flex justify-between border-b pb-2">
+                                    <span class="font-medium text-gray-600">Weight</span>
+                                    <span class="text-gray-800"><%=product.Tech_Specifications[0].Weight%> g</span>
+                                </div>
+                                <div class="flex justify-between border-b pb-2">
+                                    <span class="font-medium text-gray-600">Country of Origin</span>
+                                    <span class="text-gray-800">India</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <div class="product-info">
-            <h1 class="product-title"><%=product.name%></h1>
-            <div class="product-rating">
-                ★★★★☆ (42 Reviews)
-            </div>
-            <div class="product-price">
-                <%=product.price%> <span>₹690</span> (22% off)
-            </div>
-            <div class="product-availability">
-                <strong>Availability:</strong> In Stock (<%=product.stock%> units)
-            </div>
-
-            <div class="product-highlights">
-                <h3>Key Features:</h3>
-                <ul>
-                    <%for(let feature of product.key_features) {%>
-                        <li><%=feature%></li>
-                    <%}%>
-                </ul>
-            </div>
-
-            <div class="product-actions">
-    <div class="quantity-selector">
-        <label for="quantity"><strong>Quantity:</strong></label>
-        <input type="number" id="quantity" value="1" min="1" max="10">
     </div>
-    <div class="btn-b-c">
-        <form action="/cart/add/<%=userId%>" method="POST" onsubmit="copyQuantity(this)">
-            <input type="hidden" name="quantity">
-            <input type="hidden" name="productId" value="<%= product.productid %>">
-            <input type="hidden" name="name" value="<%=product.name%>">
-            <input type="hidden" name="price" value="<%=product.price%>">
-            <input type="hidden" name="image" value="<%=product.image[0].url%>">
-            <button type="submit" class="add-to-cart">
-                <i class="fas fa-cart-plus"></i> Add to Cart
-            </button>
-        </form>
-        
-        <form action="/product/checkout/<%=product.id%>" method="POST" onsubmit="copyQuantity(this)">
-            <input type="hidden" name="quantity">
-            <input type="hidden" name="productId" value="<%=product.id%>">
-            <input type="hidden" name="name" value="<%=product.name%>">
-            <input type="hidden" name="price" value="<%=product.price%>">
-            <input type="hidden" name="image" value="<%=product.image[0].url%>">
-            <button type="submit" class="buy-now">
-                <i class="fas fa-bolt"></i> Buy Now
-            </button>
-        </form>
-    </div>
-</div>
 
-            <div class="product-description">
-                <h3>Product Description</h3>
-                <p><%=product.Product_description%></p>
-            </div>
-
-            <div class="product-specs">
-                <h3>Technical Specifications</h3>
-                <table class="specs-table">
-                    <tr>
-                        <td>Brand</td>
-                        <td><%=product.Tech_Specifications[0].Brand%></td>
-                    </tr>
-                    <tr>
-                        <td>Model</td>
-                        <td><%=product.Tech_Specifications[0].Model_number%></td>
-                    </tr>
-                    <tr>
-                        <td>Model type</td>
-                        <td><%=product.Tech_Specifications[0].Model_type%></td>
-                    </tr>
-                    <tr>
-                        <td>Material</td>
-                        <td><%=product.Tech_Specifications[0].Material%></td>
-                    </tr>
-                    <tr>
-                        <td>Size(inch)</td>
-                        <td><%=product.Tech_Specifications[0].size%></td>
-                    </tr>
-                    <tr>
-                        <td>Weight(g)</td>
-                        <td><%=product.Tech_Specifications[0].Weight%></td>
-                    </tr>
-                    <tr>
-                        <td>Country of Origin</td>
-                        <td>India</td>
-                    </tr>
-                </table>
-            </div>
+    <footer class="bg-gray-800 text-white py-6 mt-8">
+        <div class="container mx-auto px-4 text-center">
+            <p class="mb-2">&copy; 2023 JOY Hardware Solutions. All Rights Reserved.</p>
+            <p class="mb-2">Registered Office: 123 Industrial Area, Mumbai, Maharashtra - 400001</p>
+            <p>Contact: support@joyhardware.com | Customer Care: +91 1800 123 4567</p>
         </div>
-    </div>
-
-    <footer>
-        <p>&copy; 2023 JOY Hardware Solutions. All Rights Reserved.</p>
-        <p>Registered Office: 123 Industrial Area, Mumbai, Maharashtra - 400001</p>
-        <p>Contact: support@joyhardware.com | Customer Care: +91 1800 123 4567</p>
     </footer>
+
 
     <script src="/script/customer/product-details.js"></script>
 </body>

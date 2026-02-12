@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const buySchema = new mongoose.Schema({
     // Define the schema for the product
     userId: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         ref: 'User',
         required: true
     },
@@ -63,7 +63,18 @@ const buySchema = new mongoose.Schema({
             type: String, // You can store the image URL here
             required: true
         },
-        
+        category: {
+            type: String,
+            required: true
+        },
+        Material: {
+            type: String,
+            required: true
+        },
+        size: {
+            type: String,
+            required: true
+        },
         total: {
             type: Number,
             required: true,
@@ -78,6 +89,10 @@ const buySchema = new mongoose.Schema({
     subtotal: {
         type: Number,
         required: true,
+        default: 0
+    },
+    tax: {
+        type: Number,
         default: 0
     },
     totalPrice: {

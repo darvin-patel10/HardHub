@@ -1,175 +1,167 @@
-// Delivery option selection
-function selectDeliveryOption(element, option) {
-    document.querySelectorAll('.delivery-option').forEach(opt => {
-        opt.classList.remove('active');
-    });
-    element.classList.add('active');
-    
-    // Update shipping cost and totals
-    updateTotals(option);
-}
-
-// Update totals based on delivery option
-function updateTotals(deliveryOption) {
-    const subtotal = 973.00;
-    let shipping = 50.00;
-    
-    if (deliveryOption === 'express') {
-        shipping = 150.00;
-    }
-    
-    const tax = (subtotal + shipping) * 0.18;
-    const total = subtotal + shipping + tax;
-    
-    document.getElementById('shippingCost').textContent = `₹${shipping.toFixed(2)}`;
-    document.getElementById('taxAmount').textContent = `₹${tax.toFixed(2)}`;
-    document.getElementById('totalAmount').textContent = `₹${total.toFixed(2)}`;
-}
-
-// Toggle address form based on saved address selection
+// ===============================
+// Address Toggle Logic
+// ===============================
 function setupAddressToggle() {
     const savedAddressCheckbox = document.getElementById('useSavedAddress');
     const addressFormSection = document.getElementById('addressFormSection');
-    const addressCard = document.getElementById('savedAddressCard');
+
+    if (!savedAddressCheckbox || !addressFormSection) return;
 
     const formFields = addressFormSection.querySelectorAll(
         'input, textarea, select'
     );
 
-    if (savedAddressCheckbox) {
-        savedAddressCheckbox.addEventListener('change', function () {
+    savedAddressCheckbox.addEventListener('change', function () {
 
-            if (this.checked) {
-                // Disable form
-                addressFormSection.classList.add('form-disabled');
-                addressCard.classList.add('active');
+        if (this.checked) {
+            // Disable manual form
+            formFields.forEach(field => {
+                field.dataset.required = field.required;
+                field.required = false;
+                field.disabled = true;
+                field.readOnly = true;
+            });
 
-                formFields.forEach(field => {
-                    field.dataset.wasRequired = field.required;
-                    field.required = false;
-                    field.disabled = true;
-                });
+            addressFormSection.classList.add(
+                'opacity-50',
+                'pointer-events-none'
+            );
 
-            } else {
-                // Enable form
-                addressFormSection.classList.remove('form-disabled');
-                addressCard.classList.remove('active');
+        } else {
+            // Enable manual form
+            formFields.forEach(field => {
+                field.disabled = false;
+                field.readOnly = false;
 
-                formFields.forEach(field => {
-                    field.disabled = false;
+                if (field.dataset.required === "true") {
+                    field.required = true;
+                }
+            });
 
-                    // restore required only if it was required before
-                    if (field.dataset.wasRequired === "true") {
-                        field.required = true;
-                    }
-                });
-            }
-        });
-    }
+            addressFormSection.classList.remove(
+                'opacity-50',
+                'pointer-events-none'
+            );
+        }
+    });
 }
 
-
-// Form validation and submission
-document.getElementById('placeOrderBtn').addEventListener('click', function(e) {
-    e.preventDefault();
-    const form = document.getElementById('shippingForm');
-    const useSavedAddress = document.getElementById('useSavedAddress');
-    
-    let isValid = true;
-    
-    if (useSavedAddress && useSavedAddress.checked) {
-        // Using saved address - only validate that checkbox is checked
-        isValid = true;
-        
-        // Populate hidden fields with saved address data
-        populateSavedAddressFields();
-    } else {
-        // Using custom address - validate all form fields
-        const requiredFields = form.querySelectorAll('[required]');
-        
-        // Validate required fields
-        requiredFields.forEach(field => {
-            if (!field.value.trim()) {
-                field.style.borderColor = 'red';
-                isValid = false;
-            } else {
-                field.style.borderColor = '#ddd';
-            }
-        });
-        
-        // Validate phone number
-        const phoneField = document.getElementById('phone');
-        const phoneRegex = /^[0-9]{10}$/;
-        if (!phoneRegex.test(phoneField.value.trim())) {
-            phoneField.style.borderColor = 'red';
-            isValid = false;
-            alert('Please enter a valid 10-digit phone number');
-        }
-        
-        // Validate pincode
-        const pincodeField = document.getElementById('pincode');
-        const pincodeRegex = /^[0-9]{6}$/;
-        if (!pincodeRegex.test(pincodeField.value.trim())) {
-            pincodeField.style.borderColor = 'red';
-            isValid = false;
-            alert('Please enter a valid 6-digit pincode');
-        }
-        
-        // Validate email
-        const emailField = document.getElementById('email');
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(emailField.value.trim())) {
-            emailField.style.borderColor = 'red';
-            isValid = false;
-            alert('Please enter a valid email address');
-        }
-    }
-    
-    if (isValid) {
-        // Submit the form
-        form.submit();
-    } else {
-        alert('Please fill in all required fields correctly');
-    }
-});
-
-// Function to populate hidden fields with saved address data
+// ===============================
+// Populate Saved Address
+// ===============================
 function populateSavedAddressFields() {
     const form = document.getElementById('shippingForm');
     const dataDiv = document.getElementById('savedUserData');
 
-    const savedFields = [
-        { name: 'firstname', value: dataDiv.dataset.firstname },
-        { name: 'lastname', value: dataDiv.dataset.lastname },
-        { name: 'email', value: dataDiv.dataset.email },
-        { name: 'phone', value: dataDiv.dataset.phone },
-        { name: 'address', value: dataDiv.dataset.address },
-        { name: 'city', value: dataDiv.dataset.city },
-        { name: 'state', value: dataDiv.dataset.state },
-        { name: 'pincode', value: dataDiv.dataset.pincode },
-        { name: 'country', value: "India" }
-    ];
+    if (!dataDiv) return;
 
-    savedFields.forEach(field => {
-        const input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = field.name;
-        input.value = field.value;
+    const fields = {
+        firstname: dataDiv.dataset.firstname || "",
+        lastname: dataDiv.dataset.lastname || "",
+        email: dataDiv.dataset.email || "",
+        phone: dataDiv.dataset.phone || "",
+        address: dataDiv.dataset.address || "",
+        city: dataDiv.dataset.city || "",
+        state: dataDiv.dataset.state || "",
+        pincode: dataDiv.dataset.pincode || "",
+        country: "India"
+    };
+
+    Object.entries(fields).forEach(([name, value]) => {
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = name;
+        input.value = value;
         form.appendChild(input);
     });
 }
 
-// Auto-format phone number input
-document.getElementById('phone')?.addEventListener('input', function(e) {
-    this.value = this.value.replace(/[^0-9]/g, '').substring(0, 10);
-});
+// ===============================
+// Validation
+// ===============================
+function validateForm() {
+    const form = document.getElementById('shippingForm');
+    const useSavedAddress = document.getElementById('useSavedAddress');
 
-// Auto-format pincode input
-document.getElementById('pincode')?.addEventListener('input', function(e) {
-    this.value = this.value.replace(/[^0-9]/g, '').substring(0, 6);
-});
+    let isValid = true;
 
-// Initialize on page load
-document.addEventListener('DOMContentLoaded', function() {
+    // If using saved address
+    if (useSavedAddress && useSavedAddress.checked) {
+        populateSavedAddressFields();
+        return true;
+    }
+
+    const requiredFields = form.querySelectorAll('[required]');
+
+    requiredFields.forEach(field => {
+        if (!field.value.trim()) {
+            field.classList.add('border-red-500');
+            isValid = false;
+        } else {
+            field.classList.remove('border-red-500');
+        }
+    });
+
+    // Phone validation
+    const phone = document.getElementById('phone');
+    if (phone && !/^[0-9]{10}$/.test(phone.value.trim())) {
+        alert("Enter valid 10-digit phone number");
+        phone.classList.add('border-red-500');
+        isValid = false;
+    }
+
+    // Pincode validation
+    const pincode = document.getElementById('pincode');
+    if (pincode && !/^[0-9]{6}$/.test(pincode.value.trim())) {
+        alert("Enter valid 6-digit pincode");
+        pincode.classList.add('border-red-500');
+        isValid = false;
+    }
+
+    // Email validation
+    const email = document.getElementById('email');
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) {
+        alert("Enter valid email");
+        email.classList.add('border-red-500');
+        isValid = false;
+    }
+
+    return isValid;
+}
+
+// ===============================
+// Auto Format Inputs
+// ===============================
+function setupAutoFormat() {
+
+    const phone = document.getElementById('phone');
+    phone?.addEventListener('input', function () {
+        this.value = this.value.replace(/\D/g, '').slice(0, 10);
+    });
+
+    const pincode = document.getElementById('pincode');
+    pincode?.addEventListener('input', function () {
+        this.value = this.value.replace(/\D/g, '').slice(0, 6);
+    });
+}
+
+// ===============================
+// Init
+// ===============================
+document.addEventListener("DOMContentLoaded", () => {
+
     setupAddressToggle();
+    setupAutoFormat();
+
+    const form = document.getElementById("shippingForm");
+
+    form?.addEventListener("submit", function (e) {
+
+        if (!validateForm()) {
+            e.preventDefault();
+            alert("Please fill all fields correctly!");
+        }
+
+    });
+
 });

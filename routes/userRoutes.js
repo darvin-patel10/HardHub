@@ -177,7 +177,7 @@ router.post('/cart/remove/:id', async (req, res) => {
         // Update cart totals
         cart.totalUniqueItems = cart.items.length;
         cart.subtotal = cart.items.reduce((acc, item) => acc + item.total, 0);
-        cart.totalPrice = cart.subtotal * 1.18 + 120;
+        cart.totalPrice = cart.subtotal * 1.18 + 40;
         cart.updatedAt = Date.now();
 
         await cart.save();
@@ -195,7 +195,15 @@ router.post('/cart/remove/:id', async (req, res) => {
 //========================================Buying Routes========================================//
 
 router.post('/product/checkout/:id', async (req, res) => {
-    const {productId, name, price, quantity, image}= req.body;
+    const id = req.params.id;
+    console.log("Checkout request for product ID:", id);
+    const {productId, name, price, quantity, size, image}= req.body;
+
+    console.log("Checkout data received:", req.body);
+    const product = await Product.findOne({ productid: productId });
+    if (!product) {
+        return res.status(404).send('Product not found');
+    }
 
      // Store product data in session
     try { 
@@ -205,8 +213,12 @@ router.post('/product/checkout/:id', async (req, res) => {
             price: parseFloat(price),
             quantity: parseInt(quantity),
             image,
+            category: product.category,
+            material: product.Tech_Specifications[0].Material,
+            size,
             subtotal: price * quantity,
-            totalPrice: (price * quantity) * 1.18 + 120
+            tax: ((price * 18)/100)*quantity,
+            totalPrice: (price * quantity) * 1.18 + 40
         };
         // console.log("✅ Buy saved:", req.session.checkoutData);
         res.redirect(`/chekout/${productId}`);
@@ -249,10 +261,15 @@ router.post('/product/buy/:id', async (req, res) => {
                 price: priceNum,
                 quantity: quantityNum,
                 image: checkoutData.image,
+                category: checkoutData.category,
+                Material: checkoutData.material,
+                size: checkoutData.size,
                 total: priceNum * quantityNum
             }],
+            totalUniqueItems: 1,
             subtotal: priceNum * quantityNum,
-            totalPrice: (priceNum * quantityNum) * 1.18 + 120,
+            tax: ((priceNum * 18)/100)*quantityNum,
+            totalPrice: (priceNum * quantityNum) * 1.18 + 40,
         };
 
 
@@ -287,17 +304,13 @@ router.post('/product/confirm/:id', async (req, res) => {
         state: buyData.state,
         pincode: buyData.pincode,
         country: "India",
-        items: [{
-            name: buyData.items[0].name,
-            price: buyData.items[0].price,
-            quantity: buyData.items[0].quantity,
-            image: buyData.items[0].image,
-            total: buyData.items[0].total
-        }],
+        items: buyData.items,
+        totalUniqueItems: buyData.items.length,
         paymentMethod: paymentMethod,
         transactionId: uuidv4(), // Assuming you want to generate a new transaction ID
         createdAt: Date.now(),
         subtotal: buyData.subtotal,
+        tax: buyData.tax,
         totalPrice: buyData.totalPrice,
     });
     await buy.save();
@@ -333,7 +346,7 @@ router.post('/product/confirm/:id', async (req, res) => {
 router.post('/account/edit/:id', upload.single('profilePhoto'), async (req, res) => {
     const userId = req.params.id;
     console.log("User ID for account edit:", userId);
-    const { profilePhoto, username, password, email, phone, dob, street1,street2, city, state, pincode, country } = req.body;
+    const {  username, password, email, phone, dob, street1,street2, city, state, pincode, country } = req.body;
     try {
         let user = await User.findById(userId);
 
@@ -432,7 +445,7 @@ router.get('/chekout/:id', async(req,res)=>{
 
     res.render('customer/checkout.ejs', {
         user,
-        product: req.session.checkoutData, // So you can show summary
+        order: req.session.checkoutData, // So you can show summary
         totalUniqueItems: cart.items.length
     });
 });

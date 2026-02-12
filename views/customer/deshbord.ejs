@@ -50,15 +50,27 @@
             
             <!-- User Icon -->
             <div class="flex items-center space-x-4">
-                <a href="/dashboard" class="flex items-center space-x-2 text-hardware-primary hover:text-hardware-accent transition-colors">
+                <% if (!user || !user.profilePhoto || user.profilePhoto.length === 0 || !user.profilePhoto[0].url) { %>
+                    <a href="deshbord/<%=user._id%>" class="flex items-center space-x-2 text-hardware-primary hover:text-hardware-accent transition-colors">
                     <div class="relative">
-                        <img src="<%= user.profilePhoto[0].url || 'https://thumbs.dreamstime.com/b/default-profile-picture-avatar-photo-placeholder-vector-illustration-default-profile-picture-avatar-photo-placeholder-vector-189495158.jpg' %>" 
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQF02Jj8T2t7PdkytAw42HDuuSz7yXguKn8Lg&s" 
                              alt="User Icon" 
                              class="w-10 h-10 rounded-full border-2 border-gray-300">
                         <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
                     </div>
                     <span class="hidden lg:inline font-medium"><%=user.username%></span>
                 </a>
+               <% } else { %>
+                <a href="/deshbord/<%=user._id%>" class="flex items-center space-x-2 text-hardware-primary hover:text-hardware-accent transition-colors">
+                    <div class="relative">
+                        <img src="<%= user.profilePhoto[0].url %>" 
+                             alt="User Icon" 
+                             class="w-10 h-10 rounded-full border-2 border-gray-300">
+                        <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
+                    </div>
+                    <span class="hidden lg:inline font-medium"><%=user.username%></span>
+                </a>
+                <% } %>
                 
                 <!-- Mobile Menu Button -->
                 <button id="mobile-menu-button" class="lg:hidden text-hardware-primary focus:outline-none">
@@ -104,14 +116,23 @@
                     <i class="fas fa-user-circle text-hardware-accent text-2xl"></i>
                 </div>
                 
+                <% if (!user || !user.profilePhoto || user.profilePhoto.length === 0 || !user.profilePhoto[0].url) { %>
+                    <div class="flex flex-col items-center mb-6">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQF02Jj8T2t7PdkytAw42HDuuSz7yXguKn8Lg&s" 
+                             alt="Profile Photo" 
+                             class="w-24 h-24 rounded-full border-4 border-gray-100 mb-4">
+                        <p class="text-lg font-bold text-gray-800"><%=user.username%></p>
+                        <p class="text-hardware-accent font-medium">Premium Member</p>
+                    </div>
+                <% } else { %>
                 <div class="flex flex-col items-center mb-6">
-                    <img src="<%= user.profilePhoto[0].url || 'https://thumbs.dreamstime.com/b/default-profile-picture-avatar-photo-placeholder-vector-illustration-default-profile-picture-avatar-photo-placeholder-vector-189495158.jpg' %>" 
+                    <img src="<%= user.profilePhoto[0].url %>" 
                          alt="Profile Photo" 
                          class="w-24 h-24 rounded-full border-4 border-gray-100 mb-4">
                     <p class="text-lg font-bold text-gray-800"><%=user.username%></p>
                     <p class="text-hardware-accent font-medium">Premium Member</p>
                 </div>
-                
+                <% } %>
                 <div class="space-y-3 mb-6">
                     <div class="flex items-center">
                         <i class="fas fa-envelope text-gray-400 w-6 mr-3"></i>
