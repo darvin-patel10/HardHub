@@ -309,7 +309,7 @@
                                     
                                     <div class="flex justify-between">
                                         <span class="text-gray-600">Shipping:</span>
-                                        <span class="font-medium">₹<%= shippingCharge.toFixed(2) %></span>
+                                        <span class="font-medium">₹40 %></span>
                                     </div>
                                     
                                     <%
@@ -319,8 +319,8 @@
                                     %>
                                     
                                     <div class="flex justify-between">
-                                        <span class="text-gray-600">Tax (GST <%= (taxRate * 100).toFixed(0) %>%):</span>
-                                        <span class="font-medium">₹<%= taxAmount.toFixed(2) %></span>
+                                        <span class="text-gray-600">Tax (GST 18%):</span>
+                                        <span class="font-medium">₹<%= order.tax %></span>
                                     </div>
                                     
                                     <div class="border-t border-gray-200 pt-3 mt-3">
@@ -329,7 +329,7 @@
                                             <%
                                                 grandTotal = taxableAmount + shippingCharge + taxAmount;
                                             %>
-                                            <span class="text-hardware-primary">₹<%= grandTotal.toFixed(2) %></span>
+                                            <span class="text-hardware-primary">₹<%= order.totalPrice %></span>
                                         </div>
                                         <p class="text-right text-sm text-gray-500 mt-1">
                                             <% if(order.paymentMethod === 'COD') { %>

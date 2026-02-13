@@ -38,6 +38,8 @@
         </div>
         -->
 
+        <form action="/product/buy/<%=order.productId%>" method="POST"></form>
+
         <div class="cart-container">
             <div class="cart-items">
                 <table class="cart-table">
@@ -105,7 +107,7 @@
                     <span class="price"><%=totalPrice%> <span class="inr">INR</span></span>
                 </div>
                 
-                <button class="checkout-btn">Proceed to Checkout</button>
+                </a><button class="checkout-btn">Proceed to Checkout</button>
                 <a href="/product/<%=userId%>"><button class="continue-btn">Continue Shopping</button></a>
                 
                 <div style="margin-top: 2rem; font-size: 0.9rem;">
