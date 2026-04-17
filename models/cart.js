@@ -23,10 +23,25 @@ const cartSchema = new mongoose.Schema({
             default: 1
         },
         image: {
-            type: String, // You can store the image URL here
+            type: String, 
             required: true
         },
-        
+        Model_number:{
+            type: Number,
+            required: true,
+        },
+        category: {
+            type: String,
+            required: true
+        },
+        Material: {
+            type: String,
+            required: true
+        },
+        size: {
+            type: String,
+            required: true
+        },        
         total: {
             type: Number,
             required: true,
@@ -36,9 +51,14 @@ const cartSchema = new mongoose.Schema({
 
     totalUniqueItems: {
         type: Number,
+        required: true,
         default: 0
     },
 
+    tax: {
+        type: Number,
+        required: true
+    },
     subtotal: {
         type: Number,
         required: true,
@@ -46,6 +66,7 @@ const cartSchema = new mongoose.Schema({
     },
     totalPrice: {
         type: Number,
+        required: true,
         default: 0
     },
     updatedAt: {

@@ -23,24 +23,19 @@
             <li><a href="/about">About Us</a></li>
             <li><a href="/contact">Contact</a></li>
         </ul>
+
         
-        <% if (!user || !user.profilePhoto || user.profilePhoto.length === 0 || !user.profilePhoto[0].url) { %>
 
-            <div class="user-icon-container">
+        <div class="user-icon-welcom-container">
+            <div class="hidden lg:flex items-end space-x-2 text-sm welcom-text">
+                <span class="text-white">Hello, <strong><%=user.username%></strong></span>
+            </div>
+            <div>
                 <a href="/deshbord/<%=userId%>" class="user-icon">
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQF02Jj8T2t7PdkytAw42HDuuSz7yXguKn8Lg&s" alt="User Icon">
+                   <img src="<%= user?.profilePhoto[0].url || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQF02Jj8T2t7PdkytAw42HDuuSz7yXguKn8Lg&s" alt="User Icon' %>">
                 </a>
             </div>
-
-        <% } else { %>
-
-            <div class="user-icon-container">
-                <a href="/deshbord/<%=userId%>" class="user-icon">
-                    <img src="<%= user.profilePhoto[0].url %>" alt="User Icon">
-                </a>
-            </div>
-
-        <% } %>
+        </div>
         
         <!-- Mobile Menu Button -->
         <div class="hamburger" onclick="toggleMenu()">

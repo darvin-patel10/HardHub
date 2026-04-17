@@ -12,12 +12,6 @@ const buySchema = new mongoose.Schema({
         required: true,
         unique: true
     },
-    productId: {
-        type: String,
-        required: true,
-        unique: true
-    },
-
     firstname:{
         type: String,
     },
@@ -47,6 +41,11 @@ const buySchema = new mongoose.Schema({
         default: "India"
     },
     items: [{
+        productId: {
+            type: String,
+            required: true,
+            unique: true
+        },
         name: {
             type: String,
             required: true
@@ -69,6 +68,10 @@ const buySchema = new mongoose.Schema({
         },
         Material: {
             type: String,
+            required: true
+        },
+        Model_number: {
+            type: Number,
             required: true
         },
         size: {

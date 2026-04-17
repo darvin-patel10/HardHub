@@ -31,7 +31,7 @@
                     <p class="text-gray-300 mt-1 text-sm lg:text-base">Quality tools for professionals and DIY enthusiasts</p>
                 </div>
                 <div class="hidden lg:flex items-center space-x-2 text-sm">
-                    <span class="text-gray-300">Welcome, <strong><%=user.username%></strong></span>
+                    <span class="text-gray-300">Welcome, <strong><%=user?.username%></strong></span>
                 </div>
             </div>
         </div>
@@ -43,7 +43,7 @@
             <!-- Desktop Navigation -->
             <div class="hidden lg:flex items-center space-x-8">
                 <a href="/product/<%= user._id %>" class="text-hardware-primary font-medium hover:text-hardware-accent transition-colors">Home</a>
-                <a href="/product" class="text-hardware-primary font-medium hover:text-hardware-accent transition-colors">Products</a>
+                <a href="/product/<%= user._id %>" class="text-hardware-primary font-medium hover:text-hardware-accent transition-colors">Products</a>
                 <a href="/deshbord/<%= user._id %>" class="text-hardware-primary font-medium hover:text-hardware-accent transition-colors">Dashboard</a>
                 <a href="/orders" class="text-hardware-primary font-medium hover:text-hardware-accent transition-colors">My Orders</a>
                 <a href="/about" class="text-hardware-primary font-medium hover:text-hardware-accent transition-colors">About Us</a>
@@ -54,12 +54,12 @@
             <div class="flex items-center space-x-4">
                 <a href="/dashboard" class="flex items-center space-x-2 text-hardware-primary hover:text-hardware-accent transition-colors">
                     <div class="relative">
-                        <img src="<%= user.profilePhoto[0].url || 'https://thumbs.dreamstime.com/b/default-profile-picture-avatar-photo-placeholder-vector-illustration-default-profile-picture-avatar-photo-placeholder-vector-189495158.jpg' %>" 
+                        <img src="<%= user?.profilePhoto[0].url || 'https://thumbs.dreamstime.com/b/default-profile-picture-avatar-photo-placeholder-vector-illustration-default-profile-picture-avatar-photo-placeholder-vector-189495158.jpg' %>" 
                              alt="User Icon" 
                              class="w-10 h-10 rounded-full border-2 border-gray-300 object-cover">
                         <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
                     </div>
-                    <span class="hidden lg:inline font-medium"><%=user.username%></span>
+                    <span class="hidden lg:inline font-medium"><%=user?.username%></span>
                 </a>
                 
                 <!-- Mobile Menu Button -->
@@ -72,7 +72,7 @@
         <!-- Mobile Navigation Menu -->
         <div id="mobile-menu" class="lg:hidden hidden bg-white shadow-lg rounded-b-lg mt-2 py-4 px-4">
             <div class="flex flex-col space-y-3">
-                <a href="/product/<%= user._id %>" class="text-hardware-primary font-medium py-2 px-3 hover:bg-gray-100 rounded transition-colors">Home</a>
+                <a href="/product/<%= user?._id %>" class="text-hardware-primary font-medium py-2 px-3 hover:bg-gray-100 rounded transition-colors">Home</a>
                 <a href="/product" class="text-hardware-primary font-medium py-2 px-3 hover:bg-gray-100 rounded transition-colors">Products</a>
                 <a href="/dashboard" class="text-hardware-primary font-medium py-2 px-3 hover:bg-gray-100 rounded transition-colors">Dashboard</a>
                 <a href="/orders" class="text-hardware-primary font-medium py-2 px-3 hover:bg-gray-100 rounded transition-colors">My Orders</a>
@@ -137,7 +137,7 @@
                     <div class="flex flex-col md:flex-row items-center md:items-start space-y-6 md:space-y-0 md:space-x-8">
                         <div class="profile-photo-container relative">
                             <img id="profile-preview" 
-                                 src="<%= user.profilePhoto[0].url || 'https://thumbs.dreamstime.com/b/default-profile-picture-avatar-photo-placeholder-vector-illustration-default-profile-picture-avatar-photo-placeholder-vector-189495158.jpg' %>" 
+                                 src="<%= user?.profilePhoto[0].url || 'https://thumbs.dreamstime.com/b/default-profile-picture-avatar-photo-placeholder-vector-illustration-default-profile-picture-avatar-photo-placeholder-vector-189495158.jpg' %>" 
                                  alt="Profile Photo" 
                                  class="w-40 h-40 rounded-full border-4 border-gray-100 object-cover">
                             <div class="profile-photo-overlay absolute inset-0 rounded-full flex items-center justify-center">
@@ -181,7 +181,7 @@
                             <input type="text" 
                                    id="username" 
                                    name="username" 
-                                   value="<%= user.username %>"
+                                   value="<%= user?.username %>"
                                    required
                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-colors">
                             <p class="text-gray-500 text-xs mt-1">Your full name as it should appear on orders</p>
@@ -194,7 +194,7 @@
                             <input type="email" 
                                    id="email" 
                                    name="email" 
-                                   value="<%= user.email %>"
+                                   value="<%= user?.email %>"
                                    required
                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-colors">
                             <p class="text-gray-500 text-xs mt-1">We'll send order confirmations to this email</p>
@@ -211,7 +211,7 @@
                                 <input type="tel" 
                                        id="phone" 
                                        name="phone" 
-                                       value="<%= user.phone %>"
+                                       value="<%= user?.phone %>"
                                        pattern="[0-9]{10}"
                                        required
                                        class="w-full px-4 py-3 border border-gray-300 rounded-r-lg input-focus transition-colors">
@@ -245,10 +245,10 @@
                                     name="gender"
                                     class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-colors">
                                 <option value="">Select Gender</option>
-                                <option value="male" <%= user.gender === 'male' ? 'selected' : '' %>>Male</option>
-                                <option value="female" <%= user.gender === 'female' ? 'selected' : '' %>>Female</option>
-                                <option value="other" <%= user.gender === 'other' ? 'selected' : '' %>>Other</option>
-                                <option value="prefer-not-to-say" <%= user.gender === 'prefer-not-to-say' ? 'selected' : '' %>>Prefer not to say</option>
+                                <option value="male" <%= user?.gender === 'male' ? 'selected' : '' %>>Male</option>
+                                <option value="female" <%= user?.gender === 'female' ? 'selected' : '' %>>Female</option>
+                                <option value="other" <%= user?.gender === 'other' ? 'selected' : '' %>>Other</option>
+                                <option value="prefer-not-to-say" <%= user?.gender === 'prefer-not-to-say' ? 'selected' : '' %>>Prefer not to say</option>
                             </select>
                         </div>
                         
@@ -259,7 +259,7 @@
                             <input type="text" 
                                    id="occupation" 
                                    name="occupation" 
-                                   value="<%= user.occupation || '' %>"
+                                   value="<%= user?.occupation || '' %>"
                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-colors"
                                    placeholder="e.g., Carpenter, Electrician, DIY Enthusiast">
                         </div>
@@ -273,14 +273,14 @@
                                   name="bio" 
                                   rows="3"
                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-colors"
-                                  placeholder="Tell us a little about yourself..."><%= user.bio || '' %></textarea>
+                                  placeholder="Tell us a little about yourself..."><%= user?.bio || '' %></textarea>
                         <p class="text-gray-500 text-xs mt-1">Maximum 250 characters</p>
                     </div>
                 </div>
 
                 <!-- Form Actions -->
                 <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-                    <a href="/dashboard" class="inline-flex items-center px-6 py-3 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors">
+                    <a href="/deshbord/<%= user._id%>" class="inline-flex items-center px-6 py-3 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors">
                         <i class="fas fa-times mr-2"></i> Cancel
                     </a>
                     <div class="flex space-x-4">

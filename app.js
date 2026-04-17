@@ -32,6 +32,10 @@ app.use('/', userRoutes); // Use the user routes
 // app.use('/cart', cartRoutes);
 // app.use('/order', profileRoutes);
 
+// app.get('*',async(req,res)=>{
+//     res.render('index.ejs')
+// })
+
 app.listen(port,()=>{
     console.log('Server is running on port 3000');
 });

@@ -153,7 +153,10 @@
                             <input type="hidden" name="quantity" id="cart-quantity" value="1">
                             <input type="hidden" name="productId" value="<%=product.productid%>">
                             <input type="hidden" name="name" value="<%=product.name%>">
+                            <input type="hidden" name="Model_number" value="<%=product.Tech_Specifications[0].Model_number%>">
                             <input type="hidden" name="image" value="<%=product.image[0].url%>">
+                            <input type="hidden" name="category" value="<%=product.category%>">
+                            <input type="hidden" name="Material" value="<%=product.Tech_Specifications[0].Material%>">
                             <input type="hidden" name="size" id="selected-size-input">
                             <input type="hidden" name="price" id="selected-price-input">
                             <input type="hidden" name="size_id" id="selected-size-id">
@@ -170,6 +173,7 @@
                             <input type="hidden" name="productId" value="<%=product.productid%>">
                             <input type="hidden" name="name" value="<%=product.name%>">
                             <input type="hidden" name="image" value="<%=product.image[0].url%>">
+                            <input type="hidden" name="Model_number" value="<%=product.Tech_Specifications[0].Model_number%>">
                             <input type="hidden" name="size" id="buy-selected-size-input">
                             <input type="hidden" name="price" id="buy-selected-price-input">
                             <input type="hidden" name="size_id" id="buy-selected-size-id">

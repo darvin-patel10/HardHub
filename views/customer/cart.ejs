@@ -22,101 +22,101 @@
         </ul>
     </nav>
 
-    <div class="container">
-        <div class="cart-header">
-            <h1>Your Shopping Cart</h1>
-            <p>Review and checkout your selected items</p>
-        </div>
+    
+        <div class="container">
+            <div class="cart-header">
+                <h1>Your Shopping Cart</h1>
+                <p>Review and checkout your selected items</p>
+            </div>
 
-        <!-- For empty cart state (comment out when cart has items) -->
-        <!--
-        <div class="empty-cart">
-            <div class="empty-cart-icon">🛒</div>
-            <h2>Your Cart is Empty</h2>
-            <p>Looks like you haven't added any items to your cart yet.</p>
-            <a href="products.html"><button class="empty-cart-btn">Browse Products</button></a>
-        </div>
-        -->
+            <!-- For empty cart state (comment out when cart has items) -->
 
-        <form action="/product/buy/<%=order.productId%>" method="POST"></form>
-
-        <div class="cart-container">
-            <div class="cart-items">
-                <table class="cart-table">
-                    <thead>
-                        <tr>
-                            <th>Product</th>
-                            <th>Price</th>
-                            <th>Quantity</th>
-                            <th>Total</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    
-                    <tbody>
-                        <% for (let product of cartItems) {%>
+            <div class="cart-container">
+                <div class="cart-items">
+                    <table class="cart-table">
+                        <thead>
                             <tr>
-                                <td>
-                                    <div class="product-cell">
-                                        <img src="<%=product.image%>" alt="<%=product.name%>" class="product-image">
-                                        <div>
-                                            <h3><%=product.name%></h3>
-                                            <p>Model: JPD-550</p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="price"><%=product.price%></td>
-                                <td>
-                                    <div class="quantity-control">
-                                        <button class="quantity-btn">-</button>
-                                        <input type="number" value="<%=product.quantity%>" min="<%=product.quantity%>" placeholder="<%=product.quantity%>" class="quantity-input">
-                                        <button class="quantity-btn">+</button>
-                                    </div>
-                                </td>
-                                <td class="price"><%=product.total%></td>
-                                <form action="/cart/remove/<%=product.productId%>" method="POST" class="remove-form">
-                                    <input type="hidden" name="productId" value="<%=product.productId%>">
-                                    <!-- <button type="submit" class="remove-btn">✕</button> -->
-                                <td><button type="submit" class="remove-btn">✕</button></td>
+                                <th>Product</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Total</th>
+                                <th></th>
                             </tr>
-                        <%}%>
-                    </tbody>
-                </table>
-            </div>
+                        </thead>
+                        
+                        <tbody>
+                            <% for (let product of cartItems) {%>
+                                <tr>
+                                    <td>
+                                        <div class="product-cell">
+                                            <img src="<%=product.image%>" alt="<%=product.name%>" class="product-image">
+                                            <div>
+                                                <h3><%=product.name%></h3>
+                                                <p>Model: JPD-550</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="price"><%=product.price%></td>
+                                    <td>
+                                        <div class="quantity-control">
+                                            <button class="quantity-btn">-</button>
+                                            <input type="number" value="<%=product.quantity%>" min="<%=product.quantity%>" placeholder="<%=product.quantity%>" class="quantity-input">
+                                            <button class="quantity-btn">+</button>
+                                        </div>
+                                    </td>
+                                    <td class="price"><%=product.total%></td>
+                                    <form action="/cart/remove/<%=product.productId%>" method="POST" class="remove-form">
+                                        <input type="hidden" name="productId" value="<%=product.productId%>">
+                                        <input type="hidden" name="category" value="<%=product.category%>">
+                                        <input type="hidden" name="Material" value="<%=product.Material%>">
+                                        <input type="hidden" name="size" value="<%=product.size%>">
+                                        <input type="hidden" name="Model_number" value="<%=product.Model_number%>">
+                                        <!-- <button type="submit" class="remove-btn">✕</button> -->
+                                        <td><button type="submit" class="remove-btn">✕</button></td>
+                                    </form>
+                                </tr>
+                            <%}%>
+                        </tbody>
+                    </table>
+                </div>
 
-            <div class="cart-summary">
-                <h2 class="summary-title">Order Summary</h2>
-                
-                <div class="summary-row">
-                    <span>Subtotal (<%=totalUniqueItems%> items)</span>
-                    <span class="price"><%=subtotal%></span>
+                <div class="cart-summary">
+                    <h2 class="summary-title">Order Summary</h2>
+                    
+                    <div class="summary-row">
+                        <span>Subtotal (<%=totalUniqueItems%> items)</span>
+                        <span class="price"><%=subtotal%></span>
+                    </div>
+                    
+                    <div class="summary-row">
+                        <span>Shipping</span>
+                        <span class="price">₹40</span>
+                    </div>
+                    
+                    <div class="summary-row">
+                        <span>Tax (GST 18%)</span>
+                        <span class="price">₹<%=tax%></span>
+                    </div>
+                    
+                    <div class="summary-row summary-total">
+                        <span>Total</span>
+                        <span class="price"><%=totalPrice%> <span class="inr">INR</span></span>
+                    </div>
+                    
+                    <form action="/product/checkout/<%=userId%>" method="POST">
+                        <button type="submit" class="checkout-btn">Proceed to Checkout</button>
+                    </form>
+
+                    <a href="/product/<%=userId%>"><button class="continue-btn">Continue Shopping</button></a>
+                    
+                    <div style="margin-top: 2rem; font-size: 0.9rem;">
+                        <p><strong>Estimated Delivery:</strong> 3-5 business days</p>
+                        <p><strong>Free Shipping</strong> on orders over ₹5,000</p>
+                    </div>
                 </div>
-                
-                <div class="summary-row">
-                    <span>Shipping</span>
-                    <span class="price">₹120</span>
-                </div>
-                
-                <div class="summary-row">
-                    <span>Tax (GST 18%)</span>
-                    <span class="price">totalPrice</span>
-                </div>
-                
-                <div class="summary-row summary-total">
-                    <span>Total</span>
-                    <span class="price"><%=totalPrice%> <span class="inr">INR</span></span>
-                </div>
-                
-                </a><button class="checkout-btn">Proceed to Checkout</button>
-                <a href="/product/<%=userId%>"><button class="continue-btn">Continue Shopping</button></a>
-                
-                <div style="margin-top: 2rem; font-size: 0.9rem;">
-                    <p><strong>Estimated Delivery:</strong> 3-5 business days</p>
-                    <p><strong>Free Shipping</strong> on orders over ₹5,000</p>
-                </div>
-            </div>
+            </div>    
         </div>
-    </div>
+    
 
     <footer>
         <div class="footer-content">

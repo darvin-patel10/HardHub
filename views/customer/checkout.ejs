@@ -22,7 +22,7 @@
         </div>
     </nav>
     
-    <form id="shippingForm" action="/product/buy/<%=order.productId%>" method="POST" class="p-4 md:p-6">
+    <form id="shippingForm" action="/product/buy/<%=order.orderid%>" method="POST" class="p-4 md:p-6">
         <div class="checkout-container">
             <div class="flex flex-col lg:flex-row gap-6">
                 <!-- Shipping Information -->
@@ -153,28 +153,29 @@
                         
                         <!-- Order Items -->
                         <div class="order-items mb-6">
+                            <% for(let ord of order.items) { %>
                             <div class="order-item">
-                                <img src="<%=order.image%>" alt="<%=order.name%>" class="order-item-img">
+                                <img src="<%=ord.image%>" alt="<%=ord.name%>" class="order-item-img">
                                 <div class="ml-4 flex-1">
-                                    <div class="order-item-name font-semibold text-lg text-gray-800 mb-2"><%=order.name%></div>
+                                    <div class="order-item-name font-semibold text-lg text-gray-800 mb-2"><%=ord.name%></div>
                                     
                                     <!-- Size and Material Information -->
                                     <div class="mb-3">
-                                        <% if(order.size) { %>
+                                        <% if(ord.size) { %>
                                         <span class="spec-badge">
-                                            <i class="fas fa-ruler mr-1"></i> Size: <%=order.size%>
+                                            <i class="fas fa-ruler mr-1"></i> Size: <%=ord.size%>
                                         </span>
                                         <% } %>
                                         
-                                        <% if(order.Material) { %>
+                                        <% if(ord.Material) { %>
                                         <span class="spec-badge">
-                                            <i class="fas fa-cube mr-1"></i> Material: <%=order.Material%>
+                                            <i class="fas fa-cube mr-1"></i> Material: <%=ord.Material%>
                                         </span>
                                         <% } %>
                                         
-                                        <% if(order.category) { %>
+                                        <% if(ord.category) { %>
                                         <span class="spec-badge">
-                                            <i class="fas fa-tag mr-1"></i> Category: <%=order.category%>
+                                            <i class="fas fa-tag mr-1"></i> Category: <%=ord.category%>
                                         </span>
                                         <% } %>
                                     </div>
@@ -183,29 +184,30 @@
                                     <div class="text-gray-600 text-sm mb-2">
                                         <div class="flex justify-between">
                                             <span><i class="fas fa-box mr-1"></i> Quantity:</span>
-                                            <span class="font-medium"><%=order.quantity%></span>
+                                            <span class="font-medium"><%=ord.quantity%></span>
                                         </div>
                                     </div>
                                     
                                     <!-- Hidden inputs for size, material, and category -->
-                                    <% if(order.size) { %>
-                                    <input type="hidden" name="size" value="<%=order.size%>">
+                                    <% if(ord.size) { %>
+                                    <input type="hidden" name="size" value="<%=ord.size%>">
                                     <% } %>
                                     
-                                    <% if(order.Material) { %>
-                                    <input type="hidden" name="Material" value="<%=order.Material%>">
+                                    <% if(ord.Material) { %>
+                                    <input type="hidden" name="Material" value="<%=ord.Material%>">
                                     <% } %>
                                     
-                                    <% if(order.category) { %>
-                                    <input type="hidden" name="category" value="<%=order.category%>">
+                                    <% if(ord.category) { %>
+                                    <input type="hidden" name="category" value="<%=ord.category%>">
                                     <% } %>
                                     
                                     <!-- Price -->
                                     <div class="order-item-price text-xl font-bold text-green-600 mt-2">
-                                        ₹<%=order.price%>
+                                        ₹<%=ord.price%>
                                     </div>
                                 </div>
                             </div>
+                            <% } %>
                         </div>
                         
                         <!-- Order Totals -->

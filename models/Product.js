@@ -39,11 +39,6 @@ const productSchema = new mongoose.Schema({
 
     }, 
 
-    // price: {
-    //     type: String,
-    //     required: true,
-    //     trim: true // trim whitespace
-    // },
 
     key_features: {
         type: [String],
@@ -51,13 +46,6 @@ const productSchema = new mongoose.Schema({
         trim: true, // trim whitespace
         default: ["No key features available"] // default message if not provided
     },
-
-    // stock: {
-    //     type: Number,
-    //     required: true,
-    //     trim: true, // trim whitespace
-    //     default: 0 // default stock is 0
-    // }, 
 
     category:{
         type: String,
