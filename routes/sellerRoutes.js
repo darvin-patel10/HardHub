@@ -202,25 +202,12 @@ router.get('/', async(req, res) => {
     // const orders = await Buy.find({});
     const allproducts = await Product.find({});
 
-    const [salesAgg] = await Buy.aggregate([
-      {
-        $match: {
-        //   sellerId: req.user._id,
-          status: 'completed'
-        }
-      },
-      {
-        $group: {
-          _id: null,
-          total: { $sum: "$totalAmount" }
-        }
-      }
-    ]);
-
-    const totalSales = salesAgg?.total || 0;
+    const totalSales = await Buy.countDocuments({
+        status: 'Delivered'
+    }); 
 
     const totalOrders = await Buy.countDocuments({
-    //   sellerId: req.user._id
+        status: 'Processing'
     });
 
     const totalProducts = await Product.countDocuments({

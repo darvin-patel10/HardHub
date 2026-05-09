@@ -2,16 +2,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const searchInput = document.getElementById('search');
     const categoryFilter = document.getElementById('category');
+    const sizeFilter = document.getElementById('sizeFilter');
     const stockFilter = document.getElementById('stock');
     const products = document.querySelectorAll('.product-row');
 
     searchInput.addEventListener('input', applyFilters);
     categoryFilter.addEventListener('change', applyFilters);
+    sizeFilter.addEventListener('change', applyFilters);
     stockFilter.addEventListener('change', applyFilters);
 
     function applyFilters() {
         const searchValue = searchInput.value.toLowerCase();
-        const selectedCategory = categoryFilter.value;
+        const selectedCategory = categoryFilter.value.toLowerCase();
+        const selectedSize = sizeFilter.value;
         const selectedStock = stockFilter.value;
 
         products.forEach(product => {
@@ -19,23 +22,43 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const categoryMatch =
                 selectedCategory === 'all' ||
-                product.dataset.category === selectedCategory;
+                (product.dataset.category || '').toLowerCase() === selectedCategory;
+
+            const sizeMatch =
+                selectedSize === 'all' ||
+                (product.dataset.sizes || '').split(',').includes(selectedSize);
 
             let stockMatch = true;
-            const stock = parseInt(product.dataset.stock);
+            const stock = getFilterStock(product, selectedSize);
 
             if (selectedStock === 'low'){ 
-                stockMatch = stock < 5;
+                stockMatch = stock < 5 && stock > 0;
             }
             else if (selectedStock === 'out') stockMatch = stock === 0;
-            else if (selectedStock === 'in') stockMatch = stock > 0;
+            else if (selectedStock === 'in') stockMatch = stock >= 5;
 
-            if (textMatch && categoryMatch && stockMatch) {
+            if (textMatch && categoryMatch && sizeMatch && stockMatch) {
                 product.style.display = 'table-row';
             } else {
                 product.style.display = 'none';
             }
         });
+    }
+
+    function getFilterStock(row, selectedSize) {
+        const sizeSelect = row.querySelector('.size-selector');
+
+        if (selectedSize !== 'all' && sizeSelect) {
+            const sizeOption = Array.from(sizeSelect.options).find(option => {
+                return option.getAttribute('data-size') === selectedSize;
+            });
+
+            if (sizeOption) {
+                return parseInt(sizeOption.getAttribute('data-stock')) || 0;
+            }
+        }
+
+        return parseInt(row.dataset.stock) || 0;
     }
 
     // Attach event listeners to all size selectors
@@ -81,30 +104,13 @@ document.addEventListener('DOMContentLoaded', () => {
         // Also update the product-row dataset for filtering
         if (row) {
             row.dataset.stock = stock;
+            applyFilters();
         }
     };
 
     // Also make filterProductsBySize available globally
     window.filterProductsBySize = function() {
-        const sizeFilter = document.getElementById('sizeFilter');
-        if (!sizeFilter) return;
-        
-        const selectedSize = sizeFilter.value;
-        const rows = document.querySelectorAll('.product-row');
-        
-        rows.forEach(row => {
-            const sizeSelect = row.querySelector('.size-selector');
-            if (sizeSelect) {
-                const selectedOption = sizeSelect.options[sizeSelect.selectedIndex];
-                const currentSize = selectedOption.textContent.trim();
-                
-                if (selectedSize === 'all' || currentSize.includes(selectedSize)) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
-            }
-        });
+        applyFilters();
     };
 
     // Initial attachment of listeners
