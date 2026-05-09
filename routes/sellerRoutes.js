@@ -57,7 +57,7 @@ router.post('/product/update/:id',upload.single("new_image"),async(req,res) =>{
     
     let product = await Product.findById(productId);
     if (!product) {
-        return res.status(404).send('Product not found');
+        return res.status(404).render('error/404.ejs', { message: 'Product Not Found' });
     }
 
     // Update product details
@@ -95,7 +95,7 @@ router.post('/product/delete/:id', async (req, res) => {
     try {
         const product = await Product.findByIdAndDelete(productId);
         if (!product) {
-            return res.status(404).send('Product not found');
+            return res.status(404).render('error/404.ejs', { message: 'Product Not Found' });
         }
         console.log("✅ Product deleted successfully", product);
         res.redirect('/seller/products'); // Redirect to the products page after deletion
@@ -112,7 +112,7 @@ router.post('/order/delete/:id', async (req, res) => {
     try {
         const order = await Buy.findOneAndDelete({ orderid: orderId });
         if (!order) {
-            return res.status(404).send('Order not found');
+            return res.status(404).render('error/404.ejs', { message: 'Order Not Found' });
         }
         console.log("✅ Order deleted successfully", order);
         res.redirect('/seller/orders'); // Redirect to the orders page after deletion
@@ -136,7 +136,7 @@ router.put('/orders/:orderId/status', async (req, res) => {
         const order = await Buy.findOne({ orderid: orderId }); // ⚠️ IMPORTANT
 
         if (!order) {
-            return res.status(404).json({ message: "Order not found" });
+            return res.status(404).render('error/404.ejs', { message: "Order not found" });
         }
 
         order.status = status;
@@ -163,7 +163,7 @@ router.get('/product/:id', async (req, res) => {
     const productId = req.params.id;
     const product = await Product.findById(productId);
     if (!product) {
-        return res.status(404).send('Product not found');
+        return res.status(404).render('error/404.ejs', { message: 'Product Not Found' });
     }
     res.render('Admin/product-details.ejs', { product, seller: req.user });
 });
@@ -172,7 +172,7 @@ router.get('/order/details/:id',async(req, res) =>{
     const orderId = req.params.id;
     const order = await Buy.findOne({orderid: orderId });
     if (!order) {
-        return res.status(404).send('Order not found');
+        return res.status(404).render('error/404.ejs', { message: 'Order Not Found' });
     }
     res.render('Admin/order-details.ejs', { order , seller: req.user });
 });
@@ -181,7 +181,7 @@ router.get('/product/edit/:id', async (req, res) => {
     const productId = req.params.id;
     const product = await Product.findById(productId);
     if (!product) {
-        return res.status(404).send('Product not found');
+        return res.status(404).render('error/404.ejs', { message: 'Product Not Found' });
     }
     res.render('Admin/edit.ejs', { product, seller: req.user });
 });

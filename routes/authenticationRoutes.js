@@ -5,6 +5,10 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/users');
 
+//Middulaware
+
+const authenticateTokenOptional = require('../middleware/optionalAuth');
+
 // ------------------------------- User Registration ---------------------------
 
 const key = process.env.SECRET_KEY;
@@ -80,7 +84,7 @@ router.post('/login', async (req, res) => {
                 return res.redirect('/seller');
             }
             else {
-                return res.redirect(`/product/${user._id}`);
+                return res.redirect(`/buyer/product/${user._id}`);
             }
         } else {
             // Passwords do not match
@@ -103,12 +107,76 @@ router.post('/logout', (req, res) => {
 
 // ------------------------------- Render Forms ---------------------------
 
-router.get('/signup', (req, res) => {
-    res.render('Authentication/sign-up.ejs');
+router.get('/signup',authenticateTokenOptional, (req, res) => {
+    console.log('User type', req.user.type);
+    try {
+        // ✅ If Buyer
+        console.log('User Type',req.user.type)
+        if (req.user.type === 'buyer') {
+            return res.redirect(`/buyer/product/${req.user._id}`);
+        }
+
+        // ✅ If Seller
+        if (req.user.type === 'seller') {
+            return res.redirect('/seller');
+        }
+
+        // fallback
+        return res.render('Authentication/sign-up.ejs');
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server Error');
+    }
+    // res.render('Authentication/sign-up.ejs');
 });
 
-router.get('/signin', (req, res) => {
-    res.render('Authentication/sign-in.ejs');
+router.get('/signin', authenticateTokenOptional, (req, res) => {
+    try {
+        // ✅ If already logged in
+        if (req.user) {
+            if (req.user.type === 'buyer') {
+                return res.redirect(`/buyer/product/${req.user._id}`);
+            }
+
+            if (req.user.type === 'seller') {
+                return res.redirect('/seller');
+            }
+        }
+
+        // ✅ Not logged in → show signin
+        return res.render('Authentication/sign-in.ejs');
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server Error');
+    }
 });
+
+// router.get('/signin',authenticateToken, (req, res) => {
+//     // console.log('User Type',req.user.type)
+
+//     try {
+//         console.log('User Type',req.user.type)
+
+//         // ✅ If Buyer
+//         if (req.user.type === 'buyer') {
+//             return res.redirect(`/buyer/deshbord/${req.user._id}`);
+//         }
+
+//         // ✅ If Seller
+//         if (req.user.type === 'seller') {
+//             return res.redirect('/seller');
+//         }
+
+//         // fallback
+//         return res.render('Authentication/sign-in.ejs');
+
+//     } catch (err) {
+//         console.error(err);
+//         res.status(500).send('Server Error');
+//     }
+//     // res.render('Authentication/sign-in.ejs');
+// });
 
 module.exports = router; // ✅ Export the router

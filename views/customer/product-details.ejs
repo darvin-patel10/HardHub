@@ -13,10 +13,10 @@
     <nav class="bg-gray-800 text-white p-4">
         <div class="container mx-auto">
             <ul class="flex justify-center space-x-8">
-                <li><a href="/product/<%= userId %>" class="hover:text-blue-300 transition-colors">Home</a></li>
+                <li><a href="/buyer/product/<%= userId %>" class="hover:text-blue-300 transition-colors">Home</a></li>
                 <li><a href="/about" class="hover:text-blue-300 transition-colors">About Us</a></li>
                 <li><a href="/contact" class="hover:text-blue-300 transition-colors">Contact</a></li>
-                <li><a href="/cart/<%=userId%>" class="hover:text-blue-300 transition-colors">Cart (<%=totalUniqueItems%>)</a></li>
+                <li><a href="/buyer/cart/<%=userId%>" class="hover:text-blue-300 transition-colors">Cart (<%=totalUniqueItems%>)</a></li>
             </ul>
         </div>
     </nav>
@@ -149,7 +149,7 @@
                     <!-- Action Buttons -->
                     <div class="flex flex-col sm:flex-row gap-4 mb-6">
                         <!-- Add to Cart Form -->
-                        <form id="add-to-cart-form" action="/cart/add/<%=userId%>" method="POST" class="flex-1">
+                        <form id="add-to-cart-form" action="/buyer/cart/add/<%=userId%>" method="POST" class="flex-1">
                             <input type="hidden" name="quantity" id="cart-quantity" value="1">
                             <input type="hidden" name="productId" value="<%=product.productid%>">
                             <input type="hidden" name="name" value="<%=product.name%>">
@@ -168,7 +168,7 @@
                         </form>
                         
                         <!-- Buy Now Form -->
-                        <form id="buy-now-form" action="/product/checkout/<%=product.productid%>" method="POST" class="flex-1">
+                        <form id="buy-now-form" action="/buyer/product/checkout/<%=product.productid%>" method="POST" class="flex-1">
                             <input type="hidden" name="quantity" id="buy-quantity" value="1">
                             <input type="hidden" name="productId" value="<%=product.productid%>">
                             <input type="hidden" name="name" value="<%=product.name%>">

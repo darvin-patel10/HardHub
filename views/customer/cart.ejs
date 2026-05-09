@@ -65,7 +65,7 @@
                                         </div>
                                     </td>
                                     <td class="price"><%=product.total%></td>
-                                    <form action="/cart/remove/<%=product.productId%>" method="POST" class="remove-form">
+                                    <form action="/buyer/cart/remove/<%=product.productId%>" method="POST" class="remove-form">
                                         <input type="hidden" name="productId" value="<%=product.productId%>">
                                         <input type="hidden" name="category" value="<%=product.category%>">
                                         <input type="hidden" name="Material" value="<%=product.Material%>">
@@ -103,11 +103,11 @@
                         <span class="price"><%=totalPrice%> <span class="inr">INR</span></span>
                     </div>
                     
-                    <form action="/product/checkout/<%=userId%>" method="POST">
+                    <form action="/buyer/product/checkout/<%=userId%>" method="POST">
                         <button type="submit" class="checkout-btn">Proceed to Checkout</button>
                     </form>
 
-                    <a href="/product/<%=userId%>"><button class="continue-btn">Continue Shopping</button></a>
+                    <a href="/buyer/product/<%=userId%>"><button class="continue-btn">Continue Shopping</button></a>
                     
                     <div style="margin-top: 2rem; font-size: 0.9rem;">
                         <p><strong>Estimated Delivery:</strong> 3-5 business days</p>

@@ -2,9 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { v4: uuidv4 } = require('uuid');
 const session = require('express-session');
-const authToken = require('../middleware/validation');
 
-router.use(authToken);
 router.use(session({
   secret: 'yourSecretKey', // Change this to a strong secret
   resave: false,
@@ -15,6 +13,8 @@ router.use(session({
 
 // Middleware for file uploads
 const upload = require('../middleware/uplode-image');
+const authToken = require('../middleware/validation');
+const isBuyer = require('../middleware/checkBuyer');
 
 
 const User = require('../models/users');
@@ -22,30 +22,35 @@ const Product = require('../models/Product');
 const Cart = require('../models/cart');
 const Buy = require('../models/checkout'); // Assuming you have a Buy model for checkout
 
+router.use(authToken);
+router.use(isBuyer);
+
 //Show Product
 
 router.get('/product-details/:id',async(req,res)=>{
     try {
-    const productId = req.params.id;
-    console.log("Product ID:", productId);
-    const product = await Product.findOne({ productid: productId });
-    if (!product) {
-       console.log('Product not found');
-    }
+        const productId = req.params.id;
+        console.log("Product ID:", productId);
+        const product = await Product.findOne({ productid: productId });
+        if (!product) {
+        //    console.log('Product not found');
+        //    return res.status(404).send('Product not found');
+            return res.status(404).render('error/404.ejs', { message: 'Product Not Found' });
+        }
 
-    let cart = null;
-    let totalUniqueItems = 0;
-    let userId = null;
-    
-    userId = req.user.userId;
-    console.log("User ID for product details:", userId);
-    // const user = await User.findOne({ userId: userId });
-    cart = await Cart.findOne({ userId: userId });
-    res.render('customer/product-details.ejs', { 
-        userId,
-        product: product,
-        totalUniqueItems: cart ? cart.items.length : 0
-    });
+        let cart = null;
+        let totalUniqueItems = 0;
+        let userId = null;
+        
+        userId = req.user._id;
+        console.log("User ID for product details:", userId);
+        // const user = await User.findOne({ userId: userId });
+        cart = await Cart.findOne({ userId: userId });
+        res.render('customer/product-details.ejs', { 
+            userId,
+            product: product,
+            totalUniqueItems: cart ? cart.items.length : 0
+        });
     } catch (err) {
         console.error("❌ Error loading product details:", err);
         res.status(500).send("Error loading product details");
@@ -63,7 +68,7 @@ router.post('/cart/add/:id', async (req, res) => {
         
         // Validate required fields
         if (!productId || !name || !price || !quantity ||!Model_number || !image) {
-        return res.status(400).send('Missing required fields');
+            return res.status(400).send('Missing required fields');
         }
 
         const priceNum = parseFloat(price);
@@ -74,14 +79,15 @@ router.post('/cart/add/:id', async (req, res) => {
         // console.log("User ID for add to cart:", userId);
         
         if (!userId) {
-        return res.status(401).send('User not authenticated');
+            return res.status(401).send('User not authenticated');
         }
 
         //Find User
-        const user = await User.findOne({ userId: userId });
+        const user = await User.findOne({ _id: userId });
         
         if (!user) {
-            return res.status(404).send('User not found');      
+            // return res.status(404).send('User not found');
+            return res.status(404).render('error/404.ejs', { message: 'User Not Found' });
         }
 
         // Find or create cart for this user
@@ -90,7 +96,7 @@ router.post('/cart/add/:id', async (req, res) => {
         if (!cart) {
         
         cart = new Cart({
-            userId: req.user.userId,
+            userId: req.user._id,
             items: [{
                 productId,
                 name,
@@ -147,7 +153,7 @@ router.post('/cart/add/:id', async (req, res) => {
         // console.log("✅ Cart saved for user:", userId, cart);
 
         // Redirect to cart page
-        res.redirect(`/cart/${userId}`);
+        res.redirect(`/buyer/cart/${userId}`);
     } 
     catch (err) {
         console.error("❌ Error adding to cart:", err);
@@ -158,7 +164,7 @@ router.post('/cart/add/:id', async (req, res) => {
 // Remove item from cart
 
 router.post('/cart/remove/:id', async (req, res) => {
-    const userId = req.user.userId;
+    const userId = req.user._id;
     console.log("User ID for cart removal:", userId);
     const productId = req.params.id;
     const { category, Material, size , Model_number } = req.body;
@@ -169,7 +175,7 @@ router.post('/cart/remove/:id', async (req, res) => {
 
         if (!cart) {
             console.log("No cart found.");
-            return res.redirect(`/cart/${req.user.userId}`);
+            return res.redirect(`/buyer/cart/${req.user._id}`);
         }
 
         // Find item index
@@ -201,7 +207,7 @@ router.post('/cart/remove/:id', async (req, res) => {
         await cart.save();
         console.log("✅ Cart updated:", cart);
 
-        res.redirect(`/cart/${userId}`);
+        res.redirect(`/buyer/cart/${userId}`);
     } catch (err) {
         console.error("❌ Error removing from cart:", err);
         res.status(500).send("❌ Error removing from cart");
@@ -253,7 +259,7 @@ router.post('/product/checkout/:id', async (req, res) => {
             };
         }
         console.log("✅ Buy saved:", req.session.checkoutData);
-        res.redirect(`/chekout/${productId}`);
+        res.redirect(`/buyer/chekout/${productId}`);
     }
     catch (err) {
         console.error("❌ Error saving buy:", err);
@@ -298,7 +304,7 @@ router.post('/product/buy/:id', async (req, res) => {
 
 
         console.log("✅ First Buy saved:", req.session.buyData);
-        res.redirect(`/payment/${checkoutData.orderid}`);
+        res.redirect(`/buyer/payment/${checkoutData.orderid}`);
     } 
     catch (err) {
         console.error("❌ Error saving final buy:", err);
@@ -316,7 +322,7 @@ router.post('/product/confirm/:id', async (req, res) => {
 
     try {
         let buy = new Buy({
-            userId: req.user.userId,    
+            userId: req.user._id,    
             orderid: buyData.orderId,
             firstname: buyData.firstname,
             lastname: buyData.lastname,
@@ -355,7 +361,7 @@ router.post('/product/confirm/:id', async (req, res) => {
         }
         // Redirect to order confirmation page
         console.log("✅ Redirecting to confirmation:");
-        res.redirect(`/order-confirmation/${buyData.orderId}`);
+        res.redirect(`/buyer/order-confirmation/${buyData.orderId}`);
     } 
     catch (err) {
         console.error("❌ Error saving final buy:", err);
@@ -372,10 +378,11 @@ router.post('/account/edit/:id', upload.single('profilePhoto'), async (req, res)
     console.log("User ID for account edit:", userId);
     const {  username, password, email, phone, dob, street1,street2, city, state, pincode, country } = req.body;
     try {
-        const user = await User.findOne({ userId: userId });
+        const user = await User.findOne({ _id: userId });
 
         if (!user) {
-            return res.status(404).send('User not found');
+            // return res.status(404).send('User not found');
+            return res.status(404).render('error/404.ejs', { message: 'User Not Found' });
         }
         if (req.file){
             user.profilePhoto = [{
@@ -402,11 +409,11 @@ router.post('/account/edit/:id', upload.single('profilePhoto'), async (req, res)
         user.country = country || user.country;
 
         await user.save();
-        console.log("✅ User updated successfully:", user);
+        // console.log("✅ User updated successfully:", user);
         if(password){
             res.clearCookie('token');
         }
-        res.redirect(`/deshbord/${user.userId}`);
+        res.redirect(`/buyer/deshbord/${user._id}`);
     } 
     catch (err) {
         console.error("❌ Error updating account:", err);
@@ -421,10 +428,11 @@ router.post('/address/edit/:id', async (req, res) => {
     const { street1, street2, city, state, pincode, country } = req.body;
 
     try {
-        const user = await User.findOne({ userId: userId });
+        const user = await User.findOne({ _id: userId });
 
         if (!user) {
-            return res.status(404).send('User not found');
+            // return res.status(404).send('User not found');
+            return res.status(404).render('error/404.ejs', { message: 'User Not Found' });
         }
 
         // ✅ Ensure address array exists
@@ -444,7 +452,7 @@ router.post('/address/edit/:id', async (req, res) => {
 
         console.log("✅ Address updated successfully:", user);
 
-        res.redirect(`/deshbord/${user.userId}`);
+        res.redirect(`/buyer/deshbord/${user._id}`);
 
     } catch (err) {
         console.error("❌ Error updating address:", err);
@@ -496,7 +504,7 @@ router.get('/order-confirmation/:id', async (req, res) => {
     const order = await Buy.findOne({ orderid: orderId });
     console.log("Order details:", order);
     res.render('customer/OrderConfarm.ejs', { 
-        userId: req.user.userId,
+        userId: req.user._id,
         order,
         totalUniqueItems: cart.items.length
      });  
@@ -514,9 +522,10 @@ router.get('/cart/:id', async(req,res)=>{
     const userId = req.params.id;
 
     if(!userId) {
-        console.log("User ID not found, redirecting to signin");
+        // console.log("User ID not found, redirecting to signin");
         // res.clearCookie('token');
         // redirect('/auth/signin');
+        return res.redirect('/error/404', { message: 'User Not Found' });
     }
     const cart = await Cart.findOne({ userId });
     
@@ -550,10 +559,12 @@ router.get('/deshbord/:id',async(req,res)=>{
     console.log("User ID on Dashbord : ",userId);
     let user = await User.findOne({ _id: userId });
     if (!user) {
-        return res.status(404).send('User not found');
+        // return res.status(404).send('User not found');
+        return res.status(404).render('error/404.ejs', { message: 'User Not Found' });
     }
 
     const buyOrders = await Buy.find({ userId: userId });
+    console.log("Buy Orders for user:", buyOrders);
     // user = user.toObject();
     // user.buyOrders = buyOrders;
     // Fetch all products from the database
@@ -571,10 +582,10 @@ router.get('/accountedit/:id',async(req,res)=>{
 //--------------------- Order Details -------------------------------
 router.get('/order-details/:id',async(req,res)=>{
     const orderId = req.params.id;
-    const userId = req.user.userId;
+    const userId = req.user._id;
     console.log("Order ID for details:", orderId);
     const order = await Buy.findOne({ orderid: orderId });
-    const user = await User.findOne({ userId: userId });
+    const user = await User.findOne({ _id: userId });
     console.log("Order details:", order);
     res.render('customer/order-details.ejs', { order , user });
 });
@@ -586,13 +597,8 @@ router.get('/product/:id',async(req,res)=>{
     // Fetch all products from the database
     const user = await User.findOne({ _id: userId });
     const allproducts = await Product.find({});
-    // console.log(user);
+    console.log(user);
     res.render('customer/product.ejs', { allproducts, user,userId });
-});
-
-
-router.get('/',(req,res)=>{
-    res.render('customer/index.ejs');
 });
 
 module.exports = router;
