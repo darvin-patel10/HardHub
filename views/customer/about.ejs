@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About Us - JOY Hardware Solutions</title>
-    <link rel="stylesheet" href="css/customer/about.css">
+    <link rel="stylesheet" href="/css/customer/navbar.css">
+    <link rel="stylesheet" href="/css/customer/about.css">
 </head>
 <body>
     <header>
@@ -12,12 +13,7 @@
         <p>Building Trust Since 1995</p>
     </header>
 
-    <nav>
-        <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="/product">Products</a></li>
-            <li><a href="/about" class="active">About Us</a></li>
-            <li><a href="/contact">Contact</a></li>
+    <%- include('partials/navbar') %>
             <li><a href="/cart">Cart (0)</a></li>
         </ul>
     </nav>

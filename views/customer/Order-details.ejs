@@ -27,6 +27,14 @@
         <%- include('partials/navbar') %>
     </div>
 
+    <%
+        const orderStatus = order.status || 'Processing';
+        const orderCreatedAt = order.createdAt || Date.now();
+        const orderItems = order.items || [];
+        const orderTax = Number(order.tax || 0);
+        const orderTotalPrice = Number(order.totalPrice || 0);
+    %>
+
     <!-- Main Content -->
     <main class="container mx-auto px-4 lg:px-8 py-8">
         <!-- Print Section for Invoice -->
@@ -42,14 +50,14 @@
                     <div class="text-right">
                         <h2 class="text-2xl font-bold text-hardware-primary">INVOICE</h2>
                         <p class="text-gray-600">Invoice #<%= order.orderid || 'N/A' %></p>
-                        <p class="text-gray-600">Date: <%= new Date(order.createdAt).toLocaleDateString('en-GB') %></p>
+                        <p class="text-gray-600">Date: <%= new Date(orderCreatedAt).toLocaleDateString('en-GB') %></p>
                     </div>
                 </div>
             </div>
 
             <!-- Back Button and Order Header -->
             <div class="mb-6 no-print">
-                <a href="/deshbord/<%= user._id %>" class="inline-flex items-center text-hardware-primary hover:text-hardware-accent transition-colors mb-4">
+                <a href="/buyer/deshbord/<%= user._id %>" class="inline-flex items-center text-hardware-primary hover:text-hardware-accent transition-colors mb-4">
                     <i class="fas fa-arrow-left mr-2"></i> Back to Orders
                 </a>
                 
@@ -60,25 +68,25 @@
                     </div>
                     
                     <div class="mt-4 lg:mt-0 flex items-center space-x-3">
-                        <% if(order.status === "Processing") { %>
+                        <% if(orderStatus === "Processing") { %>
                             <span class="inline-flex items-center px-4 py-2 rounded-full bg-yellow-100 text-yellow-800 text-sm font-medium">
-                                <i class="fas fa-clock mr-2"></i> <%= order.status %>
+                                <i class="fas fa-clock mr-2"></i> <%= orderStatus %>
                             </span>
-                        <% } else if(order.status === "Shipped") { %>
+                        <% } else if(orderStatus === "Shipped") { %>
                             <span class="inline-flex items-center px-4 py-2 rounded-full bg-blue-100 text-blue-800 text-sm font-medium">
-                                <i class="fas fa-shipping-fast mr-2"></i> <%= order.status %>
+                                <i class="fas fa-shipping-fast mr-2"></i> <%= orderStatus %>
                             </span>
-                        <% } else if(order.status === "Delivered") { %>
+                        <% } else if(orderStatus === "Delivered") { %>
                             <span class="inline-flex items-center px-4 py-2 rounded-full bg-green-100 text-green-800 text-sm font-medium">
-                                <i class="fas fa-check-circle mr-2"></i> <%= order.status %>
+                                <i class="fas fa-check-circle mr-2"></i> <%= orderStatus %>
                             </span>
-                        <% } else if(order.status === "Cancelled") { %>
+                        <% } else if(orderStatus === "Cancelled") { %>
                             <span class="inline-flex items-center px-4 py-2 rounded-full bg-red-100 text-red-800 text-sm font-medium">
-                                <i class="fas fa-times-circle mr-2"></i> <%= order.status %>
+                                <i class="fas fa-times-circle mr-2"></i> <%= orderStatus %>
                             </span>
                         <% } else { %>
                             <span class="inline-flex items-center px-4 py-2 rounded-full bg-gray-100 text-gray-800 text-sm font-medium">
-                                <i class="fas fa-info-circle mr-2"></i> <%= order.status %>
+                                <i class="fas fa-info-circle mr-2"></i> <%= orderStatus %>
                             </span>
                         <% } %>
                         
@@ -101,15 +109,15 @@
                         </div>
                         <div class="flex justify-between">
                             <span class="text-gray-600">Order Date:</span>
-                            <span class="font-medium"><%= new Date(order.createdAt).toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) %></span>
+                            <span class="font-medium"><%= new Date(orderCreatedAt).toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) %></span>
                         </div>
                         <div class="flex justify-between">
                             <span class="text-gray-600">Total Items:</span>
                             <span class="font-medium">
                                 <% 
                                     let totalItems = 0;
-                                    if(order.items && order.items.length > 0) {
-                                        order.items.forEach(item => {
+                                    if(orderItems.length > 0) {
+                                        orderItems.forEach(item => {
                                             totalItems += item.quantity || 1;
                                         });
                                     }
@@ -168,9 +176,9 @@
 
             <!-- Order Items Table -->
             <div class="bg-white rounded-xl card-shadow p-6 mb-8">
-                <h3 class="text-lg font-bold text-hardware-primary mb-6">Order Items (<%= order.items?.length || 0 %> products, <%= totalItems %> total items)</h3>
+                <h3 class="text-lg font-bold text-hardware-primary mb-6">Order Items (<%= orderItems.length %> products, <%= totalItems %> total items)</h3>
                 
-                <% if(order.items && order.items.length > 0) { %>
+                <% if(orderItems.length > 0) { %>
                     <%
                         let subtotal = 0;
                         let taxRate = 0.18; // 18% GST
@@ -192,7 +200,7 @@
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
-                                <% order.items.forEach(item => { 
+                                <% orderItems.forEach(item => { 
                                     const itemPrice = item.price || 0;
                                     const itemQuantity = item.quantity || 1;
                                     const itemTotal = itemPrice * itemQuantity;
@@ -297,7 +305,7 @@
                                     
                                     <div class="flex justify-between">
                                         <span class="text-gray-600">Shipping:</span>
-                                        <span class="font-medium">₹40 %></span>
+                                        <span class="font-medium">₹<%= shippingCharge.toFixed(2) %></span>
                                     </div>
                                     
                                     <%
@@ -308,7 +316,7 @@
                                     
                                     <div class="flex justify-between">
                                         <span class="text-gray-600">Tax (GST 18%):</span>
-                                        <span class="font-medium">₹<%= order.tax %></span>
+                                        <span class="font-medium">₹<%= orderTax.toFixed(2) %></span>
                                     </div>
                                     
                                     <div class="border-t border-gray-200 pt-3 mt-3">
@@ -317,7 +325,7 @@
                                             <%
                                                 grandTotal = taxableAmount + shippingCharge + taxAmount;
                                             %>
-                                            <span class="text-hardware-primary">₹<%= order.totalPrice %></span>
+                                            <span class="text-hardware-primary">₹<%= orderTotalPrice.toFixed(2) %></span>
                                         </div>
                                         <p class="text-right text-sm text-gray-500 mt-1">
                                             <% if(order.paymentMethod === 'COD') { %>
@@ -344,13 +352,13 @@
 
             <!-- Action Buttons -->
             <div class="flex flex-wrap gap-3 mb-8 no-print">
-                <% if(order.status === "Processing") { %>
+                <% if(orderStatus === "Processing") { %>
                     <button onclick="cancelOrder()" class="inline-flex items-center px-5 py-3 bg-red-50 hover:bg-red-100 text-red-700 font-medium rounded-lg transition-colors">
                         <i class="fas fa-times-circle mr-2"></i> Cancel Order
                     </button>
                 <% } %>
                 
-                <% if(order.status === "Delivered") { %>
+                <% if(orderStatus === "Delivered") { %>
                     <button onclick="downloadInvoice()" class="inline-flex items-center px-5 py-3 bg-green-50 hover:bg-green-100 text-green-700 font-medium rounded-lg transition-colors">
                         <i class="fas fa-download mr-2"></i> Download Invoice PDF
                     </button>
@@ -363,7 +371,7 @@
                     <i class="fas fa-print mr-2"></i> Print Invoice
                 </button>
                 
-                <a href="/product/<%= user._id %>" class="inline-flex items-center px-5 py-3 bg-blue-50 hover:bg-blue-100 text-blue-700 font-medium rounded-lg transition-colors">
+                <a href="/buyer/product/<%= user._id %>" class="inline-flex items-center px-5 py-3 bg-blue-50 hover:bg-blue-100 text-blue-700 font-medium rounded-lg transition-colors">
                     <i class="fas fa-shopping-cart mr-2"></i> Continue Shopping
                 </a>
             </div>

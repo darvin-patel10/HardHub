@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JOY Hardware</title>
+    <link rel="stylesheet" href="/css/customer/navbar.css">
     <link rel="stylesheet" href="/css/customer/index.css">
 </head>
 <body>
@@ -12,42 +13,7 @@
         <p>Your trusted partner for quality tools and equipment</p>
     </header>
 
-    <nav class="nav">
-        <!-- Left Side Links -->
-        <ul class="nav-links">
-            <li><a href="/">Home</a></li>
-            <li><a href="/product">Products</a></li>
-            <li><a href="/about">About Us</a></li>
-            <li><a href="/contact">Contact</a></li>
-        </ul>
-        
-        <!-- Right Side Buttons -->
-        <div class="auth-buttons">
-            <a href="/auth/signin" class="login-btn">Login</a>
-            <a href="/auth/signup" class="signup-btn">Sign Up</a>
-        </div>
-        
-        <!-- Mobile Menu Button -->
-        <div class="hamburger" onclick="toggleMenu()">
-            <div></div>
-            <div></div>
-            <div></div>
-        </div>
-    </nav>
-
-    <!-- <nav>
-        <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="/product">Products</a></li>
-            <li><a href="/about">About Us</a></li>
-            <li><a href="/contact">Contact</a></li> -->
-            <!-- Added login and signup buttons -->
-            <!-- <li class="auth-buttons">
-                <a href="/login" class="login-btn">Login</a>
-                <a href="/signup" class="signup-btn">Sign Up</a>
-            </li>
-        </ul>
-    </nav> -->
+    <%- include('partials/navbar') %>
     <section class="hero">
         <h2>Welcome to JOY Hardware</h2>
         <p>Best quality tools at affordable prices</p>

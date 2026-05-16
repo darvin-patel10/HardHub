@@ -45,7 +45,12 @@ router.post('/registor', async (req, res) => {
                     let token = jwt.sign({ email:user.email, userId: user._Id}, key);
                     console.log("✅ JWT token generated successfully");
 
-                    res.cookie('token', token);
+                    res.cookie('token', token, {
+                        httpOnly: true,
+                        secure: process.env.NODE_ENV === 'production',
+                        sameSite: 'Lax',
+                        maxAge: 24 * 60 * 60 * 1000 // 24 hours
+                    });
                     console.log("✅ Cookie set with token");
 
                     res.redirect('/auth/signin');
@@ -78,7 +83,12 @@ router.post('/login', async (req, res) => {
             let token = jwt.sign({ email: user.email, userId: user._id }, key);
             console.log("✅ JWT token generated successfully");
 
-            res.cookie('token', token);
+            res.cookie('token', token, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: 'Lax',
+                maxAge: 24 * 60 * 60 * 1000 // 24 hours
+            });
             console.log("✅ Cookie set with token");
             if(type === 'seller'){
                 return res.redirect('/seller');
@@ -97,8 +107,12 @@ router.post('/login', async (req, res) => {
 
 router.post('/logout', (req, res) => {
     console.log("✅ Logout request received");
-    // Clear the cookie
-    res.clearCookie('token');
+    // Clear the cookie with the same options used when setting
+    res.clearCookie('token', {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'Lax'
+    });
     console.log("✅ Cookie cleared");
 
     // Redirect to the login page

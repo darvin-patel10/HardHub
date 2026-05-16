@@ -598,10 +598,15 @@ router.get('/order-details/:id',async(req,res)=>{
     const orderId = req.params.id;
     const userId = req.user._id;
     console.log("Order ID for details:", orderId);
-    const order = await Buy.findOne({ orderid: orderId });
-    const user = await User.findOne({ _id: userId });
+    const order = await Buy.findOne({ orderid: orderId, userId });
+    const user = req.user;
+
+    if (!order) {
+        return res.status(404).render('error/404.ejs', { message: 'Order Not Found' });
+    }
+
     console.log("Order details:", order);
-    res.render('customer/order-details.ejs', { order , user });
+    res.render('customer/order-details.ejs', { order, user });
 });
 
 //--------------------- Product Listing -------------------------------

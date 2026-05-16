@@ -19,34 +19,11 @@
         }
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="/css/customer/navbar.css">
     <link rel="stylesheet" href="/css/customer/deshbord.css">
 </head>
 <body class="bg-gray-50">
-    <!-- Header Section -->
-    <header class="header-gradient text-white py-4 px-4 lg:px-8">
-        <div class="container mx-auto">
-            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between">
-                <div class="text-center lg:text-left mb-4 lg:mb-0">
-                    <h1 class="text-2xl lg:text-3xl font-bold tracking-tight">JOY Hardware Products</h1>
-                    <p class="text-gray-300 mt-1 text-sm lg:text-base">Quality tools for professionals and DIY enthusiasts</p>
-                </div>
-                <div class="hidden lg:flex items-center space-x-2 text-sm">
-                    <span class="text-gray-300">Welcome, <strong><%=user.username%></strong></span>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <!-- Navigation -->
-    <nav class="bg-white shadow-md py-3 px-4 lg:px-8 sticky top-0 z-10">
-        <div class="container mx-auto flex items-center justify-between">
-            <!-- Desktop Navigation -->
-            <div class="hidden lg:flex items-center space-x-8">
-                <a href="/buyer/product/<%= user._id %>" class="text-hardware-primary font-medium hover:text-hardware-accent transition-colors">Home</a>
-                <a href="/buyer/product/<%= user._id %>" class="text-hardware-primary font-medium hover:text-hardware-accent transition-colors">Products</a>
-                <a href="/about" class="text-hardware-primary font-medium hover:text-hardware-accent transition-colors">About Us</a>
-                <a href="/contact" class="text-hardware-primary font-medium hover:text-hardware-accent transition-colors">Contact</a>
-            </div>
+    <%- include('partials/navbar') %>
             
             <!-- User Icon -->
             <div class="flex items-center space-x-4">
@@ -70,10 +47,10 @@
         <!-- Mobile Navigation Menu -->
         <div id="mobile-menu" class="lg:hidden hidden bg-white shadow-lg rounded-b-lg mt-2 py-4 px-4">
             <div class="flex flex-col space-y-3">
-                <a href="/product/<%= user._id %>" class="text-hardware-primary font-medium py-2 px-3 hover:bg-gray-100 rounded transition-colors">Home</a>
-                <a href="/product" class="text-hardware-primary font-medium py-2 px-3 hover:bg-gray-100 rounded transition-colors">Products</a>
-                <a href="/about" class="text-hardware-primary font-medium py-2 px-3 hover:bg-gray-100 rounded transition-colors">About Us</a>
-                <a href="/contact" class="text-hardware-primary font-medium py-2 px-3 hover:bg-gray-100 rounded transition-colors">Contact</a>
+                <a href="/buyer/product/<%= user._id %>" class="text-hardware-primary font-medium py-2 px-3 hover:bg-gray-100 rounded transition-colors">Home</a>
+                <a href="/buyer/product/<%= user._id %>" class="text-hardware-primary font-medium py-2 px-3 hover:bg-gray-100 rounded transition-colors">Products</a>
+                <a href="/buyer/about" class="text-hardware-primary font-medium py-2 px-3 hover:bg-gray-100 rounded transition-colors">About Us</a>
+                <a href="/buyer/contact" class="text-hardware-primary font-medium py-2 px-3 hover:bg-gray-100 rounded transition-colors">Contact</a>
             </div>
         </div>
     </nav>
@@ -153,7 +130,7 @@
             </div>
             
             <!-- Recent Orders Card -->
-            <div class="bg-white rounded-xl card-shadow p-6 product-card">
+            <div id="recent-orders" class="bg-white rounded-xl card-shadow p-6 product-card">
                 <div class="flex items-center justify-between mb-6">
                     <h3 class="text-xl font-bold text-hardware-primary">Recent Orders</h3>
                     <i class="fas fa-shopping-bag text-hardware-accent text-2xl"></i>
@@ -161,7 +138,7 @@
                 
                 <% if (buyOrders && buyOrders.length > 0) { %>
                     <% for (let order of buyOrders.slice(0, 3)) { %>
-                        <a href="/order-details/<%=order.orderid%>" class="block  mb-4">
+                        <a href="/buyer/order-details/<%=order.orderid%>" class="block  mb-4">
                         <div class="border border-gray-200 rounded-lg p-4 mb-4 hover:bg-gray-50 transition-colors">
                             <div class="flex justify-between items-start mb-2">
                                 <div>
@@ -201,7 +178,7 @@
                     </div>
                 <% } %>
                 
-                <a href="/orders" class="block w-full text-center border-2 border-hardware-primary text-hardware-primary hover:bg-hardware-primary hover:text-white font-medium py-3 rounded-lg transition-colors mt-4">
+                <a href="#recent-orders" class="block w-full text-center border-2 border-hardware-primary text-hardware-primary hover:bg-hardware-primary hover:text-white font-medium py-3 rounded-lg transition-colors mt-4">
                     <i class="fas fa-list-alt mr-2"></i> View All Orders
                 </a>
             </div>
@@ -214,7 +191,7 @@
                 </div>
                 
                 <div class="space-y-4">
-                    <a href="/product/<%= user.userId %>" class="flex items-center justify-between bg-blue-50 hover:bg-blue-100 text-blue-700 p-4 rounded-lg transition-colors">
+                    <a href="/buyer/product/<%= user._id %>" class="flex items-center justify-between bg-blue-50 hover:bg-blue-100 text-blue-700 p-4 rounded-lg transition-colors">
                         <div class="flex items-center">
                             <i class="fas fa-shopping-cart text-xl mr-3"></i>
                             <span class="font-medium">Shop Products</span>
@@ -222,15 +199,15 @@
                         <i class="fas fa-chevron-right"></i>
                     </a>
                     
-                    <a href="/cart/<%=user.userId%>" class="flex items-center justify-between bg-green-50 hover:bg-green-100 text-green-700 p-4 rounded-lg transition-colors">
+                    <a href="/buyer/cart/<%=user._id%>" class="flex items-center justify-between bg-green-50 hover:bg-green-100 text-green-700 p-4 rounded-lg transition-colors">
                         <div class="flex items-center">
                             <i class="fas fa-heart text-xl mr-3"></i>
-                            <span class="font-medium">View Wishlist</span>
+                            <span class="font-medium">View Cart</span>
                         </div>
                         <i class="fas fa-chevron-right"></i>
                     </a>
                     
-                    <a href="/contact" class="flex items-center justify-between bg-red-50 hover:bg-red-100 text-red-700 p-4 rounded-lg transition-colors">
+                    <a href="/buyer/contact" class="flex items-center justify-between bg-red-50 hover:bg-red-100 text-red-700 p-4 rounded-lg transition-colors">
                         <div class="flex items-center">
                             <i class="fas fa-headset text-xl mr-3"></i>
                             <span class="font-medium">Contact Support</span>
