@@ -10,7 +10,7 @@ const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 
 const db = require('./config/db'); // MongoDB connection
-const port = process.env.PORT;
+const port = process.env.PORT || 3000;
 
 //Middulaware
 
@@ -74,5 +74,5 @@ app.use((req, res) => {
 });
 
 app.listen(port,()=>{
-    console.log('Server is running on port 3000');
+    console.log(`Server is running on port ${port}`);
 });
