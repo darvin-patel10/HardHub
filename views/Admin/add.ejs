@@ -14,7 +14,9 @@
             <h1 class="text-2xl font-bold">JOY Hardware Seller Portal</h1>
             <div class="flex items-center space-x-4">
                 <span class="text-sm">Welcome, <%= seller.username %></span>
-                <button class="bg-red-500 hover:bg-red-600 px-3 py-1 rounded text-sm">Logout</button>
+                <form id="logoutForm" action="/auth/logout" method="POST" style="display: inline;">
+                    <button type="submit" class="bg-red-500 hover:bg-red-600 px-3 py-1 rounded text-sm">Logout</button>
+                </form>            
             </div>
         </div>
     </header>
