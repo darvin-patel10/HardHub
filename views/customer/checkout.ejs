@@ -146,7 +146,7 @@
                         <div class="order-items mb-6">
                             <% for(let ord of order.items) { %>
                             <div class="order-item">
-                                <img src="<%=ord.image%>" alt="<%=ord.name%>" class="order-item-img">
+                                <img src="<%= ord.image || '/image/placeholder-product.svg' %>" alt="<%=ord.name%>" class="order-item-img" onerror="this.onerror=null;this.src='/image/placeholder-product.svg';">
                                 <div class="ml-4 flex-1">
                                     <div class="order-item-name font-semibold text-lg text-gray-800 mb-2"><%=ord.name%></div>
                                     

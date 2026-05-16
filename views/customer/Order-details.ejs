@@ -203,7 +203,7 @@
                                         <div class="flex items-center">
                                             <div class="flex-shrink-0 h-16 w-16 bg-gray-100 rounded-lg flex items-center justify-center mr-4">
                                                 <% if(item.image) { %>
-                                                    <img src="<%= item.image %>" alt="<%= item.name %>" class="h-12 w-12 object-contain">
+                                                    <img src="<%= item.image || '/image/placeholder-product.svg' %>" alt="<%= item.name %>" class="h-12 w-12 object-contain" onerror="this.onerror=null;this.src='/image/placeholder-product.svg';">
                                                 <% } else { %>
                                                     <i class="fas fa-box text-gray-400 text-2xl"></i>
                                                 <% } %>

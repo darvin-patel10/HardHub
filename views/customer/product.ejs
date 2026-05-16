@@ -40,21 +40,11 @@
          <% for (let product of allproducts) {%>
         <div class="product-card" data-category="<%=product.category%>">
             <a href="/buyer/product-details/<%=product.productid%>">
-                <img src="<%=product.image[0].url%>" alt="<%=product.name%>">
+                <img src="<%= product.image?.[0]?.url || '/image/placeholder-product.svg' %>" alt="<%=product.name%>" onerror="this.onerror=null;this.src='/image/placeholder-product.svg';">
                 <div class="product-name"><%=product.name%></div>
                 <div class="price"><%=product.price%></div>
                 <p><%=product.small_description%> </p>
             </a>
-            <!-- <form action="/buyer/cart/add/<%=product.productid%>" method="POST" onsubmit="copyQuantity(this)">
-                <input type="hidden" name="quantity">
-                <input type="hidden" name="productId" value="<%=product.id%>">
-                <input type="hidden" name="name" value="<%=product.name%>">
-                <input type="hidden" name="price" value="<%=product.price%>">
-                <input type="hidden" name="image" value="<%=product.image[0].url%>"> -->
-                <!-- <button type="submit" class="add-to-cart"> -->
-                <!-- <button type="submit">Add to Cart</button>
-            </form> -->
-            
         </div>
         <%}%>
     </section>

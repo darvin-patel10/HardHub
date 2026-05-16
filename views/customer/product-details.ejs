@@ -17,15 +17,16 @@
             <!-- Product Images -->
             <div class="lg:w-1/2">
                 <div class="bg-white p-4 rounded-lg shadow-lg">
-                    <img id="main-image" src="<%=product.image[0].url%>" alt="<%=product.name%>" 
+                    <img id="main-image" src="<%= product.image?.[0]?.url || '/image/placeholder-product.svg' %>" alt="<%=product.name%>" onerror="this.onerror=null;this.src='/image/placeholder-product.svg';"
                          class="product-main-image w-full rounded-lg">
                     
-                    <% if(product.image.length > 1) { %>
+                    <% if(product.image && product.image.length > 1) { %>
                     <div class="mt-4 grid grid-cols-4 gap-2">
                         <% product.image.forEach((img, index) => { %>
-                        <img src="<%=img.url%>" 
+                        <img src="<%= img.url || '/image/placeholder-product.svg' %>" 
                              alt="<%=product.name%> - Image <%=index+1%>"
                              class="w-full h-20 object-cover rounded cursor-pointer border-2 hover:border-blue-500 transition-all"
+                             onerror="this.onerror=null;this.src='/image/placeholder-product.svg';"
                              onclick="changeImage('<%=img.url%>')"
                              onmouseover="changeImage('<%=img.url%>')">
                         <% }) %>
@@ -145,7 +146,7 @@
                             <input type="hidden" name="productId" value="<%=product.productid%>">
                             <input type="hidden" name="name" value="<%=product.name%>">
                             <input type="hidden" name="Model_number" value="<%=product.Tech_Specifications[0].Model_number%>">
-                            <input type="hidden" name="image" value="<%=product.image[0].url%>">
+                            <input type="hidden" name="image" value="<%= product.image?.[0]?.url || '/image/placeholder-product.svg' %>">
                             <input type="hidden" name="category" value="<%=product.category%>">
                             <input type="hidden" name="Material" value="<%=product.Tech_Specifications[0].Material%>">
                             <input type="hidden" name="size" id="selected-size-input">
@@ -163,7 +164,7 @@
                             <input type="hidden" name="quantity" id="buy-quantity" value="1">
                             <input type="hidden" name="productId" value="<%=product.productid%>">
                             <input type="hidden" name="name" value="<%=product.name%>">
-                            <input type="hidden" name="image" value="<%=product.image[0].url%>">
+                            <input type="hidden" name="image" value="<%= product.image?.[0]?.url || '/image/placeholder-product.svg' %>">
                             <input type="hidden" name="Model_number" value="<%=product.Tech_Specifications[0].Model_number%>">
                             <input type="hidden" name="size" id="buy-selected-size-input">
                             <input type="hidden" name="price" id="buy-selected-price-input">

@@ -48,7 +48,7 @@
                         <% order.items.forEach(item => { %>
                         <div class="flex items-center p-3 bg-gray-50 rounded-lg">
                             <div class="flex-shrink-0 w-16 h-16 bg-white rounded-lg border border-gray-200 flex items-center justify-center overflow-hidden">
-                                <img src="<%= item.image %>" alt="<%= item.name %>" class="order-item-img">
+                                <img src="<%= item.image || '/image/placeholder-product.svg' %>" alt="<%= item.name %>" class="order-item-img" onerror="this.onerror=null;this.src='/image/placeholder-product.svg';">
                             </div>
                             <div class="ml-4 flex-1">
                                 <div class="flex justify-between items-start">
@@ -85,7 +85,7 @@
                         <!-- Single Item (Backward Compatibility) -->
                         <div class="flex items-center p-3 bg-gray-50 rounded-lg">
                             <div class="flex-shrink-0 w-16 h-16 bg-white rounded-lg border border-gray-200 flex items-center justify-center overflow-hidden">
-                                <img src="<%= order.image %>" alt="<%= order.name %>" class="order-item-img">
+                                <img src="<%= order.image || '/image/placeholder-product.svg' %>" alt="<%= order.name %>" class="order-item-img" onerror="this.onerror=null;this.src='/image/placeholder-product.svg';">
                             </div>
                             <div class="ml-4 flex-1">
                                 <div class="flex justify-between items-start">

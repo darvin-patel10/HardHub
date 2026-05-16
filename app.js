@@ -26,6 +26,15 @@ const userRoutes = require('./routes/userRoutes');
 app.set('view engine','ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({ extended: true }));
+app.use('/css', express.static(path.join(__dirname, 'public', 'css'), {
+    setHeaders: (res, filePath) => {
+        if (filePath.endsWith('.css')) {
+            res.setHeader('Content-Type', 'text/css');
+        }
+    }
+}));
+app.use('/image', express.static(path.join(__dirname, 'public', 'image')));
+app.use('/script', express.static(path.join(__dirname, 'public', 'script')));
 app.use(express.static(path.join(__dirname,'public')));
 app.use(express.json());
 app.use(cookieParser())

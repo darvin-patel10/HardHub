@@ -42,7 +42,7 @@
                                 <tr>
                                     <td>
                                         <div class="product-cell">
-                                            <img src="<%=product.image%>" alt="<%=product.name%>" class="product-image">
+                                            <img src="<%= product.image || '/image/placeholder-product.svg' %>" alt="<%=product.name%>" class="product-image" onerror="this.onerror=null;this.src='/image/placeholder-product.svg';">
                                             <div>
                                                 <h3><%=product.name%></h3>
                                                 <p>Model: JPD-550</p>
