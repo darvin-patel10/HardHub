@@ -3,23 +3,27 @@ document.getElementById('productImages').addEventListener('change', function(e) 
     const previewsContainer = document.getElementById('imagePreviews');
     previewsContainer.innerHTML = '';
     
-    Array.from(e.target.files).forEach((file, index) => {
-        const reader = new FileReader();
-        reader.onload = function(event) {
-            const preview = document.createElement('div');
-            preview.className = 'image-preview relative w-20 h-20 rounded-md overflow-hidden border border-gray-200';
-            preview.innerHTML = `
-                <img src="${event.target.result}" class="w-full h-full object-cover">
-                <button type="button" onclick="removeImage(this)" class="absolute top-0 right-0 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">×</button>
-            `;
-            previewsContainer.appendChild(preview);
-        };
-        reader.readAsDataURL(file);
-    });
+    const file = e.target.files[0];
+    if (!file) {
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(event) {
+        const preview = document.createElement('div');
+        preview.className = 'image-preview relative w-20 h-20 rounded-md overflow-hidden border border-gray-200';
+        preview.innerHTML = `
+            <img src="${event.target.result}" class="w-full h-full object-cover">
+            <button type="button" onclick="removeImage(this)" class="absolute top-0 right-0 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">×</button>
+        `;
+        previewsContainer.appendChild(preview);
+    };
+    reader.readAsDataURL(file);
 });
 
 function removeImage(button) {
     button.parentElement.remove();
+    document.getElementById('productImages').value = '';
 }
 
 // Add a new key feature input field
@@ -187,13 +191,7 @@ document.getElementById('productForm').addEventListener('submit', function(e) {
     // Validate images
     const imageInput = document.getElementById('productImages');
     if (!imageInput.files || imageInput.files.length === 0) {
-        alert('Please upload at least one product image');
-        return false;
-    }
-    
-    // Validate image count (max 5)
-    if (imageInput.files.length > 5) {
-        alert('Maximum 5 images allowed');
+        alert('Please upload a product image');
         return false;
     }
     

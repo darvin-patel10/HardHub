@@ -1,0 +1,37 @@
+<%
+    const navUser = locals.user || {};
+    const navUserId = locals.userId || navUser._id || '';
+    const navCartCount = typeof locals.totalUniqueItems === 'number' ? locals.totalUniqueItems : 0;
+    const navProfilePhoto = navUser.profilePhoto?.[0]?.url || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQF02Jj8T2t7PdkytAw42HDuuSz7yXguKn8Lg&s';
+%>
+
+<nav class="joy-navbar">
+    <ul class="joy-nav-links">
+        <li><a href="/buyer/product/<%= navUserId %>">Home</a></li>
+        <li><a href="/buyer/about">About Us</a></li>
+        <li><a href="/buyer/contact">Contact</a></li>
+        <li><a href="/buyer/cart/<%= navUserId %>">Cart (<%= navCartCount %>)</a></li>
+    </ul>
+
+    <div class="joy-user-area">
+        <span class="joy-welcome">Hello, <strong><%= navUser.username || 'User' %></strong></span>
+        <a href="/buyer/deshbord/<%= navUserId %>" class="joy-user-icon" aria-label="Open dashboard">
+            <img src="<%= navProfilePhoto %>" alt="User Icon">
+        </a>
+    </div>
+
+    <button type="button" class="joy-hamburger" onclick="toggleCustomerNavbar()" aria-label="Toggle navigation menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+</nav>
+
+<script>
+    function toggleCustomerNavbar() {
+        const navLinks = document.querySelector('.joy-nav-links');
+        if (navLinks) {
+            navLinks.classList.toggle('active');
+        }
+    }
+</script>

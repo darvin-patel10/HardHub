@@ -14,21 +14,34 @@ const upload = require('../middleware/uplode-image');
 router.use(authToken);
 router.use(isSeller);
 
+const productImageUpload = upload.single("images");
+
+function productImageFromFile(file) {
+    if (!file) return null;
+
+    return {
+        public_id: file.filename,
+        url: `/image/Product/${file.filename}`
+    };
+}
+
 //------------------------------- Create New product---------------------------
 router.get('/product/new', (req, res) => {
     res.render('Admin/add.ejs', { seller: req.user });
 })
 
-router.post('/product',upload.single("images") ,async (req, res) => {
+router.post('/product', productImageUpload, async (req, res) => {
     const parseBody = qs.parse(req.body); // ✅ deeply parses nested fields
-    
+    const uploadedImage = productImageFromFile(req.file);
+
+    if (!uploadedImage) {
+        return res.status(400).send("Please upload a product image.");
+    }
+
     const newProduct = new Product({
         // Generate a unique ID for the product
         productid: uuidv4(),
-        image: [{
-            public_id: req.file.filename, // Assuming you want to store the filename as public_id
-            url: `/image/Product/${req.file.filename}` // Adjust the URL path as needed
-        }],
+        image: [uploadedImage],
         name: parseBody.name,
         small_description: parseBody.small_description,
         key_features: parseBody.key_features,
@@ -52,7 +65,7 @@ router.post('/product',upload.single("images") ,async (req, res) => {
 
 //------------------------------- Edit Product---------------------------
 
-router.post('/product/update/:id',upload.single("new_image"),async(req,res) =>{
+router.post('/product/update/:id', productImageUpload, async(req,res) =>{
     const productId = req.params.id;
     
     let product = await Product.findById(productId);
@@ -71,12 +84,14 @@ router.post('/product/update/:id',upload.single("new_image"),async(req,res) =>{
         product.Product_description = parseBody.Product_description;
         product.Tech_Specifications = parseBody.Tech_Specifications;
         product.sizes = parseBody.sizes || [];
-        // ✅ Corrected image update
-        if (req.file) {
-            product.image = [{
-                public_id: req.file.filename,
-                url: `/image/Product/${req.file.filename}`
-            }];
+        // Replace the product image only when a new file is selected.
+        const uploadedImage = productImageFromFile(req.file);
+        if (uploadedImage) {
+            product.image = [uploadedImage];
+        } else if (!product.image || product.image.length === 0) {
+            return res.status(400).send("Please upload a product image.");
+        } else {
+            product.image = product.image.slice(0, 1);
         }
         await product.save();
         console.log("✅ Product updated successfully", product);

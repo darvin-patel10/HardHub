@@ -108,11 +108,11 @@ router.post('/logout', (req, res) => {
 // ------------------------------- Render Forms ---------------------------
 
 router.get('/signup',authenticateTokenOptional, (req, res) => {
-    console.log('User type', req.user.type);
+    // console.log('User type', req.user.type);
     try {
         // ✅ If Buyer
-        console.log('User Type',req.user.type)
-        if (req.user.type === 'buyer') {
+        // console.log('User Type',req.user.type)
+        if(req.user){if (req.user.type === 'buyer') {
             return res.redirect(`/buyer/product/${req.user._id}`);
         }
 
@@ -120,7 +120,7 @@ router.get('/signup',authenticateTokenOptional, (req, res) => {
         if (req.user.type === 'seller') {
             return res.redirect('/seller');
         }
-
+}
         // fallback
         return res.render('Authentication/sign-up.ejs');
 

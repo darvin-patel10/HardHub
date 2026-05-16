@@ -6,21 +6,12 @@
     <title>Checkout - JOY Hardware Solutions</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/customer/navbar.css">
     <link rel="stylesheet" href="/css/customer/checkout.css">
 
 </head>
 <body class="bg-gray-50">
-    <nav class="bg-gray-800 text-white p-4">
-        <div class="container mx-auto">
-            <ul class="flex justify-center space-x-8">
-                <li><a href="/" class="hover:text-blue-300 transition-colors">Home</a></li>
-                <li><a href="/product" class="hover:text-blue-300 transition-colors">Products</a></li>
-                <li><a href="/about" class="hover:text-blue-300 transition-colors">About Us</a></li>
-                <li><a href="/contact" class="hover:text-blue-300 transition-colors">Contact</a></li>
-                <li><a href="/cart/<%=user._id%>" class="hover:text-blue-300 transition-colors">Cart (<%=totalUniqueItems%>)</a></li>
-            </ul>
-        </div>
-    </nav>
+    <%- include('partials/navbar') %>
     
     <form id="shippingForm" action="/buyer/product/buy/<%=order.orderid%>" method="POST" class="p-4 md:p-6">
         <div class="checkout-container">

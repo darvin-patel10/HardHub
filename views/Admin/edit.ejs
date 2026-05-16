@@ -58,11 +58,16 @@
                             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                             <option value="">Select Category</option>
                             <option value="Aldrop" <%= product.category === 'Aldrop' ? 'selected' : '' %>>Aldrop</option>
-                            <option value="Main Door Handle" <%= product.category === 'Main Door Handle' ? 'selected' : '' %>>Main Door Handle</option>
                             <option value="Handles" <%= product.category === 'Handles' ? 'selected' : '' %>>Handles</option>
                             <option value="SS Door kit" <%= product.category === 'SS Door kit' ? 'selected' : '' %>>SS Door kit</option>
-                            <option value="SS Chest Handle" <%= product.category === 'SS Chest Handle' ? 'selected' : '' %>>SS Chest Handle</option>
                             <option value="Cabinet Handle" <%= product.category === 'Cabinet Handle' ? 'selected' : '' %>>Cabinet Handle</option>
+                            <option value="Latch" <%= product.category === 'Latch' ? 'selected' : '' %>>Latch</option>
+                            <option value="Kadi" <%= product.category === 'Kadi' ? 'selected' : '' %>>Kadi</option>
+                            <option value="Door Stopper" <%= product.category === 'Door Stopper' ? 'selected' : '' %>>Door Stopper</option>
+                            <option value="Antiq-Aldrop" <%= product.category === 'Antiq-Aldrop' ? 'selected' : '' %>>Antiq-Aldrop</option>
+                            <option value="Antiq-Handle" <%= product.category === 'Antiq-Handle' ? 'selected' : '' %>>Antiq-Handle</option>
+                            <option value="Antiq-Door kit" <%= product.category === 'Antiq-Door kit' ? 'selected' : '' %>>Antiq-Door kit</option>
+                            <option value="Antiq-Door-Stopper" <%= product.category === 'Antiq-Door-Stopper' ? 'selected' : '' %>>Antiq-Door-Stopper</option>
                         </select>
                     </div>
                     
@@ -172,18 +177,18 @@
                 
                 <!-- Images -->
                 <div>
-                    <label class="block text-xl font-bold text-gray-700 mb-1">Product Images</label>
-                    <p class="text-sm text-gray-500 mb-3">Upload multiple images (minimum 1, maximum 5)</p>
+                    <label class="block text-xl font-bold text-gray-700 mb-1">Product Image</label>
+                    <p class="text-sm text-gray-500 mb-3">Upload one image to replace the current image</p>
                     
-                    <!-- Current Images -->
+                    <!-- Current Image -->
                     <div class="mb-6">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Current Images</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Current Image</label>
                         <div id="currentImages" class="flex flex-wrap gap-2">
                             <!-- Current images will be dynamically inserted here -->
                         </div>
                     </div>
                     
-                    <!-- New Images Upload -->
+                    <!-- New Image Upload -->
                     <div class="flex items-center space-x-4">
 
                         <div class="flex items-center space-x-4">
@@ -196,8 +201,8 @@
                                         stroke-width="2"/>
                                     </svg>
 
-                                    <p class="text-sm text-gray-600">Click to upload new images</p>
-                                    <p class="text-xs text-gray-500">PNG, JPG up to 2MB each</p>
+                                    <p class="text-sm text-gray-600">Click to upload new image</p>
+                                    <p class="text-xs text-gray-500">PNG, JPG up to 2MB</p>
                                 </label>
 
                                 <input 
@@ -206,34 +211,11 @@
                                     accept="image/*"
                                     name="images"
                                     class="hidden"
-                                    multiple
                                 />
                             </div>
 
-                            <!-- Existing Images -->
+                            <!-- New image preview -->
                             <div id="imagePreviews" class="flex flex-wrap gap-2">
-
-                                <% if(product.image && product.image.length > 0) { %>
-                                    <% product.image.forEach((img, index) => { %>
-                                        <div class="relative">
-
-                                            <img 
-                                                src="<%= img.url %>" 
-                                                alt="Product Image <%= index+1 %>"
-                                                class="w-20 h-20 object-cover rounded-md border"
-                                            >
-
-                                            <!-- keep image in DB -->
-                                            <input 
-                                                type="hidden" 
-                                                name="existing_images[]" 
-                                                value="<%= img.public_id %>"
-                                            >
-
-                                        </div>
-                                    <% }) %>
-                                <% } %>
-
                             </div>
 
                         </div>

@@ -6,20 +6,11 @@
     <title>Product Details - JOY Hardware Solutions</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/customer/navbar.css">
     <link rel="stylesheet" href="/css/customer/product-details.css">
 </head>
 <body class="bg-gray-50">
-    <!-- Navigation -->
-    <nav class="bg-gray-800 text-white p-4">
-        <div class="container mx-auto">
-            <ul class="flex justify-center space-x-8">
-                <li><a href="/buyer/product/<%= userId %>" class="hover:text-blue-300 transition-colors">Home</a></li>
-                <li><a href="/about" class="hover:text-blue-300 transition-colors">About Us</a></li>
-                <li><a href="/contact" class="hover:text-blue-300 transition-colors">Contact</a></li>
-                <li><a href="/buyer/cart/<%=userId%>" class="hover:text-blue-300 transition-colors">Cart (<%=totalUniqueItems%>)</a></li>
-            </ul>
-        </div>
-    </nav>
+    <%- include('partials/navbar') %>
 
     <div class="container mx-auto px-4 py-8">
         <div class="flex flex-col lg:flex-row gap-8">

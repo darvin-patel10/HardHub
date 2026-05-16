@@ -25,6 +25,21 @@ const Buy = require('../models/checkout'); // Assuming you have a Buy model for 
 router.use(authToken);
 router.use(isBuyer);
 
+router.use(async (req, res, next) => {
+    try {
+        const userId = req.user?._id;
+        const cart = userId ? await Cart.findOne({ userId }) : null;
+
+        res.locals.user = req.user;
+        res.locals.userId = userId;
+        res.locals.totalUniqueItems = cart ? cart.items.length : 0;
+
+        next();
+    } catch (err) {
+        next(err);
+    }
+});
+
 //Show Product
 
 router.get('/product-details/:id',async(req,res)=>{
@@ -466,47 +481,46 @@ router.post('/address/edit/:id', async (req, res) => {
 
 router.get('/chekout/:id', async(req,res)=>{
     const productId = req.params.id;
-    const userId = req.user.userId;
-    const cartArray = await Cart.find({});
-    const user = await User.findOne({ userId: userId });
-    const cart = cartArray[0]; // Assuming you want to fetch the first cart
+    const userId = req.user._id;
+    const user = req.user;
+    const cart = await Cart.findOne({ userId });
 
     if (!req.session.checkoutData) {
-        return res.redirect(`/product/${userId}`);
+        return res.redirect(`/buyer/product/${userId}`);
     }
 
     res.render('customer/checkout.ejs', {
         user,
         order: req.session.checkoutData, // So you can show summary
-        totalUniqueItems: cart.items.length
+        totalUniqueItems: cart ? cart.items.length : 0
     });
 });
 
 router.get('/payment/:id',async(req,res)=>{
-    const cartArray = await Cart.find({});
-    const cart = cartArray[0];
+    const userId = req.user._id;
+    const cart = await Cart.findOne({ userId });
 
     if (!req.session.buyData) {
-        return res.redirect(`/product/${req.params.id}`);
+        return res.redirect(`/buyer/product/${userId}`);
     }
     res.render('customer/payment.ejs',{
-        userId: req.user.userId,
+        userId,
         order: req.session.buyData,
-        totalUniqueItems: cart.items.length
+        totalUniqueItems: cart ? cart.items.length : 0
     });
 });
 
 router.get('/order-confirmation/:id', async (req, res) => {
-    const cartArray = await Cart.find({});
-    const cart = cartArray[0]; // Assuming you want to fetch the first cart
+    const userId = req.user._id;
+    const cart = await Cart.findOne({ userId });
     const orderId = req.params.id;
     console.log("Order ID:", orderId);
     const order = await Buy.findOne({ orderid: orderId });
     console.log("Order details:", order);
     res.render('customer/OrderConfarm.ejs', { 
-        userId: req.user._id,
+        userId,
         order,
-        totalUniqueItems: cart.items.length
+        totalUniqueItems: cart ? cart.items.length : 0
      });  
 });
 

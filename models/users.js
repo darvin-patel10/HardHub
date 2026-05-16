@@ -22,7 +22,7 @@ const userSchema = new mongoose.Schema({
     userId: {
         type: String,
         required: true,
-        default: uuidv4(),// Generate a unique ID by default 
+        default: uuidv4,// Generate a unique ID by default 
         unique: true, // Ensure each user has a unique ID
     },
     username: {

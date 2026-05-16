@@ -87,35 +87,38 @@ function loadProductData() {
     
     // Populate additional specifications
     const specsContainer = document.getElementById('specsContainer');
-    specsContainer.innerHTML = '';
-    
-    // Check if specs exist and is an object
-    if (existingSpecs && typeof existingSpecs === 'object' && Object.keys(existingSpecs).length > 0) {
-        let specIndex = 0;
-        for (const [key, value] of Object.entries(existingSpecs)) {
-            const div = document.createElement('div');
-            div.classList.add('flex', 'space-x-2');
-            
-            div.innerHTML = `
-                <input type="text" name="specs[key${specIndex}]" placeholder="Specification name" 
-                    class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    value="${key}">
-                <input type="text" name="specs[value${specIndex}]" placeholder="Value" 
-                    class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    value="${value}">
-                <button type="button" onclick="removeSpec(this)" class="px-2 text-red-500 hover:text-red-700">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                    </svg>
-                </button>
-            `;
-            
-            specsContainer.appendChild(div);
-            specIndex++;
+
+    if (specsContainer) {
+        specsContainer.innerHTML = '';
+
+        // Check if specs exist and is an object
+        if (existingSpecs && typeof existingSpecs === 'object' && Object.keys(existingSpecs).length > 0) {
+            let specIndex = 0;
+            for (const [key, value] of Object.entries(existingSpecs)) {
+                const div = document.createElement('div');
+                div.classList.add('flex', 'space-x-2');
+
+                div.innerHTML = `
+                    <input type="text" name="specs[key${specIndex}]" placeholder="Specification name" 
+                        class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        value="${key}">
+                    <input type="text" name="specs[value${specIndex}]" placeholder="Value" 
+                        class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        value="${value}">
+                    <button type="button" onclick="removeSpec(this)" class="px-2 text-red-500 hover:text-red-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                    </button>
+                `;
+
+                specsContainer.appendChild(div);
+                specIndex++;
+            }
+        } else {
+            // Add at least one empty specification
+            addSpec();
         }
-    } else {
-        // Add at least one empty specification
-        addSpec();
     }
     
     // Populate current images
@@ -123,7 +126,7 @@ function loadProductData() {
     currentImagesContainer.innerHTML = '';
     
     if (productData.image && productData.image.length > 0) {
-        productData.image.forEach((img, index) => {
+        productData.image.slice(0, 1).forEach((img, index) => {
             const div = document.createElement('div');
             div.classList.add('image-preview', 'relative', 'w-20', 'h-20', 'rounded-md', 'overflow-hidden', 'border', 'border-gray-200');
             
@@ -145,25 +148,31 @@ function setupImageUpload() {
     
     if (imageInput) {
         imageInput.addEventListener('change', function(e) {
-            Array.from(e.target.files).forEach((file, index) => {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    const preview = document.createElement('div');
-                    preview.className = 'image-preview relative w-20 h-20 rounded-md overflow-hidden border border-gray-200';
-                    preview.innerHTML = `
-                        <img src="${event.target.result}" class="w-full h-full object-cover">
-                        <button type="button" onclick="removeNewImage(this)" class="absolute top-0 right-0 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">×</button>
-                    `;
-                    previewsContainer.appendChild(preview);
-                };
-                reader.readAsDataURL(file);
-            });
+            previewsContainer.innerHTML = '';
+
+            const file = e.target.files[0];
+            if (!file) {
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const preview = document.createElement('div');
+                preview.className = 'image-preview relative w-20 h-20 rounded-md overflow-hidden border border-gray-200';
+                preview.innerHTML = `
+                    <img src="${event.target.result}" class="w-full h-full object-cover">
+                    <button type="button" onclick="removeNewImage(this)" class="absolute top-0 right-0 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">×</button>
+                `;
+                previewsContainer.appendChild(preview);
+            };
+            reader.readAsDataURL(file);
         });
     }
 }
 
 function removeNewImage(button) {
     button.parentElement.remove();
+    document.getElementById('productImages').value = '';
 }
 
 function removeExistingImage(button, imageId) {
@@ -379,17 +388,8 @@ document.getElementById('productForm').addEventListener('submit', function(e) {
     const newImagesInput = document.getElementById('productImages');
     
     if (existingImages.length === 0 && (!newImagesInput.files || newImagesInput.files.length === 0)) {
-        alert('Please upload at least one product image or keep existing images');
+        alert('Please upload a product image or keep the existing image');
         return false;
-    }
-    
-    // Validate new image count (max 5 total including existing)
-    if (newImagesInput.files) {
-        const totalImages = existingImages.length + newImagesInput.files.length;
-        if (totalImages > 5) {
-            alert('Maximum 5 images allowed in total (existing + new)');
-            return false;
-        }
     }
     
     // If all validations pass, submit the form

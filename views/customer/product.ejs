@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Products - JOY Hardware Solutions</title>
+    <link rel="stylesheet" href="/css/customer/navbar.css">
     <link rel="stylesheet" href="/css/customer/product.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
@@ -13,49 +14,24 @@
         <p>Quality tools for professionals and DIY enthusiasts</p>
     </header>
 
-    <!-- Navigation Bar -->
-
-    <nav>
-        <!-- Left Side Links -->
-        <ul class="nav-links">
-            <li><a href="/product/<%= userId %>">Home</a></li>
-            <!-- <li><a href="/product/<%= userId %>">Products</a></li> -->
-            <li><a href="/about">About Us</a></li>
-            <li><a href="/contact">Contact</a></li>
-        </ul>
-
-        
-
-        <div class="user-icon-welcom-container">
-            <div class="hidden lg:flex items-end space-x-2 text-sm welcom-text">
-                <span class="text-white">Hello, <strong><%=user.username%></strong></span>
-            </div>
-            <div>
-                <a href="/buyer/deshbord/<%=userId%>" class="user-icon">
-                   <img src="<%= user.profilePhoto[0]?.url || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQF02Jj8T2t7PdkytAw42HDuuSz7yXguKn8Lg&s'%>" alt="User Icon">
-                </a>
-            </div>
-        </div>
-        
-        <!-- Mobile Menu Button -->
-        <div class="hamburger" onclick="toggleMenu()">
-            <div></div>
-            <div></div>
-            <div></div>
-        </div>
-    </nav>
+    <%- include('partials/navbar') %>
 
 
     <section class="product-categories">
         <h2 style="text-align: center;">Product Categories</h2>
         <div class="category-buttons">
             <button onclick="filterProducts('all')">All Products</button>
-            <button onclick="filterProducts('Aldrop')">Aldrop</button>
-            <button onclick="filterProducts('Main Door Handle')">Main Door Handle</button>
-            <button onclick="filterProducts('Handles')">Handles</button>
-            <button onclick="filterProducts('SS Door kit')">SS Door kit</button>
-            <button onclick="filterProducts('SS Chest Handle')">SS Chest Handle</button>
-            <button onclick="filterProducts('Cabinet Handle')">Cabinet Handle</button>
+            <%
+                let allCategories = new Set();
+                allproducts.forEach(product => {
+                    if (product.category) {
+                        allCategories.add(product.category);
+                    }
+                });
+                allCategories.forEach(category => {
+            %>
+                <button onclick='filterProducts(<%- JSON.stringify(category) %>)'><%= category %></button>
+            <% }); %>
         </div>
     </section>
 
@@ -69,15 +45,15 @@
                 <div class="price"><%=product.price%></div>
                 <p><%=product.small_description%> </p>
             </a>
-            <form action="/buyer/cart/add/<%=product.productid%>" method="POST" onsubmit="copyQuantity(this)">
+            <!-- <form action="/buyer/cart/add/<%=product.productid%>" method="POST" onsubmit="copyQuantity(this)">
                 <input type="hidden" name="quantity">
                 <input type="hidden" name="productId" value="<%=product.id%>">
                 <input type="hidden" name="name" value="<%=product.name%>">
                 <input type="hidden" name="price" value="<%=product.price%>">
-                <input type="hidden" name="image" value="<%=product.image[0].url%>">
+                <input type="hidden" name="image" value="<%=product.image[0].url%>"> -->
                 <!-- <button type="submit" class="add-to-cart"> -->
-                <button type="submit">Add to Cart</button>
-            </form>
+                <!-- <button type="submit">Add to Cart</button>
+            </form> -->
             
         </div>
         <%}%>
