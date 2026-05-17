@@ -26,23 +26,6 @@
     <%- include('partials/navbar') %>
             
             <!-- User Icon -->
-            <div class="flex items-center space-x-4">
-                <a class="flex items-center space-x-2 text-hardware-primary hover:text-hardware-accent transition-colors">
-                    <div class="relative">
-                        <img src="<%= user.profilePhoto[0]?.url || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQF02Jj8T2t7PdkytAw42HDuuSz7yXguKn8Lg&s'%>" 
-                             alt="User Icon" 
-                             class="w-10 h-10 rounded-full border-2 border-gray-300">
-                        <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
-                    </div>
-                    <span class="hidden lg:inline font-medium"><%=user.username%></span>
-                </a>
-                
-                <!-- Mobile Menu Button -->
-                <button id="mobile-menu-button" class="lg:hidden text-hardware-primary focus:outline-none">
-                    <i class="fas fa-bars text-xl"></i>
-                </button>
-            </div>
-        </div>
         
         <!-- Mobile Navigation Menu -->
         <div id="mobile-menu" class="lg:hidden hidden bg-white shadow-lg rounded-b-lg mt-2 py-4 px-4">
@@ -178,7 +161,7 @@
                     </div>
                 <% } %>
                 
-                <a href="#recent-orders" class="block w-full text-center border-2 border-hardware-primary text-hardware-primary hover:bg-hardware-primary hover:text-white font-medium py-3 rounded-lg transition-colors mt-4">
+                <a href="/buyer/orders/<%=user._id%>" class="block w-full text-center border-2 border-hardware-primary text-hardware-primary hover:bg-hardware-primary hover:text-white font-medium py-3 rounded-lg transition-colors mt-4">
                     <i class="fas fa-list-alt mr-2"></i> View All Orders
                 </a>
             </div>
@@ -231,9 +214,11 @@
     </main>
 
     <!-- Footer -->
-    <footer>
-        <p>&copy; 2023 JOY Hardware Solutions. All Rights Reserved.</p>
-        <p>Contact: sales@joyhardware.com | Phone: +91 7201956899</p>
+    <footer class="bg-gray-800 text-white py-6 mt-16">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-sm">&copy; 2023 JOY Hardware Solutions. All Rights Reserved.</p>
+            <p class="text-sm mt-2">Contact: sales@joyhardware.com | Phone: +91 7201956899</p>
+        </div>
     </footer>
 
     <script src="/script/customer/deshbord.js"></script>

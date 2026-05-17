@@ -521,7 +521,7 @@ router.get('/order-confirmation/:id', async (req, res) => {
         userId,
         order,
         totalUniqueItems: cart ? cart.items.length : 0
-     });  
+    });  
 });
 
 router.get('/contact',(req,res)=>{
